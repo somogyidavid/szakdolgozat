@@ -5,5 +5,5 @@ export default {
     'dark': '#21183C',
     'green': '#5FBA85',
     'cyan': '#09C1DE',
-    'magenta': '#EE63B6'
+    'magenta': '#EE64B6'
 };

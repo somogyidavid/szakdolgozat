@@ -12,7 +12,6 @@ const AppNavigator = props => {
 
     return (
         <NavigationContainer>
-            <StatusBar />
             { isAuth && <ActivityNavigator /> }
             { isAuth && triedToAutoLogin && <AuthNavigator /> }
             { /*!isAuth && !triedToAutoLogin && <StartupScreen />*/ }

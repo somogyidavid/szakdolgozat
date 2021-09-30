@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, SafeAreaView, Text, Button, StyleSheet, StatusBar } from 'react-native';
+import { View, SafeAreaView, Text, Button, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Colors from '../constants/Colors';
 import OverviewScreen from '../screens/activities/OverviewScreen';
@@ -12,8 +13,9 @@ import OptionsScreen from '../screens/OptionsScreen';
 import InterestsScreen from '../screens/user/InterestsScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import i18n from 'i18n-js';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Entypo } from '@expo/vector-icons';
 import { Dimensions, Platform } from 'react-native';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 const defaultNavOptions = {
     headerStyle: {
@@ -30,18 +32,29 @@ const defaultNavOptions = {
 
 const OverviewTabNavigator = createMaterialBottomTabNavigator();
 
+const iconHandler = () => {
+    return (
+        <Entypo
+            name='dot-single'
+            size={ 20 }
+            color='black'
+        />
+    );
+};
+
 export const OverviewNavigator = () => {
+    const isWideEnough = Dimensions.get('window').width > 300;
+
     return (
         <OverviewTabNavigator.Navigator
             screenOptions={ { tabBarColor: Colors.light } }
             activeColor={ Colors.dark }
-            labeled={ Dimensions.get('window').width > 300 }
         >
             <OverviewTabNavigator.Screen
                 name='Overview'
                 component={ OverviewScreen }
                 options={ {
-                    tabBarLabel: i18n.t('overview'),
+                    tabBarLabel: isWideEnough ? i18n.t('overview') : iconHandler(),
                     tabBarIcon: props => (
                         <Ionicons
                             name={ Platform.OS === 'android' ?
@@ -58,7 +71,7 @@ export const OverviewNavigator = () => {
                 name='UserActivities'
                 component={ UserActivitiesScreen }
                 options={ {
-                    tabBarLabel: i18n.t('userActivities'),
+                    tabBarLabel: isWideEnough ? i18n.t('userActivities') : iconHandler(),
                     tabBarIcon: props => (
                         <Ionicons
                             name={ Platform.OS === 'android' ?
@@ -75,7 +88,7 @@ export const OverviewNavigator = () => {
                 name='Calendar'
                 component={ CalendarScreen }
                 options={ {
-                    tabBarLabel: i18n.t('calendar'),
+                    tabBarLabel: isWideEnough ? i18n.t('calendar') : iconHandler(),
                     tabBarIcon: props => (
                         <Ionicons
                             name={ Platform.OS === 'android' ?
@@ -92,7 +105,7 @@ export const OverviewNavigator = () => {
                 name='Sights'
                 component={ SightsScreen }
                 options={ {
-                    tabBarLabel: i18n.t('sights'),
+                    tabBarLabel: isWideEnough ? i18n.t('sights') : iconHandler(),
                     tabBarIcon: props => (
                         <Ionicons
                             name={ Platform.OS === 'android' ?
@@ -134,34 +147,59 @@ const ActivityDrawerNavigator = createDrawerNavigator();
 export const ActivityNavigator = () => {
     return (
         <ActivityDrawerNavigator.Navigator
-            screenOptions={ defaultNavOptions }
+            screenOptions={ {
+                ...defaultNavOptions, drawerType: 'front', drawerStyle: {
+                    backgroundColor: Colors.dark
+                },
+                drawerActiveTintColor: '#FFF',
+                drawerInactiveTintColor: '#FFF',
+                drawerActiveBackgroundColor: Colors.lightPurple,
+                drawerItemStyle: {
+                    marginHorizontal: 40,
+                    borderRadius: 15
+                }
+            } }
             drawerContent={ props => {
                 return (
-                    <View>
-                        <SafeAreaView>
-                            <View
-                                style={ {
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginVertical: StatusBar.currentHeight - 20,
-                                    marginHorizontal: 10,
-                                    paddingVertical: 20,
-                                    borderWidth: 2,
-                                    borderRadius: 10
-                                } }
-                            >
-                                <Text style={ { fontFamily: 'open-sans-bold' } }>{ i18n.t('label') }</Text>
-                            </View>
-                            <DrawerItemList { ...props } />
-                            <View style={ { marginHorizontal: 10 } }>
-                                <Button
-                                    title={ i18n.t('logout') }
-                                    color={ Colors.darkPurple }
-                                />
-                            </View>
-                        </SafeAreaView>
-                    </View>
+                    <SafeAreaView
+                        style={ styles.safeAreaView }
+                        forceInset={ { top: 'always', horizontal: 'never' } }
+                    >
+                        <FocusAwareStatusBar />
+                        <DrawerItem
+                            label={ i18n.t('label') }
+                            onPress={ () => props.navigation.navigate('Overview') }
+                            icon={ () => {
+                                return (
+                                    <Ionicons
+                                        name={ Platform.OS === 'android' ? 'md-compass-outline' : 'ios-compass-outline' }
+                                        size={ 30 }
+                                        color='#FFF'
+                                    />
+                                );
+                            } }
+                            style={ styles.drawerItemContainer }
+                            labelStyle={ styles.drawerItem }
+                        />
+                        <DrawerItemList { ...props } />
+                        <DrawerItem
+                            label={ i18n.t('logout') }
+                            onPress={ () => {
+                                console.log('Logged out!');
+                            } }
+                            icon={ () => {
+                                return (
+                                    <Ionicons
+                                        name={ Platform.OS === 'android' ? 'md-exit-outline' : 'ios-exit-outline' }
+                                        size={ 30 }
+                                        color='#FFF'
+                                    />
+                                );
+                            } }
+                            style={ styles.drawerItemContainer }
+                            labelStyle={ styles.drawerItem }
+                        />
+                    </SafeAreaView>
                 );
             } }
         >
@@ -169,14 +207,32 @@ export const ActivityNavigator = () => {
                 name='OverviewTab'
                 component={ OverviewNavigator }
                 options={ {
-                    title: i18n.t('title')
+                    title: i18n.t('title'),
+                    drawerIcon: () => {
+                        return (
+                            <Ionicons
+                                name={ Platform.OS === 'android' ? 'md-home-outline' : 'ios-home-outline' }
+                                size={ 30 }
+                                color='#FFF'
+                            />
+                        );
+                    }
                 } }
             />
             <ActivityDrawerNavigator.Screen
                 name='OptionsStack'
                 component={ OptionsNavigator }
                 options={ {
-                    title: i18n.t('options')
+                    title: i18n.t('options'),
+                    drawerIcon: () => {
+                        return (
+                            <Ionicons
+                                name={ Platform.OS === 'android' ? 'md-options-outline' : 'ios-options-outline' }
+                                size={ 30 }
+                                color='#FFF'
+                            />
+                        );
+                    }
                 } }
             />
         </ActivityDrawerNavigator.Navigator>
@@ -195,3 +251,21 @@ export const AuthNavigator = () => {
         </AuthStackNavigator.Navigator>
     );
 };
+
+const styles = StyleSheet.create({
+    drawerItem: {
+        color: '#FFF'
+    },
+    drawerItemContainer: {
+        backgroundColor: Colors.dark,
+        borderRadius: 10
+    },
+    logout: {
+        color: '#FFF',
+        fontFamily: 'open-sans-bold'
+    },
+    safeAreaView: {
+        flex: 1,
+        flexDirection: 'column'
+    }
+});
