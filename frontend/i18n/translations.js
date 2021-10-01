@@ -7,7 +7,8 @@ export default {
         calendar: 'Calendar',
         sights: 'Sights',
         options: 'Options',
-        logout: 'Logout'
+        logout: 'Logout',
+        profile: 'My profile'
     },
     hu: {
         label: 'Programajánló App',
@@ -17,6 +18,7 @@ export default {
         calendar: 'Naptár',
         sights: 'Nevezetességek',
         options: 'Beállítások',
-        logout: 'Kijelentkezés'
+        logout: 'Kijelentkezés',
+        profile: 'Fiókom'
     }
 };

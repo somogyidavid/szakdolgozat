@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, SafeAreaView, Text, Button, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -16,6 +15,8 @@ import i18n from 'i18n-js';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { Dimensions, Platform } from 'react-native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
+import ProfileScreen from '../screens/user/ProfileScreen';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const defaultNavOptions = {
     headerStyle: {
@@ -142,22 +143,45 @@ export const OptionsNavigator = () => {
     );
 };
 
+const ProfileStackNavigator = createStackNavigator();
+
+export const ProfileNavigator = () => {
+    return (
+        <ProfileStackNavigator.Navigator>
+            <ProfileStackNavigator.Screen
+                name='Profile'
+                component={ ProfileScreen }
+                options={ {
+                    headerShown: false
+                } }
+            />
+        </ProfileStackNavigator.Navigator>
+    );
+};
+
 const ActivityDrawerNavigator = createDrawerNavigator();
 
 export const ActivityNavigator = () => {
     return (
         <ActivityDrawerNavigator.Navigator
             screenOptions={ {
-                ...defaultNavOptions, drawerType: 'front', drawerStyle: {
+                ...defaultNavOptions,
+                drawerType: 'front',
+                drawerStyle: {
                     backgroundColor: Colors.dark
                 },
                 drawerActiveTintColor: '#FFF',
                 drawerInactiveTintColor: '#FFF',
                 drawerActiveBackgroundColor: Colors.lightPurple,
+                drawerInactiveBackgroundColor: Colors.darkPurple,
+                overlayColor: '#21183C80',
+                headerTitleAlign: 'center',
                 drawerItemStyle: {
                     marginHorizontal: 40,
-                    borderRadius: 15
-                }
+                    marginVertical: 10,
+                    borderRadius: 20
+                },
+                swipeEdgeWidth: Dimensions.get('window').width / 2
             } }
             drawerContent={ props => {
                 return (
@@ -165,40 +189,46 @@ export const ActivityNavigator = () => {
                         style={ styles.safeAreaView }
                         forceInset={ { top: 'always', horizontal: 'never' } }
                     >
-                        <FocusAwareStatusBar />
-                        <DrawerItem
-                            label={ i18n.t('label') }
-                            onPress={ () => props.navigation.navigate('Overview') }
-                            icon={ () => {
-                                return (
-                                    <Ionicons
-                                        name={ Platform.OS === 'android' ? 'md-compass-outline' : 'ios-compass-outline' }
-                                        size={ 30 }
-                                        color='#FFF'
-                                    />
-                                );
-                            } }
-                            style={ styles.drawerItemContainer }
-                            labelStyle={ styles.drawerItem }
-                        />
-                        <DrawerItemList { ...props } />
-                        <DrawerItem
-                            label={ i18n.t('logout') }
-                            onPress={ () => {
-                                console.log('Logged out!');
-                            } }
-                            icon={ () => {
-                                return (
-                                    <Ionicons
-                                        name={ Platform.OS === 'android' ? 'md-exit-outline' : 'ios-exit-outline' }
-                                        size={ 30 }
-                                        color='#FFF'
-                                    />
-                                );
-                            } }
-                            style={ styles.drawerItemContainer }
-                            labelStyle={ styles.drawerItem }
-                        />
+                        <View style={ styles.mainContainer }>
+                            <FocusAwareStatusBar />
+                            <DrawerItem
+                                label={ i18n.t('label') }
+                                onPress={ () => props.navigation.navigate('Overview') }
+                                icon={ () => {
+                                    return (
+                                        <Ionicons
+                                            name={ Platform.OS === 'android' ? 'md-compass-outline' : 'ios-compass-outline' }
+                                            size={ 30 }
+                                            color='#FFF'
+                                        />
+                                    );
+                                } }
+                                style={ { ...styles.drawerItemContainer, marginBottom: 10 } }
+                                labelStyle={ styles.drawerItem }
+                                inactiveBackgroundColor={ Colors.darkPurple }
+                            />
+                            <DrawerItemList { ...props } />
+                        </View>
+                        <View style={ styles.secondaryContainer }>
+                            <DrawerItem
+                                label={ i18n.t('logout') }
+                                onPress={ () => {
+                                    console.log('Logged out!');
+                                } }
+                                icon={ () => {
+                                    return (
+                                        <Ionicons
+                                            name={ Platform.OS === 'android' ? 'md-exit-outline' : 'ios-exit-outline' }
+                                            size={ 30 }
+                                            color='#FFF'
+                                        />
+                                    );
+                                } }
+                                style={ { ...styles.drawerItemContainer, marginTop: 20 } }
+                                labelStyle={ styles.drawerItem }
+                                inactiveBackgroundColor={ Colors.darkPurple }
+                            />
+                        </View>
                     </SafeAreaView>
                 );
             } }
@@ -235,6 +265,22 @@ export const ActivityNavigator = () => {
                     }
                 } }
             />
+            <ActivityDrawerNavigator.Screen
+                name='ProfileStack'
+                component={ ProfileNavigator }
+                options={ {
+                    title: i18n.t('profile'),
+                    drawerIcon: () => {
+                        return (
+                            <Ionicons
+                                name={ Platform.OS === 'android' ? 'md-person-circle-outline' : 'ios-person-circle-outline' }
+                                size={ 30 }
+                                color='#FFF'
+                            />
+                        );
+                    }
+                } }
+            />
         </ActivityDrawerNavigator.Navigator>
     );
 };
@@ -257,8 +303,7 @@ const styles = StyleSheet.create({
         color: '#FFF'
     },
     drawerItemContainer: {
-        backgroundColor: Colors.dark,
-        borderRadius: 10
+        borderRadius: 20
     },
     logout: {
         color: '#FFF',
@@ -267,5 +312,14 @@ const styles = StyleSheet.create({
     safeAreaView: {
         flex: 1,
         flexDirection: 'column'
+    },
+    mainContainer: {
+        flex: 1,
+        justifyContent: 'flex-start'
+    },
+    secondaryContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: getStatusBarHeight() / 2
     }
 });
