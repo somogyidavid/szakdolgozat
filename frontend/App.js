@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
+import { Provider } from 'react-redux';
+import store from './store/store';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import * as Localization from 'expo-localization';
@@ -32,7 +34,9 @@ const App = () => {
     }
 
     return (
-        <AppNavigator />
+        <Provider store={ store }>
+            <AppNavigator />
+        </Provider>
     );
 };
 

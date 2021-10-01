@@ -8,7 +8,10 @@ export default {
         sights: 'Sights',
         options: 'Options',
         logout: 'Logout',
-        profile: 'My profile'
+        profile: 'My profile',
+        error: 'An error occurred',
+        okay: 'Okay',
+        locationPermissionDenied: 'You need to give permission to get location in order to use this function!'
     },
     hu: {
         label: 'Programajánló App',
@@ -19,6 +22,9 @@ export default {
         sights: 'Nevezetességek',
         options: 'Beállítások',
         logout: 'Kijelentkezés',
-        profile: 'Fiókom'
+        profile: 'Fiókom',
+        error: 'Hiba történt',
+        okay: 'Rendben',
+        locationPermissionDenied: 'Engedélyt kell adnia a pozíció lekérdezéséhez, hogy használhassa ezt a funkciót!'
     }
 };
