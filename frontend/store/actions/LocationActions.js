@@ -10,12 +10,13 @@ export const fetchLocationRequested = () => {
     };
 };
 
-export const fetchLocationSuccess = (location, address) => {
+export const fetchLocationSuccess = (location, address, weather) => {
     return {
         type: FETCH_LOCATION_SUCCESS,
         payload: {
             location,
-            address
+            address,
+            weather
         }
     };
 };

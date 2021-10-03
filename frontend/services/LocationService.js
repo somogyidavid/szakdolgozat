@@ -4,22 +4,25 @@ import ENV from '../constants/env';
 const axios = require('axios');
 
 export const fetchLocation = (location) => {
-    const uri = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${ location.lat },${ location.lng }&sensor=false&key=${ ENV().googleApiKey }`;
+    const addressUri = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${ location.lat },${ location.lng }&sensor=false&key=${ ENV().googleApiKey }`;
+    const weatherUri = `https://api.openweathermap.org/data/2.5/onecall?lat=${ location.lat }&lon=${ location.lng }&units=metric&exclude=minutely&appid=${ ENV().openWeathersApiKey }`;
+
 
     return async (dispatch) => {
         try {
             dispatch(fetchLocationRequested());
 
-            const response = await axios.get(uri);
+            const addressResponse = await axios.get(addressUri);
 
             const address = {
-                formattedAddress: response.data.results[0].formatted_address,
-                city: response.data.results[0].address_components.filter(item => item.types.includes('locality'))[0].long_name
+                formattedAddress: addressResponse.data.results[0].formatted_address,
+                city: addressResponse.data.results[0].address_components.filter(item => item.types.includes('locality'))[0].long_name
             };
 
-            dispatch(fetchLocationSuccess(location, address));
+            const weatherResponse = await axios.get(weatherUri);
+
+            dispatch(fetchLocationSuccess(location, address, weatherResponse.data));
         } catch (err) {
-            console.log(err);
             dispatch(fetchLocationFailed(err));
         }
     };

@@ -10,6 +10,8 @@ const OverviewScreen = props => {
     const dispatch = useDispatch();
     const isLoading = useSelector(state => state.location.isLoading);
     const address = useSelector(state => state.location.address);
+    const location = useSelector(state => state.location.location);
+    const weather = useSelector(state => state.location.weather);
 
     const verifyPermissions = async () => {
         const hasPermissions = Location.getForegroundPermissionsAsync();
@@ -39,10 +41,6 @@ const OverviewScreen = props => {
         }));
     };
 
-    const addressHandler = () => {
-        console.log(address);
-    };
-
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', getLocationHandler);
 
@@ -58,10 +56,6 @@ const OverviewScreen = props => {
     return (
         <View>
             <Text>OverviewScreen</Text>
-            <Button
-                title='Press me'
-                onPress={ addressHandler }
-            />
         </View>
     );
 };
