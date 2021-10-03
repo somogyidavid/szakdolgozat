@@ -1,11 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
+import thunk from 'redux-thunk';
 import LocationReducer from './reducers/LocationReducer';
 
 const rootReducer = combineReducers({
-    location: LocationReducer
+    location: LocationReducer,
 });
 
-const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;

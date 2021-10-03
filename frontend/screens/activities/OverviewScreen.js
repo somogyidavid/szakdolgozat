@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { Alert, Button, StyleSheet, Text, View } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import * as Location from 'expo-location';
 import i18n from 'i18n-js';
 import { fetchLocation } from '../../services/LocationService';
 import AppLoading from 'expo-app-loading';
 
 const OverviewScreen = props => {
+    const dispatch = useDispatch();
     const isLoading = useSelector(state => state.location.isLoading);
+    const address = useSelector(state => state.location.address);
 
     const verifyPermissions = async () => {
         const hasPermissions = Location.getForegroundPermissionsAsync();
@@ -30,11 +32,15 @@ const OverviewScreen = props => {
             return;
         }
 
-        const location = await Location.getLastKnownPositionAsync();
-        fetchLocation({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
-        });
+        const currentLocation = await Location.getLastKnownPositionAsync();
+        dispatch(fetchLocation({
+            lat: currentLocation.coords.latitude,
+            lng: currentLocation.coords.longitude
+        }));
+    };
+
+    const addressHandler = () => {
+        console.log(address);
     };
 
     useEffect(() => {
@@ -52,6 +58,10 @@ const OverviewScreen = props => {
     return (
         <View>
             <Text>OverviewScreen</Text>
+            <Button
+                title='Press me'
+                onPress={ addressHandler }
+            />
         </View>
     );
 };

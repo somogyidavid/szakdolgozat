@@ -10,6 +10,10 @@ const initialState = {
         lat: 47.497913,
         lng: 19.040236
     },
+    address: {
+        formattedAddress: 'Budapest, Hősök tere, 1146',
+        city: 'Budapest'
+    },
     errors: []
 };
 
@@ -29,6 +33,7 @@ const LocationReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 location: payload.location,
+                address: payload.address,
                 errors: []
             };
         }
