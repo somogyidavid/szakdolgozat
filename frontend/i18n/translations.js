@@ -11,6 +11,7 @@ export default {
         profile: 'My profile',
         error: 'An error occurred',
         okay: 'Okay',
+        feelsLike: 'Feels like:',
         locationPermissionDenied: 'You need to give permission to get location in order to use this function!'
     },
     hu: {
@@ -25,6 +26,7 @@ export default {
         profile: 'Fiókom',
         error: 'Hiba történt',
         okay: 'Rendben',
+        feelsLike: 'Hőérzet:',
         locationPermissionDenied: 'Engedélyt kell adnia a pozíció lekérdezéséhez, hogy használhassa ezt a funkciót!'
     }
 };
