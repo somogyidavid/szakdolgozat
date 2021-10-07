@@ -8,6 +8,7 @@ import * as Localization from 'expo-localization';
 import AppNavigator from './navigation/AppNavigator';
 import i18n from 'i18n-js';
 import Translations from './i18n/translations';
+import { Asset } from 'expo-asset';
 
 i18n.translations = Translations;
 i18n.locale = Localization.locale;
@@ -20,13 +21,39 @@ const fetchFonts = () => {
     });
 };
 
+const loadImages = () => {
+    const images = [
+        require('./assets/images/fog.jpeg'),
+        require('./assets/images/snow.jpeg'),
+        require('./assets/images/rain.jpeg'),
+        require('./assets/images/cloud_day.jpeg'),
+        require('./assets/images/cloud_night.jpeg'),
+        require('./assets/images/clear_day.jpeg'),
+        require('./assets/images/clear_night.jpeg'),
+        require('./assets/images/drizzle.jpeg'),
+        require('./assets/images/thunder.jpeg'),
+        require('./assets/images/wind.jpeg')
+    ];
+
+    const cacheImages = images.map(image => {
+        return Asset.fromModule(image).downloadAsync();
+    });
+
+    return Promise.all(cacheImages);
+};
+
+const loadResources = async () => {
+    await fetchFonts();
+    await loadImages();
+};
+
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
 
     if (!fontLoaded) {
         return (
             <AppLoading
-                startAsync={ fetchFonts }
+                startAsync={ loadResources }
                 onFinish={ () => setFontLoaded(true) }
                 onError={ () => Alert.alert('Error!', 'Could not load fonts!', [{ text: 'Okay' }]) }
             />

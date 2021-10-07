@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import {
     ActivityIndicator,
     Alert,
-    Button,
-    ImageBackground,
     Platform,
+    Text,
     ScrollView,
     StyleSheet,
-    Text,
-    View
+    View, Image,
+    RefreshControl
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import * as Location from 'expo-location';
@@ -16,16 +15,14 @@ import i18n from 'i18n-js';
 import { fetchLocation } from '../../services/LocationService';
 import Card from '../../components/Card';
 import Colors from '../../constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
 import { LocationAccuracy } from 'expo-location';
+import { weatherHandler } from '../../helpers/weatherHandler';
 
 const OverviewScreen = props => {
     const dispatch = useDispatch();
     const isLoading = useSelector(state => state.location.isLoading);
     const address = useSelector(state => state.location.address);
-    const location = useSelector(state => state.location.location);
     const weather = useSelector(state => state.location.weather);
-
 
     const verifyPermissions = async () => {
         const hasPermissions = await Location.getForegroundPermissionsAsync();
@@ -47,8 +44,8 @@ const OverviewScreen = props => {
             return;
         }
 
-        const currentLocation = await Location.getCurrentPositionAsync({
-            accuracy: LocationAccuracy.Lowest
+        const currentLocation = await Location.getLastKnownPositionAsync({
+            requiredAccuracy: 50
         });
 
         dispatch(fetchLocation({
@@ -62,7 +59,7 @@ const OverviewScreen = props => {
         return () => {
             unsubscribe();
         };
-    }, []);
+    }, [getLocationHandler]);
 
     if (isLoading) {
         return (
@@ -82,15 +79,28 @@ const OverviewScreen = props => {
                     <Text style={ styles.title }>{ address.city }</Text>
                 </Card>
             </View>
-            <ScrollView contentContainerStyle={ styles.weatherContainer }>
-                <Card style={ styles.weatherCard }>
+            <ScrollView
+                contentContainerStyle={ styles.weatherContainer }
+                refreshControl={ <RefreshControl
+                    refreshing={ isLoading }
+                    onRefresh={ getLocationHandler }
+                /> }
+            >
+                <Card
+                    style={ styles.weatherCard }
+                    image={ require('../../assets/images/clear_day.jpeg') }
+                >
                     <View style={ styles.currentWeather }>
-                        <Ionicons
+                        {/*<Ionicons
                             name={ Platform.OS === 'android' ? 'md-partly-sunny-outline' : 'ios-partly-sunny-outline' }
                             size={ 60 }
                             style={ styles.icon }
+                        />*/ }
+                        <Image
+                            source={ { uri: `http://openweathermap.org/img/wn/${ weather.current.weather[0].icon }@2x.png` } }
+                            style={ styles.icon }
                         />
-                        <Text style={ styles.weatherDetail }>Partly sunny</Text>
+                        <Text style={ styles.weatherDetail }>{ weatherHandler(weather.current.weather[0].id) }</Text>
                     </View>
                     <View style={ styles.currentTemperature }>
                         <Text style={ styles.temperature }>{ weather.current.temp.toFixed(0) }{ String.fromCharCode(8451) }</Text>
@@ -106,7 +116,8 @@ const OverviewScreen = props => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white'
     },
     titleContainer: {
         alignItems: 'center',
@@ -129,30 +140,32 @@ const styles = StyleSheet.create({
     },
     weatherCard: {
         backgroundColor: 'lightblue',
-        marginHorizontal: '5%',
+        marginHorizontal: '3%',
         marginVertical: 20,
         flexDirection: 'row'
     },
     currentWeather: {
         width: '50%',
         alignItems: 'flex-start',
-        paddingLeft: 15
+        paddingLeft: 20,
     },
     weatherDetail: {
         marginBottom: 10,
+        marginLeft: 10,
         fontSize: 16,
         fontFamily: 'open-sans-bold',
-        color: Colors.dark
+        color: 'white'
     },
     currentTemperature: {
         width: '50%',
         justifyContent: 'space-between',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        paddingRight: 10
     },
     temperature: {
         fontFamily: 'open-sans-bold',
         fontSize: 50,
-        color: Colors.dark,
+        color: 'white',
         marginRight: 20,
         marginTop: 10
     },
@@ -160,12 +173,15 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginRight: 15,
         fontFamily: 'open-sans',
-        fontSize: 15
+        fontSize: 15,
+        color: 'white'
     },
     icon: {
-        marginVertical: 10,
-        marginLeft: 5,
-        color: Colors.dark
+        // marginVertical: 10,
+        //marginLeft: 5,
+        // color: 'white'
+        width: 80,
+        height: 80
     },
     loadingSpinner: {
         flex: 1,
