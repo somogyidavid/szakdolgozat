@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, ImageBackground, Platform, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
-import Colors from '../constants/Colors';
 import WeatherBackground from './WeatherBackground';
 
 const Card = props => {
     const TouchableComponent = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
-    if (props.image) {
+    if (props.touchable) {
         return (
             <View style={ { ...styles.card, ...props.style } }>
                 <TouchableComponent
@@ -27,12 +26,7 @@ const Card = props => {
 
     return (
         <View style={ { ...styles.card, ...props.style } }>
-            <TouchableComponent
-                onPress={ props.onPress }
-                background={ TouchableNativeFeedback.Ripple('lightblue', true) }
-            >
-                { props.children }
-            </TouchableComponent>
+            { props.children }
         </View>
     );
 };

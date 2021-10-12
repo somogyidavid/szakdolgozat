@@ -13,6 +13,7 @@ export default {
         okay: 'Okay',
         feelsLike: 'Feels like:',
         locationPermissionDenied: 'You need to give permission to get location in order to use this function!',
+        showDetails: 'Show details',
         // Weather
         thunderstormWithLightRain: 'Thunderstorm with light rain',
         thunderstormWithRain: 'Thunderstorm with rain',
@@ -84,6 +85,7 @@ export default {
         okay: 'Rendben',
         feelsLike: 'Hőérzet:',
         locationPermissionDenied: 'Engedélyt kell adnia a pozíció lekérdezéséhez, hogy használhassa ezt a funkciót!',
+        showDetails: 'Részletek',
         // Időjárás
         thunderstormWithLightRain: 'Zivatar enyhe esővel',
         thunderstormWithRain: 'Zivatar esővel',
