@@ -14,7 +14,6 @@ const Card = props => {
                     background={ TouchableNativeFeedback.Ripple('lightblue', true) }
                 >
                     <WeatherBackground
-                        source={ props.image }
                         style={ styles.background }
                     >
                         { props.children }
@@ -45,11 +44,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     background: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        resizeMode: 'cover',
         flexDirection: 'row'
     }
 });

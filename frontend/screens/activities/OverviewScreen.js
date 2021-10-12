@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-start',
+        backgroundColor: 'rgba(52, 52, 52, 0.3)'
     },
     loadingSpinner: {
         flex: 1,

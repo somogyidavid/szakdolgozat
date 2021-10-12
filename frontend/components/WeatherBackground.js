@@ -1,7 +1,8 @@
 import React from 'react';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import image from '../assets/images/cloud_day.jpeg';
+import { View } from 'react-native-web';
 
 const WeatherBackground = props => {
     const weather = useSelector(state => state.location.weather);
@@ -42,12 +43,20 @@ const WeatherBackground = props => {
 
     return (
         <ImageBackground
-            style={ props.style }
+            style={ { ...styles.background, ...props.style } }
             source={ image }
         >
             { props.children }
         </ImageBackground>
     );
 };
+
+const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%'
+    }
+});
 
 export default WeatherBackground;
