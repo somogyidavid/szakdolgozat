@@ -25,6 +25,8 @@ export default {
         sunday: 'Sunday',
         sunrise: 'Sunrise:',
         sunset: 'Sunset:',
+        today: 'Today',
+        tomorrow: 'Tomorrow',
         // Weather
         thunderstormWithLightRain: 'Thunderstorm with light rain',
         thunderstormWithRain: 'Thunderstorm with rain',
@@ -108,6 +110,8 @@ export default {
         sunday: 'Vasárnap',
         sunrise: 'Napkelte:',
         sunset: 'Napnyugta:',
+        today: 'Ma',
+        tomorrow: 'Holnap',
         // Időjárás
         thunderstormWithLightRain: 'Zivatar enyhe esővel',
         thunderstormWithRain: 'Zivatar esővel',

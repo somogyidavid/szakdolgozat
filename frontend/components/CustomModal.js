@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -11,8 +11,9 @@ import Button from './Button';
 import i18n from 'i18n-js';
 import Colors from '../constants/Colors';
 import Title from './Title';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import WeatherDetailsCard from './WeatherDetailsCard';
+import Card from './Card';
 
 const CustomModal = props => {
     const { weather, address, iconHandler } = props;
@@ -20,6 +21,27 @@ const CustomModal = props => {
     const currentDate = new Date();
     const currentTime = currentDate.getTime();
     const currentDay = i18n.t(weekDays[currentDate.getDay()]);
+
+    const [isToday, setIsToday] = useState(true);
+    const flatListRef = useRef(null);
+
+    const viewabilityConfig = useRef({
+        itemVisiblePercentThreshold: 50,
+    });
+
+    const onViewableItemsChanged = useRef(({ changed, viewableItems }) => {
+        if (changed && changed.length > 0) {
+            changed.forEach(item => {
+                if (item.isViewable) {
+                    if (item.index > 24) {
+                        setIsToday(false);
+                    } else {
+                        setIsToday(true);
+                    }
+                }
+            });
+        }
+    });
 
     const sunHandler = () => {
         if (currentTime < weather.current.sunset * 1000) {
@@ -57,7 +79,11 @@ const CustomModal = props => {
                             titleStyle={ styles.titleStyle }
                         />
                     </View>
-                    <ScrollView showsVerticalScrollIndicator={ false }>
+                    <ScrollView
+                        showsVerticalScrollIndicator={ false }
+                        directionalLockEnabled={ false }
+                        horizontal={ false }
+                    >
                         <View style={ styles.headerContainer }>
                             <View>
                                 { iconHandler() }
@@ -77,7 +103,7 @@ const CustomModal = props => {
                             <Text style={ styles.smallText }>{ address.city }</Text>
                         </View>
                         <View style={ styles.rowContainer }>
-                            <Text style={ styles.smallText }>{ i18n.t('feelsLike') + ' ' + weather.current.feels_like + String.fromCharCode(8451) }</Text>
+                            <Text style={ styles.smallText }>{ i18n.t('feelsLike') } { weather.current.feels_like.toFixed(0) + String.fromCharCode(8451) }</Text>
                             <Entypo
                                 name='flow-line'
                                 size={ 24 }
@@ -86,19 +112,133 @@ const CustomModal = props => {
                             { sunHandler() }
                         </View>
                         <View style={ styles.rowContainer }>
-                            <Button title='Today' />
-
-                            <Button title='Tomorrow' />
+                            <View>
+                                <Button
+                                    title={ i18n.t('today') }
+                                    onPress={ () => {
+                                        if (flatListRef.current) {
+                                            flatListRef.current.scrollToIndex({ index: 0 });
+                                        }
+                                    } }
+                                    titleStyle={ isToday ? { color: 'white' } : { color: Colors.light } }
+                                />
+                                { isToday && <View style={ styles.centered }><Entypo
+                                    name='dot-single'
+                                    size={ 22 }
+                                    color='white'
+                                /></View> }
+                            </View>
+                            <View>
+                                <Button
+                                    title={ i18n.t('tomorrow') }
+                                    onPress={ () => {
+                                        if (flatListRef.current) {
+                                            flatListRef.current.scrollToIndex({ index: 25 });
+                                        }
+                                    } }
+                                    titleStyle={ !isToday ? { color: 'white' } : { color: Colors.light } }
+                                />
+                                { !isToday && <View style={ styles.centered }><Entypo
+                                    name='dot-single'
+                                    size={ 22 }
+                                    color='white'
+                                /></View> }
+                            </View>
                         </View>
                         <View style={ styles.flatListContainer }>
                             <FlatList
+                                ref={ flatListRef }
                                 data={ weather.hourly }
-                                renderItem={ () => <WeatherDetailsCard weather={ weather.hourly } /> }
-                                keyExtractor={ item => item.dt.toString() }
+                                renderItem={ ({ index }) => <WeatherDetailsCard
+                                    weather={ weather.hourly[index] }
+                                /> }
+                                keyExtractor={ (item, index) => index.toString() }
                                 horizontal={ true }
                                 showsHorizontalScrollIndicator={ false }
                                 overScrollMode='never'
+                                viewabilityConfig={ viewabilityConfig.current }
+                                onViewableItemsChanged={ onViewableItemsChanged.current }
                             />
+                        </View>
+                        <View style={ { alignItems: 'center', marginTop: 10 } }>
+                            <View style={ styles.row }>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Feather
+                                            name='wind'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> WIND</Text>
+                                    </View>
+                                    <Text style={ styles.smallText }>{ weather.current.wind_speed } km/h</Text>
+                                </Card>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Feather
+                                            name='sun'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> UV INDEX</Text>
+                                    </View>
+                                    <Text style={ styles.smallText }>{ weather.current.uvi } - LOW</Text>
+                                </Card>
+                            </View>
+                            <View style={ styles.row }>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Entypo
+                                            name='water'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> HUMIDITY</Text>
+                                    </View>
+                                    <Text style={ styles.smallText }>{ weather.current.humidity }%</Text>
+                                    <Text style={ styles.cardText }>
+                                        The dew point is { weather.current.dew_point }
+                                        { String.fromCharCode(8451) } right now.
+                                    </Text>
+                                </Card>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Ionicons
+                                            name='rainy'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> RAIN</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>
+                                        { weather.current.rain ? weather.current.rain : 0 } mm rain expected today.
+                                    </Text>
+                                </Card>
+                            </View>
+                            <View style={ styles.row }>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <FontAwesome
+                                            name='tachometer'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> PRESSURE</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>{ weather.current.pressure } hPA</Text>
+                                </Card>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Entypo
+                                            name='eye'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> VISIBILITY</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>{ weather.current.visibility / 1000 } km</Text>
+                                </Card>
+                            </View>
                         </View>
                     </ScrollView>
                     <Button
@@ -111,7 +251,8 @@ const CustomModal = props => {
                 </View>
             </View>
         </Modal>
-    );
+    )
+        ;
 };
 
 const styles = StyleSheet.create({
@@ -136,7 +277,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         flexDirection: 'row',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     rowContainer: {
         flexDirection: 'row',
@@ -187,6 +328,21 @@ const styles = StyleSheet.create({
     closeButton: {
         marginVertical: 5,
         height: 45
+    },
+    card: {
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        backgroundColor: Colors.lightPurple,
+        width: '40%',
+        height: 120,
+        margin: 10
+    },
+    cardText: {
+        color: 'white',
+        paddingLeft: 5,
+    },
+    row: {
+        flexDirection: 'row'
     }
 });
 

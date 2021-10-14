@@ -12,8 +12,8 @@ const Button = props => {
                 background={ TouchableNativeFeedback.Ripple('grey', false) }
                 onPress={ props.onPress }
             >
-                <View style={ styles.button }>
-                    <Text style={ styles.title }>{ props.title }</Text>
+                <View style={ { ...styles.button, ...props.buttonStyle } }>
+                    <Text style={ { ...styles.title, ...props.titleStyle } }>{ props.title }</Text>
 
                     { props.icon && <Ionicons
                         name={ props.iconName }
@@ -30,7 +30,7 @@ const Button = props => {
 const styles = StyleSheet.create({
     buttonContainer: {
         borderRadius: 20,
-        overflow: 'hidden'
+        overflow: 'hidden',
     },
     button: {
         flex: 1,
