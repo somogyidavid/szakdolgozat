@@ -4,13 +4,15 @@ import {
     StyleSheet,
     Modal,
     Text,
-    Platform
+    Platform,
+    FlatList, ScrollView
 } from 'react-native';
 import Button from './Button';
 import i18n from 'i18n-js';
 import Colors from '../constants/Colors';
 import Title from './Title';
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import WeatherDetailsCard from './WeatherDetailsCard';
 
 const CustomModal = props => {
     const { weather, address, iconHandler } = props;
@@ -24,7 +26,7 @@ const CustomModal = props => {
             const sunset = new Date(weather.current.sunset * 1000).toLocaleTimeString(navigator.language, {
                 hour: '2-digit',
                 minute: '2-digit'
-            });
+            }).substring(0, 5);
             return (
                 <Text style={ styles.smallText }>{ i18n.t('sunset') } { sunset }</Text>
             );
@@ -48,35 +50,57 @@ const CustomModal = props => {
         >
             <View style={ styles.modalContainer }>
                 <View style={ styles.modalContent }>
-                    <Title
-                        content={ i18n.t('weatherForecast') }
-                        style={ styles.title }
-                        titleStyle={ styles.titleStyle }
-                    />
-                    <View style={ { flex: 1, flexDirection: 'row' } }>
-                        <View style={ { flex: 1, alignItems: 'flex-end' } }>{ iconHandler() }</View>
-                        <View style={ { flex: 1, flexDirection: 'column', paddingTop: 10 } }>
-                            <Text style={ styles.currentDay }>{ currentDay }</Text>
-                            <Text style={ styles.smallText }>{ currentDate.toISOString().slice(0, 10).replace(/-/g, '.') }</Text>
-                        </View>
-                    </View>
-                    <View style={ styles.temperatureContainer }>
-                        <Text style={ styles.temperature }>{ weather.current.temp.toFixed(0) }</Text>
-                        <Text style={ styles.superscript }>{ String.fromCharCode(8451) }</Text>
-                    </View>
-                    <View style={ { flex: 1 } }>
-                        <Text style={ styles.smallText }>{ address.formattedAddress }</Text>
-                    </View>
-                    <View style={ { flex: 1, flexDirection: 'row' } }>
-                        <Text style={ styles.smallText }>{ i18n.t('feelsLike') + ' ' + weather.current.feels_like.toFixed(0) }{ String.fromCharCode(8451) }</Text>
-                        <Entypo
-                            name={ 'flow-line' }
-                            size={ 23 }
-                            color='white'
-                            style={ { marginHorizontal: 10 } }
+                    <View style={ styles.titleContainer }>
+                        <Title
+                            content={ i18n.t('weatherForecast') }
+                            style={ styles.title }
+                            titleStyle={ styles.titleStyle }
                         />
-                        { sunHandler() }
                     </View>
+                    <ScrollView showsVerticalScrollIndicator={ false }>
+                        <View style={ styles.headerContainer }>
+                            <View>
+                                { iconHandler() }
+                            </View>
+                            <View style={ styles.today }>
+                                <Text style={ styles.currentDay }>{ currentDay }</Text>
+                                <Text style={ styles.smallText }>{ currentDate.toISOString().slice(0, 10).replace(/-/g, '.') }</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <View style={ styles.headerContainer }>
+                                <Text style={ styles.temperature }>{ weather.current.temp.toFixed(0) }</Text>
+                                <Text style={ styles.superscript }>{ String.fromCharCode(8451) }</Text>
+                            </View>
+                        </View>
+                        <View style={ styles.centered }>
+                            <Text style={ styles.smallText }>{ address.city }</Text>
+                        </View>
+                        <View style={ styles.rowContainer }>
+                            <Text style={ styles.smallText }>{ i18n.t('feelsLike') + ' ' + weather.current.feels_like + String.fromCharCode(8451) }</Text>
+                            <Entypo
+                                name='flow-line'
+                                size={ 24 }
+                                color='white'
+                            />
+                            { sunHandler() }
+                        </View>
+                        <View style={ styles.rowContainer }>
+                            <Button title='Today' />
+
+                            <Button title='Tomorrow' />
+                        </View>
+                        <View style={ styles.flatListContainer }>
+                            <FlatList
+                                data={ weather.hourly }
+                                renderItem={ () => <WeatherDetailsCard weather={ weather.hourly } /> }
+                                keyExtractor={ item => item.dt.toString() }
+                                horizontal={ true }
+                                showsHorizontalScrollIndicator={ false }
+                                overScrollMode='never'
+                            />
+                        </View>
+                    </ScrollView>
                     <Button
                         title={ i18n.t('back') }
                         style={ styles.closeButton }
@@ -91,17 +115,8 @@ const CustomModal = props => {
 };
 
 const styles = StyleSheet.create({
-    title: {
-        marginVertical: 10
-    },
-    titleStyle: {
-        color: 'white',
-        fontSize: 18,
-        paddingHorizontal: 10
-    },
     modalContainer: {
         flex: 1,
-        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.6)'
@@ -110,31 +125,48 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '95%',
         alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: Colors.dark,
         borderRadius: 40,
         padding: 10,
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.5,
-        elevation: 5
+        overflow: 'hidden'
     },
-    closeButton: {
-        marginVertical: 20,
-        height: 50
+    titleContainer: {
+        alignItems: 'center'
     },
-    temperatureContainer: {
-        flex: 1,
+    headerContainer: {
         flexDirection: 'row',
-        marginTop: 10,
         justifyContent: 'center'
+    },
+    rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        marginVertical: 10,
+        alignItems: 'center'
+    },
+    flatListContainer: {
+        margin: 10,
+        backgroundColor: Colors.dark
+    },
+    centered: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    today: {
+        justifyContent: 'center',
+    },
+    title: {
+        marginVertical: 10,
+        width: '100%',
+    },
+    titleStyle: {
+        color: 'white',
+        fontSize: 18,
+        paddingHorizontal: 10
     },
     temperature: {
         color: 'white',
-        fontSize: 60,
+        fontSize: 80,
         fontFamily: 'open-sans-bold'
     },
     superscript: {
@@ -150,7 +182,11 @@ const styles = StyleSheet.create({
     smallText: {
         color: 'white',
         fontSize: 16,
-        fontFamily: 'open-sans'
+        fontFamily: 'open-sans',
+    },
+    closeButton: {
+        marginVertical: 5,
+        height: 45
     }
 });
 

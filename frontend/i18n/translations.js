@@ -97,7 +97,7 @@ export default {
         feelsLike: 'Hőérzet:',
         locationPermissionDenied: 'Engedélyt kell adnia a pozíció lekérdezéséhez, hogy használhassa ezt a funkciót!',
         details: 'Részletek',
-        weatherForecast: 'Időjárás Előrejelzés',
+        weatherForecast: 'Időjárás előrejelzés',
         back: 'Vissza',
         monday: 'Hétfő',
         tuesday: 'Kedd',

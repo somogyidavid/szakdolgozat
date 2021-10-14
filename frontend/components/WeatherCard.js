@@ -106,13 +106,16 @@ const WeatherCard = props => {
                 <Card
                     style={ styles.weatherCard }
                     touchable
+                    onPress={ () => setModalVisible(true) }
                 >
                     <View style={ styles.currentWeather }>
                         { iconHandler() }
                         <Text style={ styles.weatherDetail }>{ weatherHandler(weather.current.weather[0].id) }</Text>
                     </View>
                     <View style={ styles.currentTemperature }>
-                        <Text style={ styles.temperature }>{ weather.current.temp.toFixed(0) }{ String.fromCharCode(8451) }</Text>
+                        <View style={ styles.temperatureContainer }>
+                            <Text style={ styles.temperature }>{ weather.current.temp.toFixed(0) }{ String.fromCharCode(8451) }</Text>
+                        </View>
                         <Text style={ styles.feelsLike }>
                             { i18n.t('feelsLike') } { weather.current.feels_like.toFixed(0) }{ String.fromCharCode(8451) }
                         </Text>
@@ -121,7 +124,7 @@ const WeatherCard = props => {
                 <View style={ styles.buttonContainer }>
                     <Button
                         title={ i18n.t('details') }
-                        onPress={ () => setModalVisible(true) }
+                        onPress={ () => console.log('Open another modal') }
                         icon
                         iconName={ Platform.OS === 'android' ? 'md-arrow-down-circle-outline' : 'ios-arrow-down-circle-outline' }
                     />
@@ -164,14 +167,16 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         marginRight: 10
     },
+    temperatureContainer: {
+        backgroundColor: 'rgba(52, 52, 52, 0.25)',
+        borderRadius: 20,
+        marginRight: 20,
+    },
     temperature: {
         fontFamily: 'open-sans-bold',
         fontSize: 50,
         color: 'white',
-        backgroundColor: 'rgba(52, 52, 52, 0.25)',
-        marginRight: 20,
         marginTop: 10,
-        borderRadius: 20,
         paddingHorizontal: 5
     },
     feelsLike: {
