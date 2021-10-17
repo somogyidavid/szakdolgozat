@@ -82,7 +82,12 @@ export default {
         fewClouds: 'Few clouds',
         scatteredClouds: 'Scattered clouds',
         brokenClouds: 'Broken clouds',
-        overcastClouds: 'Overcast clouds'
+        overcastClouds: 'Overcast clouds',
+        low: 'LOW',
+        moderate: 'MODERATE',
+        high: 'HIGH',
+        veryHigh: 'VERY HIGH',
+        extreme: 'EXTREME'
     },
     hu: {
         label: 'Programajánló App',
@@ -167,6 +172,11 @@ export default {
         fewClouds: 'Gyengén felhős',
         scatteredClouds: 'Közepesen felhős',
         brokenClouds: 'Erősen felhős',
-        overcastClouds: 'Borult'
+        overcastClouds: 'Borult',
+        low: 'GYENGE',
+        moderate: 'MÉRSÉKELT',
+        high: 'MAGAS',
+        veryHigh: 'NAGYON MAGAS',
+        extreme: 'EXTRÉM'
     }
 };

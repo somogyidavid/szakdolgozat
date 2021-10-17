@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -14,6 +14,7 @@ import Title from './Title';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import WeatherDetailsCard from './WeatherDetailsCard';
 import Card from './Card';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const CustomModal = props => {
     const { weather, address, iconHandler } = props;
@@ -23,7 +24,12 @@ const CustomModal = props => {
     const currentDay = i18n.t(weekDays[currentDate.getDay()]);
 
     const [isToday, setIsToday] = useState(true);
+    const [uvLevel, setUvLevel] = useState('LOW');
     const flatListRef = useRef(null);
+
+    useEffect(() => {
+        uvLevelHandler();
+    }, [weather.current.uvi]);
 
     const viewabilityConfig = useRef({
         itemVisiblePercentThreshold: 50,
@@ -60,6 +66,55 @@ const CustomModal = props => {
             return (
                 <Text style={ styles.smallText }>{ i18n.t('sunrise') } { sunrise }</Text>
             );
+        }
+    };
+
+    const windIconHandler = () => {
+        const degree = weather.current.wind_deg;
+        const value = Math.floor((degree / 45) + 0.5);
+        let iconNames = ['arrow-up', 'arrow-up-right', 'arrow-right', 'arrow-down-right', 'arrow-down', 'arrow-down-left', 'arrow-left', 'arrow-up-left'];
+        let iconName = iconNames[(value % 8)];
+
+        return (
+            <Feather
+                name={ iconName }
+                size={ 24 }
+                color='white'
+            />
+        );
+    };
+
+    const uvArrowHandler = () => {
+        const uvi = weather.current.uvi;
+
+        if (uvi < 4) {
+            return {
+                paddingRight: `${ 80 - uvi * 2 * 10 }%`
+            };
+        } else if (uvi > 4 && uvi <= 8) {
+            return {
+                paddingLeft: `${ 80 - uvi * 2 * 10 }%`
+            };
+        } else {
+            return {
+                paddingLeft: '80%'
+            };
+        }
+    };
+
+    const uvLevelHandler = () => {
+        const uvi = weather.current.uvi;
+
+        if (uvi >= 0 && uvi < 3) {
+            setUvLevel(i18n.t('low'));
+        } else if (uvi >= 3 && uvi < 5) {
+            setUvLevel(i18n.t('moderate'));
+        } else if (uvi >= 5 && uvi < 7) {
+            setUvLevel(i18n.t('high'));
+        } else if (uvi >= 7 && uvi < 8) {
+            setUvLevel('veryHigh');
+        } else if (uvi >= 8) {
+            setUvLevel('extreme');
         }
     };
 
@@ -171,10 +226,11 @@ const CustomModal = props => {
                                         />
                                         <Text style={ styles.smallText }> WIND</Text>
                                     </View>
+                                    { windIconHandler() }
                                     <Text style={ styles.smallText }>{ weather.current.wind_speed } km/h</Text>
                                 </Card>
                                 <Card style={ styles.card }>
-                                    <View style={ styles.row }>
+                                    <View style={ { ...styles.row, paddingVertical: '10%' } }>
                                         <Feather
                                             name='sun'
                                             size={ 20 }
@@ -182,7 +238,22 @@ const CustomModal = props => {
                                         />
                                         <Text style={ styles.smallText }> UV INDEX</Text>
                                     </View>
-                                    <Text style={ styles.smallText }>{ weather.current.uvi } - LOW</Text>
+                                    <LinearGradient
+                                        colors={ ['green', 'yellow', 'orange', 'red', 'magenta'] }
+                                        start={ { x: 0, y: 1 } }
+                                        end={ { x: 1, y: 0 } }
+                                        style={ { width: '80%', height: '10%' } }
+                                    >
+                                        <View />
+                                    </LinearGradient>
+                                    <Ionicons
+                                        name='caret-up-outline'
+                                        size={ 16 }
+                                        color='white'
+                                        style={ uvArrowHandler() }
+                                    />
+                                    <Text style={ styles.smallText }>{ weather.current.uvi }</Text>
+                                    <Text style={ styles.smallText }>{ uvLevel }</Text>
                                 </Card>
                             </View>
                             <View style={ styles.row }>
@@ -237,6 +308,34 @@ const CustomModal = props => {
                                         <Text style={ styles.smallText }> VISIBILITY</Text>
                                     </View>
                                     <Text style={ styles.cardText }>{ weather.current.visibility / 1000 } km</Text>
+                                </Card>
+                            </View>
+                            <View style={ styles.row }>
+                                { weather.current.snow && <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Ionicons
+                                            name='snow'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> SNOW</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>
+                                        { weather.current.snow ? weather.current.snow : 0 } mm snow is expected today.
+                                    </Text>
+                                </Card> }
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Ionicons
+                                            name='cloudy'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> CLOUDS</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>
+                                        { weather.current.clouds } % cloudiness right now.
+                                    </Text>
                                 </Card>
                             </View>
                         </View>
@@ -339,10 +438,12 @@ const styles = StyleSheet.create({
     },
     cardText: {
         color: 'white',
-        paddingLeft: 5,
+        paddingHorizontal: '5%'
     },
     row: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
