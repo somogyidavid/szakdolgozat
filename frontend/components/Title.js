@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'open-sans-bold',
         fontSize: 22,
-        color: Colors.light,
+        color: 'rgba(255, 255, 255, 0.85)',
         padding: 5
     },
 });

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import Button from './Button';
 import WeatherTableItem from './WeatherTableItem';
 
 const WeatherTable = props => {
@@ -13,6 +12,7 @@ const WeatherTable = props => {
                 /> }
                 keyExtractor={ (item, index) => index.toString() }
                 horizontal={ true }
+                showsHorizontalScrollIndicator={ false }
             />
         </View>
     );

@@ -16,7 +16,7 @@ import WeatherDetailsCard from './WeatherDetailsCard';
 import Card from './Card';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const CustomModal = props => {
+const CurrentWeatherModal = props => {
     const { weather, address, iconHandler } = props;
     const weekDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const currentDate = new Date();
@@ -200,7 +200,7 @@ const CustomModal = props => {
                                 /></View> }
                             </View>
                         </View>
-                        <View style={ styles.flatListContainer }>
+                        { !props.weekly && <View style={ styles.flatListContainer }>
                             <FlatList
                                 ref={ flatListRef }
                                 data={ weather.hourly }
@@ -214,7 +214,7 @@ const CustomModal = props => {
                                 viewabilityConfig={ viewabilityConfig.current }
                                 onViewableItemsChanged={ onViewableItemsChanged.current }
                             />
-                        </View>
+                        </View> }
                         <View style={ { alignItems: 'center', marginTop: 10 } }>
                             <View style={ styles.row }>
                                 <Card style={ styles.card }>
@@ -446,4 +446,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CustomModal;
+export default CurrentWeatherModal;

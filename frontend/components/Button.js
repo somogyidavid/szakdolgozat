@@ -18,7 +18,7 @@ const Button = props => {
                     { props.icon && <Ionicons
                         name={ props.iconName }
                         size={ 25 }
-                        color={ Colors.light }
+                        color='white'
                         style={ styles.icon }
                     /> }
                 </View>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'open-sans-bold',
         fontSize: 18,
-        color: Colors.light,
+        color: 'white',
     },
     icon: {
         paddingLeft: 10

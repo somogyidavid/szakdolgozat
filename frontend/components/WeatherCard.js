@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, Platform, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Colors from '../constants/Colors';
@@ -9,7 +9,7 @@ import * as Location from 'expo-location';
 import { fetchLocation } from '../services/LocationService';
 import { Ionicons } from '@expo/vector-icons';
 import Button from './Button';
-import CustomModal from './CustomModal';
+import CurrentWeatherModal from './CurrentWeatherModal';
 import Title from './Title';
 import WeatherTable from './WeatherTable';
 
@@ -89,7 +89,7 @@ const WeatherCard = props => {
 
     return (
         <View style={ styles.container }>
-            <CustomModal
+            <CurrentWeatherModal
                 visible={ modalVisible }
                 closeModal={ () => setModalVisible(false) }
                 weather={ weather }
@@ -97,6 +97,7 @@ const WeatherCard = props => {
                 iconHandler={ iconHandler }
             />
             <ScrollView
+                showsVerticalScrollIndicator={ false }
                 contentContainerStyle={ styles.weatherContainer }
                 refreshControl={ <RefreshControl
                     refreshing={ isLoading }
@@ -134,9 +135,8 @@ const WeatherCard = props => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.dark,
-        borderRadius: 30,
-        margin: 10
+        backgroundColor: Colors.palePurple,
+        padding: 5
     },
     weatherCard: {
         backgroundColor: 'lightblue',

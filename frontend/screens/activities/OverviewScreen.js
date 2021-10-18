@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        backgroundColor: 'rgba(52, 52, 52, 0.3)'
+        justifyContent: 'space-evenly',
     },
     loadingSpinner: {
         flex: 1,
+        backgroundColor: Colors.palePurple,
         justifyContent: 'center',
         alignItems: 'center',
     },
