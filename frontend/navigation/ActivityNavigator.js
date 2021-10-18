@@ -181,7 +181,7 @@ export const ActivityNavigator = () => {
                     marginVertical: 10,
                     borderRadius: 20
                 },
-                swipeEdgeWidth: Dimensions.get('window').width / 2
+                swipeEdgeWidth: Dimensions.get('window').width / 5
             } }
             drawerContent={ props => {
                 return (

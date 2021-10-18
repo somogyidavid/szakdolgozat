@@ -224,7 +224,7 @@ const CustomModal = props => {
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> WIND</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('wind') }</Text>
                                     </View>
                                     { windIconHandler() }
                                     <Text style={ styles.smallText }>{ weather.current.wind_speed } km/h</Text>
@@ -236,7 +236,7 @@ const CustomModal = props => {
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> UV INDEX</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('uvIndex') }</Text>
                                     </View>
                                     <LinearGradient
                                         colors={ ['green', 'yellow', 'orange', 'red', 'magenta'] }
@@ -264,12 +264,11 @@ const CustomModal = props => {
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> HUMIDITY</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('humidity') }</Text>
                                     </View>
                                     <Text style={ styles.smallText }>{ weather.current.humidity }%</Text>
                                     <Text style={ styles.cardText }>
-                                        The dew point is { weather.current.dew_point }
-                                        { String.fromCharCode(8451) } right now.
+                                        { i18n.t('dewPoint').replace('VALUE', weather.current.dew_point) }
                                     </Text>
                                 </Card>
                                 <Card style={ styles.card }>
@@ -279,24 +278,26 @@ const CustomModal = props => {
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> RAIN</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('rain') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { weather.current.rain ? weather.current.rain : 0 } mm rain expected today.
+                                        { i18n.t('expectedRain').replace('VALUE', weather.current.rain ? weather.current.rain : 0) }
                                     </Text>
                                 </Card>
                             </View>
                             <View style={ styles.row }>
                                 <Card style={ styles.card }>
                                     <View style={ styles.row }>
-                                        <FontAwesome
-                                            name='tachometer'
+                                        <Ionicons
+                                            name='cloudy'
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> PRESSURE</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('clouds') }</Text>
                                     </View>
-                                    <Text style={ styles.cardText }>{ weather.current.pressure } hPA</Text>
+                                    <Text style={ styles.cardText }>
+                                        { i18n.t('cloudiness').replace('VALUE', weather.current.clouds) }
+                                    </Text>
                                 </Card>
                                 <Card style={ styles.card }>
                                     <View style={ styles.row }>
@@ -305,7 +306,7 @@ const CustomModal = props => {
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> VISIBILITY</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('visibility') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>{ weather.current.visibility / 1000 } km</Text>
                                 </Card>
@@ -318,24 +319,22 @@ const CustomModal = props => {
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> SNOW</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('snow').toUpperCase() }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { weather.current.snow ? weather.current.snow : 0 } mm snow is expected today.
+                                        { i18n.t('expectedSnow').replace('VALUE', weather.current.snow ? weather.current.snow : 0) }
                                     </Text>
                                 </Card> }
                                 <Card style={ styles.card }>
                                     <View style={ styles.row }>
-                                        <Ionicons
-                                            name='cloudy'
+                                        <FontAwesome
+                                            name='tachometer'
                                             size={ 20 }
                                             color='white'
                                         />
-                                        <Text style={ styles.smallText }> CLOUDS</Text>
+                                        <Text style={ styles.smallText }> { i18n.t('pressure') }</Text>
                                     </View>
-                                    <Text style={ styles.cardText }>
-                                        { weather.current.clouds } % cloudiness right now.
-                                    </Text>
+                                    <Text style={ styles.cardText }>{ weather.current.pressure } hPA</Text>
                                 </Card>
                             </View>
                         </View>
@@ -362,7 +361,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.6)'
     },
     modalContent: {
-        width: '90%',
+        width: '95%',
         height: '95%',
         alignItems: 'center',
         justifyContent: 'space-between',

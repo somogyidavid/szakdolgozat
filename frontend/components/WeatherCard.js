@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Button from './Button';
 import CustomModal from './CustomModal';
 import Title from './Title';
+import WeatherTable from './WeatherTable';
 
 const WeatherCard = props => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -121,14 +122,10 @@ const WeatherCard = props => {
                         </Text>
                     </View>
                 </Card>
-                <View style={ styles.buttonContainer }>
-                    <Button
-                        title={ i18n.t('details') }
-                        onPress={ () => console.log('Open another modal') }
-                        icon
-                        iconName={ Platform.OS === 'android' ? 'md-arrow-down-circle-outline' : 'ios-arrow-down-circle-outline' }
-                    />
-                </View>
+                <Title content={ i18n.t('sevenDaysForecast') } />
+                <WeatherTable
+                    weather={ weather.daily }
+                />
             </ScrollView>
         </View>
     );
