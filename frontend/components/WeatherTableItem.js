@@ -1,13 +1,24 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, Platform, TouchableNativeFeedback, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    Platform,
+    TouchableNativeFeedback,
+    TouchableOpacity,
+    Modal
+} from 'react-native';
 import i18n from 'i18n-js';
 import Title from './Title';
 import Colors from '../constants/Colors';
 import Button from './Button';
 import { Ionicons } from '@expo/vector-icons';
+import WeeklyWeatherModal from './WeeklyWeatherModal';
 
 const WeatherTableItem = props => {
     const { weather } = props;
+    const [modalVisible, setModalVisible] = useState(false);
     const shortDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     const date = new Date(weather.dt * 1000);
     const day = i18n.t(shortDays[date.getDay()]);
@@ -16,6 +27,11 @@ const WeatherTableItem = props => {
 
     return (
         <View style={ styles.container }>
+            <WeeklyWeatherModal
+                visible={ modalVisible }
+                closeModal={ () => setModalVisible(false) }
+                weather={ weather }
+            />
             <Text style={ styles.text }>{ day }</Text>
             <Image
                 source={ { uri: `http://openweathermap.org/img/wn/${ weather.weather[0].icon }@2x.png` } }
@@ -39,6 +55,7 @@ const WeatherTableItem = props => {
             <Button
                 title='...'
                 style={ { flex: 1, marginTop: 5 } }
+                onPress={ () => setModalVisible(true) }
             />
         </View>
     );

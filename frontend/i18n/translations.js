@@ -33,6 +33,8 @@ export default {
         sun: 'Sun',
         sunrise: 'Sunrise:',
         sunset: 'Sunset:',
+        moonrise: 'Moonrise:',
+        moonset: 'Moonset:',
         today: 'Today',
         tomorrow: 'Tomorrow',
         // Weather
@@ -142,6 +144,8 @@ export default {
         sun: 'V',
         sunrise: 'Napkelte:',
         sunset: 'Napnyugta:',
+        moonrise: 'Holdkelte:',
+        moonset: 'Holdnyugta',
         today: 'Ma',
         tomorrow: 'Holnap',
         // Időjárás
