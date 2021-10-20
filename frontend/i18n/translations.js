@@ -108,7 +108,11 @@ export default {
         dewPoint: `The dew point is VALUE${ String.fromCharCode(8451) } right now.`,
         expectedRain: 'VALUE mm rain expected today.',
         cloudiness: 'VALUE% cloudiness right now',
-        expectedSnow: 'VALUE mm snow expected today'
+        expectedSnow: 'VALUE mm snow expected today',
+        dewPointFuture: `The dew point will be VALUE${ String.fromCharCode(8451) } on this day.`,
+        expectedRainFuture: 'VALUE mm rain expected this day.',
+        cloudinessFuture: 'VALUE% cloudiness expected this day.',
+        expectedSnowFuture: 'VALUE mm snow expected this day.'
     },
     hu: {
         label: 'Programajánló App',
@@ -219,6 +223,10 @@ export default {
         dewPoint: `A harmatpont VALUE${ String.fromCharCode(8451) } jelenleg.`,
         expectedRain: 'VALUE mm csapadék várható ma.',
         cloudiness: 'Jelenleg az ég VALUE%-át borítja felhőzet.',
-        expectedSnow: 'VALUE mm havazás várható ma.'
+        expectedSnow: 'VALUE mm havazás várható ma.',
+        dewPointFuture: `A harmatpont VALUE${ String.fromCharCode(8451) } lesz ezen a napon.`,
+        expectedRainFuture: 'VALUE mm csapadék várható ezen a napon.',
+        cloudinessFuture: 'Ezen a napon az ég VALUE%-át fogja borítani felhőzet.',
+        expectedSnowFuture: 'VALUE mm havazás várható ezen a napon.',
     }
 };

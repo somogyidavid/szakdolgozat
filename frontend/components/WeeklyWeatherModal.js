@@ -1,20 +1,138 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Modal, Platform, Image, ScrollView } from 'react-native';
 import Colors from '../constants/Colors';
 import Button from './Button';
 import i18n from 'i18n-js';
 import { useSelector } from 'react-redux';
 import Title from './Title';
-import { Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import MaterialCommunityIcon from 'react-native-paper/src/components/MaterialCommunityIcon';
+import Card from './Card';
+import { LinearGradient } from 'expo-linear-gradient';
+import WeatherChart from 'react-native-weather-chart/src/WeatherChart/WeatherChart';
+import SeparatorLine from './SeparatorLine';
 
 const WeeklyWeatherModal = props => {
     const { weather } = props;
+    const [uvLevel, setUvLevel] = useState();
     const address = useSelector(state => state.location.address);
+
+    useEffect(() => {
+        uvLevelHandler();
+    }, [weather.uvi]);
 
     const weekDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const date = new Date(weather.dt * 1000);
     const day = i18n.t(weekDays[date.getDay()]);
+    const data = {
+        values: [weather.temp.morn, weather.temp.day, weather.temp.eve, weather.temp.night],
+        textTop: [
+            weather.temp.morn + String.fromCharCode(8451),
+            weather.temp.day + String.fromCharCode(8451),
+            weather.temp.eve + String.fromCharCode(8451),
+            weather.temp.night + String.fromCharCode(8451)
+        ],
+        textBottom: ['Morning', 'Day', 'Evening', 'Night']
+    };
+
+    const settings = {
+        showTextTop: true,
+        showTextBottom: true,
+        showIconTop: false,
+        showIconBottom: false,
+        colSpace: 100,
+        fontSizeTop: 16,
+        fontSizeBottom: 16,
+        markerSize: 6,
+        markerStrokeSize: 2,
+        lineColor: 'white',
+        vlineColor: 'white',
+        topTextColor: 'white',
+        bottomTextColor: 'white',
+        noDataText: 'ERROR',
+        noDataTextColor: 'white'
+    };
+
+    const moonHandler = () => {
+        const phase = weather.moon_phase;
+        let moon = 'moon-full';
+
+        if (phase === 1 || phase === 0) {
+            moon = 'moon-new';
+        } else if (phase > 0 && phase < 0.25) {
+            moon = 'moon-waxing-crescent';
+        } else if (phase === 0.25) {
+            moon = 'moon-first-quarter';
+        } else if (phase > 0.25 && phase < 0.5) {
+            moon = 'moon-waxing-gibbous';
+        } else if (phase === 0.5) {
+            moon = 'moon-full';
+        } else if (phase > 0.5 && phase < 0.75) {
+            moon = 'moon-waning-gibbous';
+        } else if (phase === 0.75) {
+            moon = 'moon-last-quarter';
+        } else if (phase > 0.75 && phase < 1) {
+            moon = 'moon-waning-crescent';
+        }
+
+        return (
+            <MaterialCommunityIcon
+                name={ moon }
+                color='white'
+                size={ 50 }
+                direction={ 1 }
+            />
+        );
+    };
+
+    const windIconHandler = () => {
+        const degree = weather.wind_deg;
+        const value = Math.floor((degree / 45) + 0.5);
+        let iconNames = ['arrow-up', 'arrow-up-right', 'arrow-right', 'arrow-down-right', 'arrow-down', 'arrow-down-left', 'arrow-left', 'arrow-up-left'];
+        let iconName = iconNames[(value % 8)];
+
+        return (
+            <Feather
+                name={ iconName }
+                size={ 24 }
+                color='white'
+            />
+        );
+    };
+
+    const uvArrowHandler = () => {
+        const uvi = weather.uvi;
+
+        if (uvi < 4) {
+            return {
+                paddingRight: `${ 80 - uvi * 2 * 10 }%`
+            };
+        } else if (uvi > 4 && uvi <= 8) {
+            return {
+                paddingLeft: `${ 80 - uvi * 2 * 10 }%`
+            };
+        } else {
+            return {
+                paddingLeft: '80%'
+            };
+        }
+    };
+
+    const uvLevelHandler = () => {
+        const uvi = weather.uvi;
+
+        if (uvi >= 0 && uvi < 3) {
+            setUvLevel(i18n.t('low'));
+        } else if (uvi >= 3 && uvi < 5) {
+            setUvLevel(i18n.t('moderate'));
+        } else if (uvi >= 5 && uvi < 7) {
+            setUvLevel(i18n.t('high'));
+        } else if (uvi >= 7 && uvi < 8) {
+            setUvLevel('veryHigh');
+        } else if (uvi >= 8) {
+            setUvLevel('extreme');
+        }
+    };
 
     return (
         <Modal
@@ -29,7 +147,7 @@ const WeeklyWeatherModal = props => {
                         content={ address.city }
                         titleStyle={ styles.title }
                     />
-                    <ScrollView contentContainerStyle={ styles.modalContent }>
+                    <ScrollView>
                         <View style={ styles.headerContainer }>
                             <View>
                                 <Image
@@ -48,6 +166,7 @@ const WeeklyWeatherModal = props => {
                                 <Text style={ styles.superscript }>{ String.fromCharCode(8451) }</Text>
                             </View>
                         </View>
+                        <SeparatorLine />
                         <View style={ styles.row }>
                             <Text style={ styles.smallText }>{ i18n.t('sunrise') + ' ' }
                                 { new Date(weather.sunrise * 1000).toLocaleTimeString(navigator.language, {
@@ -71,12 +190,7 @@ const WeeklyWeatherModal = props => {
                         <View
                             style={ styles.moonIcon }
                         >
-                            <MaterialCommunityIcon
-                                name='moon-waning-gibbous'
-                                color='white'
-                                size={ 50 }
-                                direction={ 1 }
-                            />
+                            { moonHandler() }
                         </View>
                         <View style={ styles.row }>
                             <Text style={ styles.smallText }>{ i18n.t('moonrise') + ' ' }
@@ -97,6 +211,126 @@ const WeeklyWeatherModal = props => {
                                     minute: '2-digit'
                                 }).substring(0, 5) }
                             </Text>
+                        </View>
+                        <SeparatorLine />
+                        <View style={ styles.chart }>
+                            <WeatherChart
+                                data={ data }
+                                settings={ settings }
+                            />
+                        </View>
+                        <SeparatorLine text={ 'Részletek' } />
+                        <View style={ { alignItems: 'center', marginTop: 10 } }>
+                            <View style={ styles.row }>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Feather
+                                            name='wind'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('wind') }</Text>
+                                    </View>
+                                    { windIconHandler() }
+                                    <Text style={ styles.smallText }>{ weather.wind_speed } km/h</Text>
+                                </Card>
+                                <Card style={ styles.card }>
+                                    <View style={ { ...styles.row, paddingVertical: '10%' } }>
+                                        <Feather
+                                            name='sun'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('uvIndex') }</Text>
+                                    </View>
+                                    <LinearGradient
+                                        colors={ ['green', 'yellow', 'orange', 'red', 'magenta'] }
+                                        start={ { x: 0, y: 1 } }
+                                        end={ { x: 1, y: 0 } }
+                                        style={ { width: '80%', height: '10%' } }
+                                    >
+                                        <View />
+                                    </LinearGradient>
+                                    <Ionicons
+                                        name='caret-up-outline'
+                                        size={ 16 }
+                                        color='white'
+                                        style={ uvArrowHandler() }
+                                    />
+                                    <Text style={ styles.smallText }>{ weather.uvi }</Text>
+                                    <Text style={ styles.smallText }>{ uvLevel }</Text>
+                                </Card>
+                            </View>
+                            <View style={ styles.row }>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Entypo
+                                            name='water'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('humidity') }</Text>
+                                    </View>
+                                    <Text style={ styles.smallText }>{ weather.humidity }%</Text>
+                                    <Text style={ styles.cardText }>
+                                        { i18n.t('dewPointFuture').replace('VALUE', weather.dew_point) }
+                                    </Text>
+                                </Card>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Ionicons
+                                            name='rainy'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('rain') }</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>
+                                        { i18n.t('expectedRainFuture').replace('VALUE', weather.rain ? weather.rain : 0) }
+                                    </Text>
+                                </Card>
+                            </View>
+                            <View style={ styles.row }>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Ionicons
+                                            name='cloudy'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('clouds') }</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>
+                                        { i18n.t('cloudinessFuture').replace('VALUE', weather.clouds) }
+                                    </Text>
+                                </Card>
+                                <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <FontAwesome
+                                            name='tachometer'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('pressure') }</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>{ weather.pressure } hPA</Text>
+                                </Card>
+                            </View>
+                            <View style={ styles.row }>
+                                { weather.snow && <Card style={ styles.card }>
+                                    <View style={ styles.row }>
+                                        <Ionicons
+                                            name='snow'
+                                            size={ 20 }
+                                            color='white'
+                                        />
+                                        <Text style={ styles.smallText }> { i18n.t('snow').toUpperCase() }</Text>
+                                    </View>
+                                    <Text style={ styles.cardText }>
+                                        { i18n.t('expectedSnowFuture').replace('VALUE', weather.snow ? weather.snow : 0) }
+                                    </Text>
+                                </Card> }
+                            </View>
                         </View>
                     </ScrollView>
                     <Button
@@ -132,34 +366,12 @@ const styles = StyleSheet.create({
     title: {
         paddingHorizontal: 10
     },
-    titleContainer: {
-        alignItems: 'center'
-    },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
     },
-    rowContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        marginVertical: 10,
-        alignItems: 'center'
-    },
-    flatListContainer: {
-        margin: 10,
-        backgroundColor: Colors.dark
-    },
-    centered: {
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     today: {
         justifyContent: 'center',
-    },
-    titleStyle: {
-        color: 'white',
-        fontSize: 18,
-        paddingHorizontal: 10
     },
     temperature: {
         color: 'white',
@@ -211,9 +423,14 @@ const styles = StyleSheet.create({
     },
     moonIcon: {
         alignItems: 'center',
-        backgroundColor: 'rgba(52, 52, 52, 0.3)',
+        backgroundColor: 'rgba(52, 52, 52, 0.8)',
         borderRadius: 10,
-        padding: 5
+        padding: 10,
+        marginHorizontal: '40%',
+        marginVertical: 14
+    },
+    chart: {
+        marginVertical: 26
     }
 });
 
