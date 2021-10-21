@@ -60,29 +60,35 @@ const WeatherCard = props => {
         if (weather.current.weather[0].main === 'Clear') {
             if (currentTime > weather.current.sunset * 1000) {
                 return (
-                    <Ionicons
-                        name={ Platform.OS === 'android' ? 'md-moon-outline' : 'ios-moon-outline' }
-                        size={ 40 }
-                        color='white'
-                        style={ { ...styles.icon, padding: 20 } }
-                    />
+                    <View style={ styles.iconContainer }>
+                        <Ionicons
+                            name={ Platform.OS === 'android' ? 'md-moon-outline' : 'ios-moon-outline' }
+                            size={ 40 }
+                            color='white'
+                            style={ { ...styles.icon, padding: 20 } }
+                        />
+                    </View>
                 );
             } else if (currentTime > weather.current.sunrise * 1000) {
                 return (
-                    <Ionicons
-                        name={ Platform.OS === 'android' ? 'md-sunny-outline' : 'ios-sunny-outline' }
-                        size={ 40 }
-                        color='white'
-                        style={ { ...styles.icon, padding: 20 } }
-                    />
+                    <View style={ styles.iconContainer }>
+                        <Ionicons
+                            name={ Platform.OS === 'android' ? 'md-sunny-outline' : 'ios-sunny-outline' }
+                            size={ 40 }
+                            color='white'
+                            style={ { ...styles.icon, padding: 20 } }
+                        />
+                    </View>
                 );
             }
         } else {
             return (
-                <Image
-                    source={ { uri: `http://openweathermap.org/img/wn/${ weather.current.weather[0].icon }@2x.png` } }
-                    style={ styles.icon }
-                />
+                <View style={ styles.iconContainer }>
+                    <Image
+                        source={ { uri: `http://openweathermap.org/img/wn/${ weather.current.weather[0].icon }@2x.png` } }
+                        style={ styles.icon }
+                    />
+                </View>
             );
         }
     };
@@ -186,6 +192,9 @@ const styles = StyleSheet.create({
     icon: {
         width: 80,
         height: 80,
+        borderRadius: 20,
+    },
+    iconContainer: {
         backgroundColor: 'rgba(52, 52, 52, 0.25)',
         borderRadius: 20,
         margin: 10

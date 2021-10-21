@@ -5,7 +5,7 @@ import Button from './Button';
 import i18n from 'i18n-js';
 import { useSelector } from 'react-redux';
 import Title from './Title';
-import { Entypo, Feather, FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import MaterialCommunityIcon from 'react-native-paper/src/components/MaterialCommunityIcon';
 import Card from './Card';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -212,14 +212,14 @@ const WeeklyWeatherModal = props => {
                                 }).substring(0, 5) }
                             </Text>
                         </View>
-                        <SeparatorLine />
+                        <SeparatorLine text={ i18n.t('temperature') } />
                         <View style={ styles.chart }>
                             <WeatherChart
                                 data={ data }
                                 settings={ settings }
                             />
                         </View>
-                        <SeparatorLine text={ 'Részletek' } />
+                        <SeparatorLine text={ i18n.t('details') } />
                         <View style={ { alignItems: 'center', marginTop: 10 } }>
                             <View style={ styles.row }>
                                 <Card style={ styles.card }>
@@ -273,7 +273,7 @@ const WeeklyWeatherModal = props => {
                                     </View>
                                     <Text style={ styles.smallText }>{ weather.humidity }%</Text>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('dewPointFuture').replace('VALUE', weather.dew_point) }
+                                        { i18n.t('dewPointFuture', { value: weather.dew_point }) }
                                     </Text>
                                 </Card>
                                 <Card style={ styles.card }>
@@ -286,7 +286,7 @@ const WeeklyWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('rain') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('expectedRainFuture').replace('VALUE', weather.rain ? weather.rain : 0) }
+                                        { i18n.t('expectedRainFuture', { value: weather.rain ? weather.rain : 0 }) }
                                     </Text>
                                 </Card>
                             </View>
@@ -301,7 +301,7 @@ const WeeklyWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('clouds') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('cloudinessFuture').replace('VALUE', weather.clouds) }
+                                        { i18n.t('cloudinessFuture', { value: weather.clouds }) }
                                     </Text>
                                 </Card>
                                 <Card style={ styles.card }>
@@ -327,7 +327,7 @@ const WeeklyWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('snow').toUpperCase() }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('expectedSnowFuture').replace('VALUE', weather.snow ? weather.snow : 0) }
+                                        { i18n.t('expectedSnowFuture', { value: weather.snow ? weather.snow : 0 }) }
                                     </Text>
                                 </Card> }
                             </View>

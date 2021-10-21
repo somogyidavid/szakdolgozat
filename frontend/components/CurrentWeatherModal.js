@@ -200,7 +200,7 @@ const CurrentWeatherModal = props => {
                                 /></View> }
                             </View>
                         </View>
-                        { !props.weekly && <View style={ styles.flatListContainer }>
+                        <View style={ styles.flatListContainer }>
                             <FlatList
                                 ref={ flatListRef }
                                 data={ weather.hourly }
@@ -214,7 +214,7 @@ const CurrentWeatherModal = props => {
                                 viewabilityConfig={ viewabilityConfig.current }
                                 onViewableItemsChanged={ onViewableItemsChanged.current }
                             />
-                        </View> }
+                        </View>
                         <View style={ { alignItems: 'center', marginTop: 10 } }>
                             <View style={ styles.row }>
                                 <Card style={ styles.card }>
@@ -268,7 +268,7 @@ const CurrentWeatherModal = props => {
                                     </View>
                                     <Text style={ styles.smallText }>{ weather.current.humidity }%</Text>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('dewPoint').replace('VALUE', weather.current.dew_point) }
+                                        { i18n.t('dewPoint', { value: weather.current.dew_point }) }
                                     </Text>
                                 </Card>
                                 <Card style={ styles.card }>
@@ -281,7 +281,7 @@ const CurrentWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('rain') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('expectedRain').replace('VALUE', weather.current.rain ? weather.current.rain : 0) }
+                                        { i18n.t('expectedRain', { value: weather.current.rain ? weather.current.rain : 0 }) }
                                     </Text>
                                 </Card>
                             </View>
@@ -296,7 +296,7 @@ const CurrentWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('clouds') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('cloudiness').replace('VALUE', weather.current.clouds) }
+                                        { i18n.t('cloudiness', { value: weather.current.clouds }) }
                                     </Text>
                                 </Card>
                                 <Card style={ styles.card }>
@@ -322,7 +322,7 @@ const CurrentWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('snow').toUpperCase() }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('expectedSnow').replace('VALUE', weather.current.snow ? weather.current.snow : 0) }
+                                        { i18n.t('expectedSnow', { value: weather.current.snow ? weather.current.snow : 0 }) }
                                     </Text>
                                 </Card> }
                                 <Card style={ styles.card }>

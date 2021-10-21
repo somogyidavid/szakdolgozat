@@ -4,13 +4,8 @@ import {
     Text,
     StyleSheet,
     Image,
-    Platform,
-    TouchableNativeFeedback,
-    TouchableOpacity,
-    Modal
 } from 'react-native';
 import i18n from 'i18n-js';
-import Title from './Title';
 import Colors from '../constants/Colors';
 import Button from './Button';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,8 +17,6 @@ const WeatherTableItem = props => {
     const shortDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     const date = new Date(weather.dt * 1000);
     const day = i18n.t(shortDays[date.getDay()]);
-
-    const TouchableComponent = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
     return (
         <View style={ styles.container }>
