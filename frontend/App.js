@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, LogBox } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import * as Font from 'expo-font';
@@ -46,6 +46,8 @@ const loadResources = async () => {
     await fetchFonts();
     await loadImages();
 };
+
+LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);

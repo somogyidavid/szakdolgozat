@@ -17,6 +17,8 @@ import { Dimensions, Platform } from 'react-native';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { useDispatch } from 'react-redux';
+import { logout } from '../services/AuthService';
 
 const defaultNavOptions = {
     headerStyle: {
@@ -162,6 +164,8 @@ export const ProfileNavigator = () => {
 const ActivityDrawerNavigator = createDrawerNavigator();
 
 export const ActivityNavigator = () => {
+    const dispatch = useDispatch();
+
     return (
         <ActivityDrawerNavigator.Navigator
             screenOptions={ {
@@ -213,7 +217,7 @@ export const ActivityNavigator = () => {
                             <DrawerItem
                                 label={ i18n.t('logout') }
                                 onPress={ () => {
-                                    console.log('Logged out!');
+                                    dispatch(logout());
                                 } }
                                 icon={ () => {
                                     return (
@@ -293,6 +297,14 @@ export const AuthNavigator = () => {
             <AuthStackNavigator.Screen
                 name='Auth'
                 component={ AuthScreen }
+                options={ {
+                    title: i18n.t('label'),
+                    headerTitleAlign: 'center',
+                    headerTintColor: 'white',
+                    headerStyle: {
+                        backgroundColor: Colors.darkPurple
+                    }
+                } }
             />
         </AuthStackNavigator.Navigator>
     );
