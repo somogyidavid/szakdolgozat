@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
-import WeatherBackground from './WeatherBackground';
+import WeatherBackground from '../weather/WeatherBackground';
 
 const Card = props => {
     const TouchableComponent = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;

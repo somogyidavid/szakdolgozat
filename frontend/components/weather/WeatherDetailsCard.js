@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Text, StyleSheet, View, Platform, TouchableNativeFeedback, TouchableOpacity, Image } from 'react-native';
-import Colors from '../constants/Colors';
+import Colors from '../../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 

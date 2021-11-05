@@ -7,13 +7,13 @@ import {
     Platform,
     FlatList, ScrollView
 } from 'react-native';
-import Button from './Button';
+import Button from '../ui/Button';
 import i18n from 'i18n-js';
-import Colors from '../constants/Colors';
-import Title from './Title';
+import Colors from '../../constants/Colors';
+import Title from '../ui/Title';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import WeatherDetailsCard from './WeatherDetailsCard';
-import Card from './Card';
+import Card from '../ui/Card';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const CurrentWeatherModal = props => {

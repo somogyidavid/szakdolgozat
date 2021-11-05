@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, Platform, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import Colors from '../constants/Colors';
-import Card from './Card';
-import { weatherHandler } from '../helpers/weatherHandler';
+import Colors from '../../constants/Colors';
+import Card from '../ui/Card';
+import { weatherHandler } from '../../helpers/weatherHandler';
 import i18n from 'i18n-js';
 import * as Location from 'expo-location';
-import { fetchLocation } from '../services/LocationService';
+import { fetchLocation } from '../../services/LocationService';
 import { Ionicons } from '@expo/vector-icons';
-import Button from './Button';
+import Button from '../ui/Button';
 import CurrentWeatherModal from './CurrentWeatherModal';
-import Title from './Title';
+import Title from '../ui/Title';
 import WeatherTable from './WeatherTable';
 
 const WeatherCard = props => {
@@ -149,6 +149,8 @@ const styles = StyleSheet.create({
         marginHorizontal: '3%',
         marginVertical: 20,
         flexDirection: 'row',
+        borderWidth: 4,
+        borderColor: Colors.darkPurple
     },
     weatherContainer: {
         width: '100%'

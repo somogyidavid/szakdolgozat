@@ -42,6 +42,7 @@
     "react-native-screens": "^3.7.2",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^12.1.1",
+    "react-native-walkthrough-tooltip": "^1.3.0",
     "react-native-weather-chart": "^0.1.3",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.5",

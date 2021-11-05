@@ -6,8 +6,8 @@ import {
     Image,
 } from 'react-native';
 import i18n from 'i18n-js';
-import Colors from '../constants/Colors';
-import Button from './Button';
+import Colors from '../../constants/Colors';
+import Button from '../ui/Button';
 import { Ionicons } from '@expo/vector-icons';
 import WeeklyWeatherModal from './WeeklyWeatherModal';
 

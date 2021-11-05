@@ -11,7 +11,7 @@ import {
     LOGIN_ERROR,
     LOGOUT_REQUEST,
     LOGOUT_SUCCESS,
-    LOGOUT_ERROR
+    LOGOUT_ERROR, FIRST_LAUNCH
 } from '../../constants/AuthConstants';
 
 const initialState = {
@@ -125,6 +125,12 @@ const AuthReducer = (state = initialState, action) => {
             return {
                 ...state,
                 didTryAutoLogin: true
+            };
+        }
+        case FIRST_LAUNCH: {
+            return {
+                ...state,
+                firstLaunch: false
             };
         }
         default:

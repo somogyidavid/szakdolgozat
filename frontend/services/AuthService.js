@@ -11,7 +11,8 @@ import {
     logoutRequest,
     logoutSuccess,
     logoutFailed,
-    setDidTryAutoLogin as setDidTryAutoLoginAction
+    setDidTryAutoLogin as setDidTryAutoLoginAction,
+    setFirstLaunch as setFirstLaunchAction
 } from '../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import env from '../constants/env';
@@ -44,18 +45,19 @@ export const signup = (email, password) => {
     return async (dispatch) => {
         try {
             dispatch(signupRequest());
-            const response = await axios({
-                url: signupUri,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify({
+
+            const response = await axios.post(signupUri, JSON.stringify({
                     email: email,
                     password: password,
                     returnSecureToken: true
-                })
-            });
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
             dispatch(signupSuccess(email, password));
             dispatch(authenticate(response.data.localId, response.data.idToken, parseInt(response.data.expiresIn * 1000)));
 
@@ -73,17 +75,26 @@ export const login = (email, password) => {
     return async (dispatch) => {
         try {
             dispatch(loginRequest());
-            const response = await axios({
-                method: 'POST',
-                url: signInUri,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify({
+
+            const response = await axios.post(signInUri, JSON.stringify({
                     email: email,
                     password: password,
                     returnSecureToken: true
-                })
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            ).catch(err => {
+                const errorId = err.response.data.error.message;
+                let message = 'Something went wrong!';
+
+                if (errorId === 'INVALID_PASSWORD') {
+                    message = 'Invalid password!';
+                }
+
+                throw new Error(message);
             });
 
             dispatch(loginSuccess(email, password));
@@ -92,7 +103,7 @@ export const login = (email, password) => {
             const expirationDate = new Date(new Date().getTime() + +response.data.expiresIn * 1000);
             await saveDataToStorage(response.data.idToken, response.data.localId, expirationDate);
         } catch (err) {
-            dispatch(loginFailed(err));
+            dispatch(loginFailed(err.message));
         }
     };
 };
@@ -108,6 +119,12 @@ export const logout = () => {
             dispatch(logoutFailed(err));
         }
     };
+};
+
+export const saveFirstLaunchToStorage = async () => {
+    await AsyncStorage.setItem('firstLaunch', JSON.stringify({
+        firstLaunch: false
+    }));
 };
 
 const clearLogoutTimer = () => {

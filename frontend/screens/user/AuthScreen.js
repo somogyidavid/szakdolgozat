@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import {
-    Text,
     View,
     StyleSheet,
     KeyboardAvoidingView,
@@ -8,14 +7,17 @@ import {
     ScrollView,
     ActivityIndicator
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import i18n from 'i18n-js';
+import { useDispatch, useSelector } from 'react-redux';
 import { login, signup } from '../../services/AuthService';
 import { LinearGradient } from 'expo-linear-gradient';
-import Input from '../../components/Input';
+import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
-import Button from '../../components/Button';
+import Button from '../../components/ui/Button';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+// TODO: Error handling
 
 const formReducer = (state, action) => {
     const { type } = action;
@@ -50,6 +52,7 @@ const AuthScreen = props => {
     const [error, setError] = useState();
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
+    const stateErr = useSelector(state => state.auth.errors);
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -64,14 +67,15 @@ const AuthScreen = props => {
     });
 
     useEffect(() => {
-        if (error) {
-            Alert.alert('An error occurred!', error, [{ text: 'Okay' }]);
+        if (stateErr.length > 0) {
+            Alert.alert('An error occurred!', stateErr, [{ text: 'Okay' }]);
+            // TODO: Check if pressed Okay
         }
-    }, [error]);
+    }, [stateErr]);
 
     const authHandler = async () => {
         let action;
-        
+
         if (isSignUp) {
             action = signup(formState.inputValues.email, formState.inputValues.password);
         } else {
@@ -119,7 +123,7 @@ const AuthScreen = props => {
                         />
                         <Input
                             id='password'
-                            label='Password'
+                            label={ i18n.t('password') }
                             keyboardType='default'
                             secureTextEntry
                             required
@@ -136,14 +140,14 @@ const AuthScreen = props => {
                                   color={ Colors.darkPurple }
                               /> :
                               <Button
-                                  title={ isSignUp ? 'Sign Up' : 'Login' }
+                                  title={ isSignUp ? i18n.t('signUp') : i18n.t('login') }
                                   onPress={ authHandler }
                               />
                             }
                         </View>
                         <View style={ styles.buttonContainer }>
                             <Button
-                                title={ `Switch to ${ isSignUp ? 'Login' : 'Sign up' }` }
+                                title={ isSignUp ? i18n.t('switchToLogin') : i18n.t('switchToSignUp') }
                                 onPress={ () => setIsSignUp(prevState => !prevState) }
                             />
                         </View>

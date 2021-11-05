@@ -14,7 +14,7 @@ import AuthScreen from '../screens/user/AuthScreen';
 import i18n from 'i18n-js';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { Dimensions, Platform } from 'react-native';
-import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
+import FocusAwareStatusBar from '../components/ui/FocusAwareStatusBar';
 import ProfileScreen from '../screens/user/ProfileScreen';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useDispatch } from 'react-redux';

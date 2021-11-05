@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
-import WeatherCard from '../../components/WeatherCard';
+import WeatherCard from '../../components/weather/WeatherCard';
+import InterestsSelectorModal from '../../components/ui/InterestsSelectorModal';
 
 const OverviewScreen = props => {
     const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const OverviewScreen = props => {
 
     return (
         <View style={ styles.container }>
+            <InterestsSelectorModal />
             <WeatherCard navigation={ props.navigation } />
         </View>
     );

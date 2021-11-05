@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Modal, Platform, Image, ScrollView } from 'react-native';
-import Colors from '../constants/Colors';
-import Button from './Button';
+import Colors from '../../constants/Colors';
+import Button from '../ui/Button';
 import i18n from 'i18n-js';
 import { useSelector } from 'react-redux';
-import Title from './Title';
+import Title from '../ui/Title';
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import MaterialCommunityIcon from 'react-native-paper/src/components/MaterialCommunityIcon';
-import Card from './Card';
+import Card from '../ui/Card';
 import { LinearGradient } from 'expo-linear-gradient';
 import WeatherChart from 'react-native-weather-chart/src/WeatherChart/WeatherChart';
-import SeparatorLine from './SeparatorLine';
+import SeparatorLine from '../ui/SeparatorLine';
 
 const WeeklyWeatherModal = props => {
     const { weather } = props;
