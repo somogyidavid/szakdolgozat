@@ -10,6 +10,7 @@ import { PlacesTypes } from '../../data/places-types';
 import HelpButton from './HelpButton';
 import InterestsSelectorItem from './InterestsSelectorItem';
 import { AntDesign } from '@expo/vector-icons';
+import i18n from 'i18n-js';
 
 const InterestsSelectorModal = props => {
     const flatList = useRef(null);
@@ -62,13 +63,13 @@ const InterestsSelectorModal = props => {
             <View style={ styles.modalContainer }>
                 <View style={ styles.modalContent }>
                     <Title
-                        content={ 'Choose your interests!' }
+                        content={ i18n.t('choseYourInterests') }
                         titleStyle={ styles.title }
                     />
                     <View style={ styles.itemCounter }>
                         <View>
                             <Text style={ { color: chosenItems.length < 5 ? 'red' : 'green' } }>
-                                Interests chosen: { chosenItems.length }/5
+                                { i18n.t('interestsChosen') } { chosenItems.length }/5
                             </Text>
                         </View>
                         <View style={ { marginLeft: 8 } }>
@@ -87,12 +88,7 @@ const InterestsSelectorModal = props => {
                         arrowSize={ { width: 16, height: 8 } }
                         backgroundColor={ 'rgba(0, 0, 0, 0.5)' }
                         isVisible={ tooltipVisible }
-                        content={
-                            <Text>
-                                Choose at least 5 of the items from the list below, which you are interested in, and the
-                                application will recommend activities like those! You can edit them later of
-                                course, in the options!
-                            </Text> }
+                        content={ <Text>{ i18n.t('interestSelectorDescription') }</Text> }
                         placement='bottom'
                         onClose={ () => setTooltipVisible(false) }
                     >
@@ -130,7 +126,7 @@ const InterestsSelectorModal = props => {
                         } }
                     />
                     <Button
-                        title='Save!'
+                        title={ i18n.t('save') + '!' }
                         style={ styles.button }
                         onPress={ () => {
                             saveFirstLaunchToStorage();

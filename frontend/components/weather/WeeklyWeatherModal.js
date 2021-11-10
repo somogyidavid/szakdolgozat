@@ -32,7 +32,12 @@ const WeeklyWeatherModal = props => {
             weather.temp.eve + String.fromCharCode(8451),
             weather.temp.night + String.fromCharCode(8451)
         ],
-        textBottom: ['Morning', 'Day', 'Evening', 'Night']
+        textBottom: [
+            i18n.t('morning'),
+            i18n.t('day'),
+            i18n.t('evening'),
+            i18n.t('night')
+        ]
     };
 
     const settings = {
