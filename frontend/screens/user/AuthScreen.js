@@ -52,7 +52,7 @@ const AuthScreen = props => {
     const [error, setError] = useState();
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
-    const stateErr = useSelector(state => state.auth.errors);
+    let stateErr = useSelector(state => state.auth.errors);
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -69,7 +69,6 @@ const AuthScreen = props => {
     useEffect(() => {
         if (stateErr.length > 0) {
             Alert.alert('An error occurred!', stateErr, [{ text: 'Okay' }]);
-            // TODO: Check if pressed Okay
         }
     }, [stateErr]);
 
@@ -89,8 +88,8 @@ const AuthScreen = props => {
             await dispatch(action);
         } catch (err) {
             setError(err.message);
-            setIsLoading(false);
         }
+        setIsLoading(false);
     };
 
     const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {

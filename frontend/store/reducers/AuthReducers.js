@@ -127,12 +127,6 @@ const AuthReducer = (state = initialState, action) => {
                 didTryAutoLogin: true
             };
         }
-        case FIRST_LAUNCH: {
-            return {
-                ...state,
-                firstLaunch: false
-            };
-        }
         default:
             return state;
     }
