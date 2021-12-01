@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
 import WeatherCard from '../../components/weather/WeatherCard';
 import InterestsSelectorModal from '../../components/ui/InterestsSelectorModal';
+import { Heading, HStack, Spinner, Toast } from 'native-base';
 
 const OverviewScreen = props => {
     const dispatch = useDispatch();

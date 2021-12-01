@@ -9,6 +9,8 @@ import AppNavigator from './navigation/AppNavigator';
 import i18n from 'i18n-js';
 import Translations from './i18n/translations';
 import { Asset } from 'expo-asset';
+import { NativeBaseProvider } from 'native-base/src/core/NativeBaseProvider';
+import { extendTheme } from 'native-base';
 
 i18n.translations = Translations;
 i18n.locale = Localization.locale;
@@ -48,6 +50,8 @@ const loadResources = async () => {
 };
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
+LogBox.ignoreLogs(['Cannot update a component']);
+LogBox.ignoreLogs(['Can\'t perform a React state update']);
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
@@ -63,9 +67,11 @@ const App = () => {
     }
 
     return (
-        <Provider store={ store }>
-            <AppNavigator />
-        </Provider>
+        <NativeBaseProvider>
+            <Provider store={ store }>
+                <AppNavigator />
+            </Provider>
+        </NativeBaseProvider>
     );
 };
 
