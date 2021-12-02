@@ -4,7 +4,7 @@ import { AboutAppNavigator, ActivityNavigator, AuthNavigator } from './ActivityN
 import StartupScreen from '../screens/user/StartupScreen';
 import { useSelector } from 'react-redux';
 import { Toast } from 'native-base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from 'i18n-js';
 
 const AppNavigator = props => {
     const isAuth = useSelector(state => !!state.auth.token);
@@ -12,10 +12,10 @@ const AppNavigator = props => {
 
     if (isAuth) {
         Toast.show({
-            title: 'Siker',
-            description: 'Sikeres bejelentkezés!',
+            title: i18n.t('success'),
+            description: i18n.t('successfulLogin'),
             status: 'success',
-            placement: 'top'
+            placement: 'bottom'
         });
     }
 

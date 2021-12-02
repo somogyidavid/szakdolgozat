@@ -43,9 +43,9 @@ const CalendarScreen = props => {
         if (isFocused) {
             setOffset(6);
             Toast.show({
-                title: 'Tipp',
+                title: i18n.t('tip'),
                 status: 'info',
-                description: 'A naptár egyik napjára nyomva megtekintheted a programjaid az adott napra!',
+                description: i18n.t('calendarTip'),
                 duration: null,
                 placement: 'bottom',
                 onCloseComplete: () => {

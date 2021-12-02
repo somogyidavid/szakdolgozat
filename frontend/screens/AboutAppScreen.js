@@ -4,36 +4,34 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveFirstLaunchToStorage, saveVisibleToStorage } from '../services/AuthService';
 import Colors from '../constants/Colors';
+import i18n from 'i18n-js';
 
 const slides = [
     {
         key: '1',
-        title: 'Programajánlás',
-        text: 'Nincs ötleted merre utaznál?\n\n' +
-            'Bízd az applikációra, hogy döntsön!\n\n' +
-            'Minél többet használod annál pontosabb lesz!',
+        title: i18n.t('tripAdvising'),
+        text: i18n.t('tripAdvisingDescription'),
         image: require('../assets/images/travel.png'),
         backgroundColor: '#59b2ab',
     },
     {
         key: '2',
-        title: 'Számtalan lehetőség',
-        text: 'Rengeteg program típus közül válaszhatsz.\n\n' +
-            'Biztosan találsz számodra megfelelő kikapcsolódást!',
+        title: i18n.t('countlessOpportunities'),
+        text: i18n.t('countlessOpportunitiesDescription'),
         image: { uri: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/road-trip-771921.png' },
         backgroundColor: '#febe29',
     },
     {
         key: '3',
-        title: 'Naptár',
-        text: 'Szeretnéd egy helyen tárolni a programjaid?\n\nEgyszerűen kezelheted őket az applikációból.',
+        title: i18n.t('calendar'),
+        text: i18n.t('calendarDescription'),
         image: require('../assets/images/calendar.jpg'),
         backgroundColor: '#22bcb5',
     },
     {
         key: '4',
-        title: 'Statisztika',
-        text: 'Bármikor megtekintheted a programjaidról és a tevékenységeidről készített statisztikákat!',
+        title: i18n.t('statistics'),
+        text: i18n.t('statisticsDescription'),
         image: require('../assets/images/statistics.jpg'),
         backgroundColor: '#febe29'
     },
@@ -67,6 +65,10 @@ const AboutAppScreen = props => {
                 renderItem={ renderItem }
                 showPrevButton={ true }
                 showSkipButton={ true }
+                nextLabel={ i18n.t('next') }
+                skipLabel={ i18n.t('skip') }
+                doneLabel={ i18n.t('done') }
+                prevLabel={ i18n.t('back') }
                 onDone={ () => {
                     console.log('Done');
                 } }
