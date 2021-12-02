@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     ActivityIndicator,
     StyleSheet,
@@ -8,10 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
 import WeatherCard from '../../components/weather/WeatherCard';
 import InterestsSelectorModal from '../../components/ui/InterestsSelectorModal';
-import { Heading, HStack, Spinner, Toast } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OverviewScreen = props => {
-    const dispatch = useDispatch();
     const isLoading = useSelector(state => state.location.isLoading);
 
     if (isLoading) {
@@ -27,7 +26,7 @@ const OverviewScreen = props => {
 
     return (
         <View style={ styles.container }>
-            <InterestsSelectorModal />
+            <InterestsSelectorModal navigation={ props.navigation } />
             <WeatherCard navigation={ props.navigation } />
         </View>
     );

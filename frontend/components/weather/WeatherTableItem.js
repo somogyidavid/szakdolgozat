@@ -43,7 +43,7 @@ const WeatherTableItem = props => {
                     color='white'
                     style={ { padding: 5 } }
                 />
-                <Text style={ styles.text }>{ weather.pop.toFixed(0) }%</Text>
+                <Text style={ styles.text }>{ weather.pop.toFixed(0) * 100 }%</Text>
             </View>
             <Button
                 title='...'
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 6,
         padding: 6,
         borderRadius: 20,
+        width: 120
     },
     text: {
         color: 'white',
@@ -72,7 +73,7 @@ const styles = StyleSheet.create({
     icon: {
         width: 50,
         height: 50,
-        backgroundColor: 'rgba(52, 52, 52, 0.25)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         borderColor: Colors.darkPurple,
         borderWidth: 2,
         borderRadius: 20,

@@ -12,7 +12,6 @@ import {
     logoutSuccess,
     logoutFailed,
     setDidTryAutoLogin as setDidTryAutoLoginAction,
-    setFirstLaunch as setFirstLaunchAction
 } from '../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import env from '../constants/env';
@@ -87,7 +86,10 @@ export const login = (email, password) => {
                     }
                 }
             ).catch(err => {
-                const errorId = err.response.data.error.message;
+                let errorId = 'BASIC_ERROR';
+                if (err.response.data) {
+                    errorId = err.response.data.error.message;
+                }
                 let message = 'Something went wrong!';
 
                 if (errorId === 'INVALID_PASSWORD') {
@@ -119,12 +121,6 @@ export const logout = () => {
             dispatch(logoutFailed(err));
         }
     };
-};
-
-export const saveFirstLaunchToStorage = async () => {
-    await AsyncStorage.setItem('firstLaunch', JSON.stringify({
-        firstLaunch: false
-    }));
 };
 
 const clearLogoutTimer = () => {

@@ -1,11 +1,11 @@
 import React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { useSelector } from 'react-redux';
+import { Text, View, StyleSheet, Image } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
 
 const UserActivitiesScreen = props => {
     return (
-        <View>
-            <Text>UserActivities Screen!</Text>
+        <View style={ styles.container }>
+            <Text>This is the user activities screen!</Text>
         </View>
     );
 };

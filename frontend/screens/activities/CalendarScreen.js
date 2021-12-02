@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Dimensions, FlatList } from 'react-native';
-import { PresenceTransition, Toast, Button, Fab, Icon, Box, Center } from 'native-base';
+import { PresenceTransition, Toast, Button, Fab, Icon, Box, Center, Modal, FormControl, Input } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import Colors from '../../constants/Colors';
@@ -28,6 +28,7 @@ const CalendarScreen = props => {
     const [offset, setOffset] = useState(6);
     const [isOpen, setIsOpen] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [selectedDate, setSelectedDate] = useState(`${ currentDate.getFullYear() }-${ currentDate.getMonth() + 1 }-${ currentDate.getDate() }`);
     const [markedDates, setMarkedDates] = useState({
         [selectedDate]: {
@@ -116,7 +117,7 @@ const CalendarScreen = props => {
                     markingType={ 'dot' }
                     markedDates={ markedDates }
                 />
-                <Fab
+                { isFocused && <Fab
                     placement={ 'bottom-right' }
                     colorScheme={ 'indigo' }
                     icon={ <Icon
@@ -126,9 +127,44 @@ const CalendarScreen = props => {
                     /> }
                     style={ { marginBottom: Dimensions.get('window').height / offset } }
                     onPress={ () => {
-                        console.log('FAB pressed!');
+                        setShowModal(true);
                     } }
-                />
+                /> }
+                <Modal
+                    isOpen={ showModal }
+                    onClose={ () => setShowModal(false) }
+                >
+                    <Modal.Content maxWidth='400px'>
+                        <Modal.CloseButton />
+                        <Modal.Header>Test Modal Header</Modal.Header>
+                        <Modal.Body>
+                            <FormControl>
+                                <FormControl.Label>Test label</FormControl.Label>
+                                <Input />
+                            </FormControl>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button.Group space={ 2 }>
+                                <Button
+                                    variant='ghost'
+                                    colorScheme='blueGray'
+                                    onPress={ () => {
+                                        setShowModal(false);
+                                    } }
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    onPress={ () => {
+                                        setShowModal(false);
+                                    } }
+                                >
+                                    Save
+                                </Button>
+                            </Button.Group>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal>
             </PresenceTransition>
             <PresenceTransition
                 style={ styles.dayDetailsContainer }

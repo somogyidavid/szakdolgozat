@@ -281,7 +281,7 @@ const CurrentWeatherModal = props => {
                                         <Text style={ styles.smallText }> { i18n.t('rain') }</Text>
                                     </View>
                                     <Text style={ styles.cardText }>
-                                        { i18n.t('expectedRain', { value: weather.current.rain ? weather.current.rain : 0 }) }
+                                        { i18n.t('expectedRain', { value: weather.current.rain ? weather.current.rain['1h'] : 0 }) }
                                     </Text>
                                 </Card>
                             </View>

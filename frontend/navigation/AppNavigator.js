@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { ActivityNavigator, AuthNavigator } from './ActivityNavigator';
+import { AboutAppNavigator, ActivityNavigator, AuthNavigator } from './ActivityNavigator';
 import StartupScreen from '../screens/user/StartupScreen';
 import { useSelector } from 'react-redux';
 import { Toast } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AppNavigator = props => {
     const isAuth = useSelector(state => !!state.auth.token);
@@ -14,7 +15,7 @@ const AppNavigator = props => {
             title: 'Siker',
             description: 'Sikeres bejelentkezés!',
             status: 'success',
-            placement: 'bottom'
+            placement: 'top'
         });
     }
 

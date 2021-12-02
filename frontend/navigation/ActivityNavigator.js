@@ -19,6 +19,7 @@ import ProfileScreen from '../screens/user/ProfileScreen';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useDispatch } from 'react-redux';
 import { logout } from '../services/AuthService';
+import AboutAppScreen from '../screens/AboutAppScreen';
 
 const defaultNavOptions = {
     headerStyle: {
@@ -161,6 +162,20 @@ export const ProfileNavigator = () => {
     );
 };
 
+const AboutAppStackNavigator = createStackNavigator();
+
+export const AboutAppNavigator = () => {
+    return (
+        <AboutAppStackNavigator.Navigator>
+            <AboutAppStackNavigator.Screen
+                name={ 'AboutApp' }
+                component={ AboutAppScreen }
+                options={ { headerShown: false } }
+            />
+        </AboutAppStackNavigator.Navigator>
+    );
+};
+
 const ActivityDrawerNavigator = createDrawerNavigator();
 
 export const ActivityNavigator = () => {
@@ -185,7 +200,7 @@ export const ActivityNavigator = () => {
                     marginVertical: 10,
                     borderRadius: 20
                 },
-                swipeEdgeWidth: Dimensions.get('window').width / 5
+                swipeEdgeWidth: Dimensions.get('window').width / 5,
             } }
             drawerContent={ props => {
                 return (
@@ -278,6 +293,22 @@ export const ActivityNavigator = () => {
                         return (
                             <Ionicons
                                 name={ Platform.OS === 'android' ? 'md-person-circle-outline' : 'ios-person-circle-outline' }
+                                size={ 30 }
+                                color='#FFF'
+                            />
+                        );
+                    }
+                } }
+            />
+            <ActivityDrawerNavigator.Screen
+                name='AboutAppStack'
+                component={ AboutAppNavigator }
+                options={ {
+                    title: 'Tippek',
+                    drawerIcon: () => {
+                        return (
+                            <Entypo
+                                name={ 'light-bulb' }
                                 size={ 30 }
                                 color='#FFF'
                             />

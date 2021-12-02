@@ -11,6 +11,9 @@ import Translations from './i18n/translations';
 import { Asset } from 'expo-asset';
 import { NativeBaseProvider } from 'native-base/src/core/NativeBaseProvider';
 import { extendTheme } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AboutAppNavigator } from './navigation/ActivityNavigator';
+import { NavigationContainer } from '@react-navigation/native';
 
 i18n.translations = Translations;
 i18n.locale = Localization.locale;
@@ -52,6 +55,7 @@ const loadResources = async () => {
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 LogBox.ignoreLogs(['Cannot update a component']);
 LogBox.ignoreLogs(['Can\'t perform a React state update']);
+LogBox.ignoreLogs(['Non-serializable values were found']);
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);

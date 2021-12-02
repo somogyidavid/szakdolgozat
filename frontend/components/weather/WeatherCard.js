@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     temperatureContainer: {
-        backgroundColor: 'rgba(52, 52, 52, 0.25)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         borderRadius: 20,
         marginRight: 20,
     },
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     iconContainer: {
-        backgroundColor: 'rgba(52, 52, 52, 0.25)',
+        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         borderRadius: 20,
         margin: 10
     },
