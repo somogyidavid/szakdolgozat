@@ -43,11 +43,11 @@ const WeatherTableItem = props => {
                     color='white'
                     style={ { padding: 5 } }
                 />
-                <Text style={ styles.text }>{ weather.pop.toFixed(0) * 100 }%</Text>
+                <Text style={ styles.text }>{ weather.pop * 100 }%</Text>
             </View>
             <Button
                 title='...'
-                style={ { flex: 1, marginTop: 5 } }
+                style={ styles.detailsButton }
                 onPress={ () => setModalVisible(true) }
             />
         </View>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 6,
         padding: 6,
         borderRadius: 20,
-        width: 120
+        width: 120,
     },
     text: {
         color: 'white',
@@ -105,6 +105,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(52, 52, 52, 0.3)',
         borderRadius: 20,
         padding: 8
+    },
+    detailsButton: {
+        flex: 1,
+        marginTop: 5,
     }
 });
 

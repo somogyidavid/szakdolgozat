@@ -8,6 +8,7 @@ import Title from '../../components/ui/Title';
 import i18n from 'i18n-js';
 import CalendarDayItem from '../../components/ui/CalendarDayItem';
 import { AntDesign } from '@expo/vector-icons';
+import CreateActivityModal from '../../components/ui/CreateActivityModal';
 
 LocaleConfig.locales['hu'] = {
     monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus',
@@ -25,7 +26,7 @@ const CalendarScreen = props => {
     const currentDate = new Date();
     const flatListRef = useRef();
     const isFocused = useIsFocused();
-    const [offset, setOffset] = useState(6);
+    const [margin, setMargin] = useState(145);
     const [isOpen, setIsOpen] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -41,7 +42,7 @@ const CalendarScreen = props => {
 
     useEffect(() => {
         if (isFocused) {
-            setOffset(6);
+            setMargin(145);
             Toast.show({
                 title: i18n.t('tip'),
                 status: 'info',
@@ -49,7 +50,7 @@ const CalendarScreen = props => {
                 duration: null,
                 placement: 'bottom',
                 onCloseComplete: () => {
-                    setOffset(16);
+                    setMargin(50);
                 }
             });
         } else {
@@ -119,52 +120,23 @@ const CalendarScreen = props => {
                 />
                 { isFocused && <Fab
                     placement={ 'bottom-right' }
+                    renderInPortal={ true }
                     colorScheme={ 'indigo' }
                     icon={ <Icon
                         color='white'
                         as={ <AntDesign name='plus' /> }
                         size='sm'
                     /> }
-                    style={ { marginBottom: Dimensions.get('window').height / offset } }
+                    style={ { marginBottom: margin } }
                     onPress={ () => {
+                        Toast.closeAll();
                         setShowModal(true);
                     } }
                 /> }
-                <Modal
-                    isOpen={ showModal }
-                    onClose={ () => setShowModal(false) }
-                >
-                    <Modal.Content maxWidth='400px'>
-                        <Modal.CloseButton />
-                        <Modal.Header>Test Modal Header</Modal.Header>
-                        <Modal.Body>
-                            <FormControl>
-                                <FormControl.Label>Test label</FormControl.Label>
-                                <Input />
-                            </FormControl>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button.Group space={ 2 }>
-                                <Button
-                                    variant='ghost'
-                                    colorScheme='blueGray'
-                                    onPress={ () => {
-                                        setShowModal(false);
-                                    } }
-                                >
-                                    Cancel
-                                </Button>
-                                <Button
-                                    onPress={ () => {
-                                        setShowModal(false);
-                                    } }
-                                >
-                                    Save
-                                </Button>
-                            </Button.Group>
-                        </Modal.Footer>
-                    </Modal.Content>
-                </Modal>
+                <CreateActivityModal
+                    showModal={ showModal }
+                    setShowModal={ setShowModal }
+                />
             </PresenceTransition>
             <PresenceTransition
                 style={ styles.dayDetailsContainer }

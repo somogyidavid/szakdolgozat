@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { saveFirstLaunchToStorage, saveVisibleToStorage } from '../services/AuthService';
-import Colors from '../constants/Colors';
 import i18n from 'i18n-js';
 
 const slides = [
@@ -107,12 +104,6 @@ const styles = StyleSheet.create({
         fontFamily: 'open-sans',
         fontSize: 16,
         textAlign: 'center'
-    },
-    loadingSpinner: {
-        flex: 1,
-        backgroundColor: Colors.palePurple,
-        justifyContent: 'center',
-        alignItems: 'center',
     }
 });
 

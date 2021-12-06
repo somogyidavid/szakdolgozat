@@ -11,9 +11,6 @@ import Translations from './i18n/translations';
 import { Asset } from 'expo-asset';
 import { NativeBaseProvider } from 'native-base/src/core/NativeBaseProvider';
 import { extendTheme } from 'native-base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AboutAppNavigator } from './navigation/ActivityNavigator';
-import { NavigationContainer } from '@react-navigation/native';
 
 i18n.translations = Translations;
 i18n.locale = Localization.locale;
@@ -60,6 +57,10 @@ LogBox.ignoreLogs(['Non-serializable values were found']);
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
 
+    const theme = extendTheme({
+        components: {}
+    });
+
     if (!fontLoaded) {
         return (
             <AppLoading
@@ -71,7 +72,7 @@ const App = () => {
     }
 
     return (
-        <NativeBaseProvider>
+        <NativeBaseProvider theme={ theme }>
             <Provider store={ store }>
                 <AppNavigator />
             </Provider>
