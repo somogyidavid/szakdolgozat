@@ -19,6 +19,7 @@ import DatePicker from '@react-native-community/datetimepicker';
 import { MaterialIcons } from '@expo/vector-icons';
 import SelectorMap from './SelectorMap';
 import ModeSelectorModal from './ModeSelectorModal';
+import { getAddress } from '../../services/LocationService';
 
 const CreateActivityModal = props => {
     const [didSelectMode, setDidSelectMode] = useState(false);
@@ -38,6 +39,23 @@ const CreateActivityModal = props => {
         latitude: 47.5058804,
         longitude: 19.0709506
     });
+    const [formattedAddress, setFormattedAddress] = useState({
+        city: 'Budapest',
+        formattedAddress: 'Budapest'
+    });
+
+    useEffect(() => {
+        const getAddressHandler = async () => {
+            const result = await getAddress({
+                lat: pickedLocation.latitude,
+                lng: pickedLocation.longitude
+            });
+
+            setFormattedAddress(result);
+        };
+
+        getAddressHandler();
+    }, [pickedLocation]);
 
     const onChange = (event, selectedPickerDate) => {
         const date = selectedPickerDate || selectedDate;
@@ -61,7 +79,7 @@ const CreateActivityModal = props => {
         setLocationPickerVisible(false);
     };
 
-    const saveLocationHandler = (location) => {
+    const saveLocationHandler = async (location) => {
         setPickedLocation({
             latitude: location.latitude,
             longitude: location.longitude
@@ -117,7 +135,7 @@ const CreateActivityModal = props => {
                                         my={ 3 }
                                         thickness={ 2 }
                                     />
-                                    <FormControl.Label>Esemény helye - ToDo</FormControl.Label>
+                                    <FormControl.Label>Esemény helye</FormControl.Label>
                                     <Divider
                                         my={ 3 }
                                         thickness={ 2 }
@@ -182,7 +200,11 @@ const CreateActivityModal = props => {
                                             >Hely kiválasztása</Button>
                                         </HStack>
                                     </FormControl.Label>
-                                    { pickedLocation && <Text>PickedLocation helye</Text> }
+                                    { pickedLocation && <VStack alignItems='center'>
+                                        <Text>{ formattedAddress.city }</Text>
+                                        <Text>{ formattedAddress.formattedAddress.slice(
+                                            formattedAddress.formattedAddress.indexOf(',') + 1).slice(0, -8) }</Text>
+                                    </VStack> }
                                     <View style={ styles.mapContainer }>
                                         <MapView
                                             region={ mapRegion }
