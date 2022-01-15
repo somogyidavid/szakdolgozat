@@ -1,43 +1,51 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Dimensions, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import {
     Button,
-    Center,
     Divider,
     FormControl,
     HStack,
     Icon,
     Input,
     Modal,
-    ScrollView,
     Switch,
     Text,
-    VStack
+    VStack, Select, CheckIcon, WarningOutlineIcon
 } from 'native-base';
+import Slider from '@react-native-community/slider';
 import MapView, { Marker } from 'react-native-maps';
 import DatePicker from '@react-native-community/datetimepicker';
 import { MaterialIcons } from '@expo/vector-icons';
 import SelectorMap from './SelectorMap';
 import ModeSelectorModal from './ModeSelectorModal';
 import { getAddress } from '../../services/LocationService';
+import { useSelector } from 'react-redux';
 
 const CreateActivityModal = props => {
+    const location = useSelector(state => state.location.location);
+
     const [didSelectMode, setDidSelectMode] = useState(false);
+    const [inputTouched, setInputTouched] = useState(false);
     const [isCustom, setIsCustom] = useState(false);
+    const [title, setTitle] = useState('');
     const [dateTimePickerVisible, setDateTimePickerVisible] = useState(false);
     const [isAllDay, setIsAllDay] = useState(true);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [reminder, setReminder] = useState(60);
+    const [timeType, setTimeType] = useState('minute');
+    const [selectedStartingDate, setSelectedStartingDate] = useState(new Date());
+    const [selectedEndingDate, setSelectedEndingDate] = useState(new Date());
+    const [isStarting, setIsStarting] = useState(true);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
     const [locationPickerVisible, setLocationPickerVisible] = useState(false);
     const [mapRegion, setMapRegion] = useState({
-        latitude: 47.5058804,
-        longitude: 19.0709506,
+        latitude: location.lat,
+        longitude: location.lng,
         latitudeDelta: 0.1,
         longitudeDelta: 0.1
     });
     const [pickedLocation, setPickedLocation] = useState({
-        latitude: 47.5058804,
-        longitude: 19.0709506
+        latitude: location.lat,
+        longitude: location.lng
     });
     const [formattedAddress, setFormattedAddress] = useState({
         city: 'Budapest',
@@ -58,12 +66,26 @@ const CreateActivityModal = props => {
     }, [pickedLocation]);
 
     const onChange = (event, selectedPickerDate) => {
+        let selectedDate = selectedPickerDate;
+
+        if (isStarting) {
+            selectedDate = selectedStartingDate;
+        } else {
+            selectedDate = selectedEndingDate;
+        }
+
         const date = selectedPickerDate || selectedDate;
+
         if (dateTimePickerMode === 'time') {
             date.setHours(date.getHours() + 1);
         }
         setDateTimePickerVisible(Platform.OS === 'ios');
-        setSelectedDate(date);
+
+        if (isStarting) {
+            setSelectedStartingDate(date);
+        } else {
+            setSelectedEndingDate(date);
+        }
 
         if (event.type === 'set' && dateTimePickerMode === 'date' && !isAllDay) {
             setDateTimePickerMode('time');
@@ -115,13 +137,38 @@ const CreateActivityModal = props => {
                         width={ Dimensions.get('window').width - 40 }
                         height={ Dimensions.get('window').height * 0.9 }
                     >
-                        <Modal.Header>Esemény létrehozása</Modal.Header>
+                        <Modal.Header
+                            _text={ {
+                                textAlign: 'center',
+                                bg: 'indigo.500',
+                                color: '#FFF',
+                                borderRadius: 10,
+                                padding: 2
+                            } }
+                        >
+                            Esemény létrehozása
+                        </Modal.Header>
                         <Modal.Body>
-                            <ScrollView>
-                                <FormControl>
-                                    <FormControl.Label>Esemény neve</FormControl.Label>
+                            <View>
+                                <FormControl isInvalid={ title === '' && inputTouched }>
+                                    <FormControl.Label
+                                        _text={ {
+                                            bg: 'indigo.500',
+                                            color: '#FFF',
+                                            borderRadius: 10,
+                                            padding: 2
+                                        } }
+                                    >
+                                        Esemény neve
+                                    </FormControl.Label>
                                     <Input
+                                        value={ title }
                                         variant='rounded'
+                                        borderWidth={ 2 }
+                                        _focus={ {
+                                            borderWidth: 2,
+                                            borderColor: (title === '' && inputTouched) ? 'error.600' : 'muted.400'
+                                        } }
                                         InputLeftElement={
                                             <Icon
                                                 as={ <MaterialIcons name='event' /> }
@@ -130,53 +177,80 @@ const CreateActivityModal = props => {
                                                 color='muted.400'
                                             />
                                         }
+                                        onTouchStart={ () => setInputTouched(true) }
+                                        onChangeText={ (text) => setTitle(text) }
                                     />
-                                    <Divider
-                                        my={ 3 }
-                                        thickness={ 2 }
-                                    />
-                                    <FormControl.Label>Esemény helye</FormControl.Label>
+                                    <FormControl.ErrorMessage leftIcon={ <WarningOutlineIcon size='xs' /> }>
+                                        Az esemény neve kötelező!
+                                    </FormControl.ErrorMessage>
                                     <Divider
                                         my={ 3 }
                                         thickness={ 2 }
                                     />
                                     <FormControl.Label>
-                                        <HStack
-                                            alignItems='center'
-                                            space={ 6 }
-                                        >
-                                            <Text>Időpont</Text>
-                                            <VStack alignItems={ 'center' }>
-                                                <HStack
-                                                    alignItems='center'
-                                                >
-                                                    <Text>Egésznapos</Text>
-                                                    <Switch
-                                                        size='md'
-                                                        colorScheme='indigo'
-                                                        isChecked={ isAllDay }
-                                                        onToggle={ () => setIsAllDay(!isAllDay) }
-                                                    />
-                                                </HStack>
-                                                <Button
-                                                    variant='subtle'
-                                                    width={ 200 }
-                                                    onPress={ () => {
-                                                        setDateTimePickerVisible(true);
-                                                    } }
-                                                >
-                                                    { isAllDay ?
-                                                      selectedDate.toISOString().slice(0, 10) :
-                                                      selectedDate.toISOString().slice(0, 16)
-                                                          .replace('T', '   ')
-                                                    }
-                                                </Button>
-                                            </VStack>
-                                        </HStack>
+                                        <Text style={ styles.label }>Időpont</Text>
                                     </FormControl.Label>
+                                    <HStack
+                                        justifyContent='space-evenly'
+                                    >
+                                        <VStack
+                                            justifyContent='space-evenly'
+                                            space='sm'
+                                        >
+                                            <Text style={ styles.dateLabel }>Kezdet</Text>
+                                            <Text style={ styles.dateLabel }>Vége</Text>
+                                        </VStack>
+                                        <VStack
+                                            justifyContent='space-evenly'
+                                            space='sm'
+                                        >
+                                            <Button
+                                                variant='subtle'
+                                                width={ 200 }
+                                                onPress={ () => {
+                                                    setDateTimePickerVisible(true);
+                                                    setIsStarting(true);
+                                                } }
+                                            >
+                                                { isAllDay ?
+                                                  selectedStartingDate.toISOString().slice(0, 10) :
+                                                  selectedStartingDate.toISOString().slice(0, 16)
+                                                      .replace('T', '   ')
+                                                }
+                                            </Button>
+                                            <Button
+                                                variant='subtle'
+                                                width={ 200 }
+                                                onPress={ () => {
+                                                    setDateTimePickerVisible(true);
+                                                    setIsStarting(false);
+                                                } }
+                                            >
+                                                { isAllDay ?
+                                                  selectedEndingDate.toISOString().slice(0, 10) :
+                                                  selectedEndingDate.toISOString().slice(0, 16)
+                                                      .replace('T', '   ')
+                                                }
+                                            </Button>
+                                        </VStack>
+                                    </HStack>
+                                    <HStack
+                                        alignItems='center'
+                                        justifyContent='flex-end'
+                                        marginRight={ 5 }
+                                    >
+                                        <Text>Egésznapos</Text>
+                                        <Switch
+                                            size='md'
+                                            colorScheme='indigo'
+                                            isChecked={ isAllDay }
+                                            onToggle={ () => setIsAllDay(!isAllDay) }
+                                        />
+                                    </HStack>
                                     <View>
                                         { dateTimePickerVisible && <DatePicker
-                                            value={ selectedDate }
+                                            value={ isStarting ? selectedStartingDate : selectedEndingDate }
+                                            minimumDate={ isStarting ? new Date() : selectedStartingDate }
                                             mode={ dateTimePickerMode }
                                             is24Hour={ true }
                                             display='default'
@@ -188,37 +262,123 @@ const CreateActivityModal = props => {
                                         thickness={ 2 }
                                     />
                                     <FormControl.Label>
-                                        <HStack
-                                            space={ 2 }
-                                            alignItems='center'
-                                        >
-                                            <Text>Esemény helye</Text>
-                                            <Button
-                                                variant='subtle'
-                                                style={ { marginLeft: 20 } }
-                                                onPress={ () => setLocationPickerVisible(true) }
-                                            >Hely kiválasztása</Button>
-                                        </HStack>
+                                        <Text style={ styles.label }>Esemény helye</Text>
                                     </FormControl.Label>
-                                    { pickedLocation && <VStack alignItems='center'>
-                                        <Text>{ formattedAddress.city }</Text>
-                                        <Text>{ formattedAddress.formattedAddress.slice(
+                                    { pickedLocation && <VStack
+                                        alignItems='center'
+                                    >
+                                        <Text style={ styles.cityLabel }>{ formattedAddress.city }, { formattedAddress.formattedAddress.slice(
                                             formattedAddress.formattedAddress.indexOf(',') + 1).slice(0, -8) }</Text>
+                                        <Button
+                                            variant='subtle'
+                                            style={ { marginLeft: 20, marginBottom: 6 } }
+                                            onPress={ () => setLocationPickerVisible(true) }
+                                        >Hely kiválasztása</Button>
                                     </VStack> }
                                     <View style={ styles.mapContainer }>
                                         <MapView
                                             region={ mapRegion }
                                             style={ styles.map }
                                             moveOnMarkerPress={ true }
+                                            scrollEnabled={ false }
                                         >
                                             <Marker
                                                 coordinate={ pickedLocation }
-                                                title='Test Marker'
+                                                title={ formattedAddress.formattedAddress }
                                             />
                                         </MapView>
                                     </View>
+                                    <Divider
+                                        my={ 3 }
+                                        thickness={ 2 }
+                                    />
+                                    <HStack
+                                        alignItems='center'
+                                        justifyContent='flex-start'
+                                    >
+                                        <FormControl.Label>
+                                            <Text style={ styles.label }>Emlékeztető az esemény előtt</Text>
+                                        </FormControl.Label>
+                                        <Switch
+                                            size='md'
+                                            colorScheme='indigo'
+                                            isChecked={ reminder > 0 }
+                                            onToggle={ () => reminder > 0 ? setReminder(0) : setReminder(60) }
+                                        />
+                                    </HStack>
                                 </FormControl>
-                            </ScrollView>
+                                <HStack
+                                    alignItems='center'
+                                    justifyContent='center'
+                                    marginX={ 5 }
+                                >
+                                    <Slider
+                                        style={ { width: 300, height: 40 } }
+                                        value={ 60 }
+                                        minimumValue={ 10 }
+                                        maximumValue={ 120 }
+                                        step={ 10 }
+                                        minimumTrackTintColor='#818cf8'
+                                        maximumTrackTintColor='#000000'
+                                        thumbTintColor='#3730a3'
+                                        disabled={ reminder <= 0 }
+                                        onValueChange={ (value) => {
+                                            if (timeType === 'minute') {
+                                                setReminder(value);
+                                            } else {
+                                                setReminder(value / 10);
+                                            }
+                                        } }
+                                    />
+                                </HStack>
+                                { reminder > 0 && < HStack
+                                    justifyContent='center'
+                                    alignItems='center'
+                                >
+                                    <Text>{ reminder }</Text>
+                                    <Select
+                                        selectedValue={ timeType }
+                                        minWidth={ 140 }
+                                        placeholder='Válassz az alábbiak közül!'
+                                        textAlign='center'
+                                        _selectedItem={ {
+                                            bg: 'teal.600',
+                                            endIcon: <CheckIcon size='5' />,
+                                        } }
+                                        _item={ { justifyContent: 'center' } }
+                                        mt={ 1 }
+                                        ml={ 2 }
+                                        onValueChange={ (itemValue) => {
+                                            if (itemValue === 'hour' && timeType !== 'day') {
+                                                setReminder(reminder / 10);
+                                            } else if (itemValue === 'day' && timeType !== 'hour') {
+                                                setReminder(reminder / 10);
+                                            } else if (itemValue === 'minute'
+                                                && (timeType === 'hour' || timeType === 'day')) {
+                                                setReminder(reminder * 10);
+                                            }
+                                            setTimeType(itemValue);
+                                        } }
+                                    >
+                                        <Select.Item
+                                            label='perc'
+                                            value='minute'
+                                        />
+                                        <Select.Item
+                                            label='óra'
+                                            value='hour'
+                                        />
+                                        <Select.Item
+                                            label='nap'
+                                            value='day'
+                                        />
+                                    </Select>
+                                </HStack> }
+                                <Divider
+                                    my={ 3 }
+                                    thickness={ 2 }
+                                />
+                            </View>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button.Group space={ 2 }>
@@ -226,6 +386,7 @@ const CreateActivityModal = props => {
                                     variant='ghost'
                                     colorScheme='blueGray'
                                     onPress={ () => {
+                                        setInputTouched(false);
                                         setDidSelectMode(false);
                                     } }
                                 >
@@ -233,7 +394,38 @@ const CreateActivityModal = props => {
                                 </Button>
                                 <Button
                                     onPress={ () => {
-                                        props.setShowModal(false);
+                                        if (title !== '') {
+                                            const data = {
+                                                title: title,
+                                                isAllDay: isAllDay,
+                                                startingDate: selectedStartingDate,
+                                                endingDate: selectedEndingDate,
+                                                location: formattedAddress,
+                                                reminder: reminder,
+                                                timeType: timeType
+                                            };
+                                            console.log(data);
+                                            setTitle('');
+                                            setInputTouched(false);
+                                            setSelectedStartingDate(new Date());
+                                            setSelectedEndingDate(new Date());
+                                            setPickedLocation({
+                                                latitude: location.lat,
+                                                longitude: location.lng
+                                            });
+                                            setMapRegion({
+                                                latitude: location.lat,
+                                                longitude: location.lng,
+                                                latitudeDelta: 0.1,
+                                                longitudeDelta: 0.1
+                                            });
+                                            setReminder(60);
+                                            setTimeType('minute');
+                                            setDidSelectMode(false);
+                                        } else {
+                                            Alert.alert('Hiba!', 'Az esemény nevét kötelező megadni!');
+                                            setInputTouched(true);
+                                        }
                                     } }
                                 >
                                     Save
@@ -261,6 +453,29 @@ const styles = StyleSheet.create({
     map: {
         height: 300,
         width: '100%'
+    },
+    label: {
+        textAlign: 'center',
+        backgroundColor: '#6366f1',
+        color: '#FFF',
+        borderRadius: 10,
+        padding: 6
+    },
+    cityLabel: {
+        textAlign: 'center',
+        backgroundColor: '#cffafe',
+        color: '#0e7490',
+        borderRadius: 10,
+        padding: 4,
+        margin: 2,
+        marginBottom: 6
+    },
+    dateLabel: {
+        backgroundColor: '#cffafe',
+        color: '#0e7490',
+        borderRadius: 10,
+        padding: 8,
+        textAlign: 'center'
     }
 });
 

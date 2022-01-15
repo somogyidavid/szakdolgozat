@@ -43,7 +43,7 @@ const WeatherTableItem = props => {
                     color='white'
                     style={ { padding: 5 } }
                 />
-                <Text style={ styles.text }>{ weather.pop * 100 }%</Text>
+                <Text style={ styles.text }>{ (weather.pop * 100).toFixed(0) }%</Text>
             </View>
             <Button
                 title='...'

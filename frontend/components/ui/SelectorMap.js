@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
-import { Button, Modal } from 'native-base';
+import { Button, Modal, Text } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 import { useSelector } from 'react-redux';
 
@@ -30,9 +30,13 @@ const SelectorMap = props => {
 
 
     return (
-        <Modal isOpen={ props.visible }>
+        <Modal
+            isOpen={ props.visible }
+        >
             <Modal.Content>
-                <Modal.Header>Helyszín kiválasztása</Modal.Header>
+                <Modal.Header>
+                    <Text style={ styles.label }>Helyszín kiválasztása</Text>
+                </Modal.Header>
                 <Modal.Body>
                     <MapView
                         style={ styles.map }
@@ -66,7 +70,14 @@ const SelectorMap = props => {
 const styles = StyleSheet.create({
     map: {
         height: Dimensions.get('window').height
-    }
+    },
+    label: {
+        textAlign: 'center',
+        backgroundColor: '#6366f1',
+        color: '#FFF',
+        borderRadius: 10,
+        padding: 6
+    },
 });
 
 export default SelectorMap;
