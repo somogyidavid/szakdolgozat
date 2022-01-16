@@ -53,6 +53,7 @@ LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 LogBox.ignoreLogs(['Cannot update a component']);
 LogBox.ignoreLogs(['Can\'t perform a React state update']);
 LogBox.ignoreLogs(['Non-serializable values were found']);
+LogBox.ignoreLogs(['Deprecation warning: value provided is not in a recognized RFC2822 or ISO format.']);
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);

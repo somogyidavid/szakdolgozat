@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, FlatList } from 'react-native';
+import { View, StyleSheet, Dimensions, FlatList, Text } from 'react-native';
 import { PresenceTransition, Toast, Button, Fab, Icon, Box, Center, Modal, FormControl, Input } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
@@ -9,6 +9,7 @@ import i18n from 'i18n-js';
 import CalendarDayItem from '../../components/ui/CalendarDayItem';
 import { AntDesign } from '@expo/vector-icons';
 import CreateActivityModal from '../../components/ui/CreateActivityModal';
+import moment from 'moment';
 
 LocaleConfig.locales['hu'] = {
     monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus',
@@ -58,27 +59,86 @@ const CalendarScreen = props => {
         }
     }, [isFocused]);
 
-    useEffect(() => {
-        if (flatListRef.current) {
-            flatListRef.current.scrollToIndex({ index: currentDate.getHours() });
+    const activities = [
+        {
+            title: 'Teszt',
+            isAllDay: true,
+            startingDate: moment.utc('2022-01-25'),
+            endingDate: moment.utc('2022-01-28'),
+            location: {
+                city: 'Balassagyarmat',
+                formattedAddress: 'Kossuth út 12'
+            },
+            reminder: 60,
+            timeType: 'minute'
+        },
+        {
+            title: 'Teszt2',
+            isAllDay: false,
+            startingDate: moment.utc('2022-01-20 13:00'),
+            endingDate: moment.utc('2022-01-20 15:00'),
+            location: {
+                city: 'Budapest',
+                formattedAddress: 'Kossuth út 16'
+            },
+            reminder: 1,
+            timeType: 'hour'
+        },
+        {
+            title: 'Teszt3',
+            isAllDay: false,
+            startingDate: moment.utc('2022-01-20 15:30'),
+            endingDate: moment.utc('2022-01-20 16:30'),
+            location: {
+                city: 'Kecskemét',
+                formattedAddress: 'Rákóczi út 12'
+            },
+            reminder: 10,
+            timeType: 'minute'
+        },
+        {
+            title: 'Teszt4',
+            isAllDay: false,
+            startingDate: moment.utc('2022-01-20 11:00'),
+            endingDate: moment.utc('2022-01-20 15:00'),
+            location: {
+                city: 'Budapest',
+                formattedAddress: 'Kossuth út 16'
+            },
+            reminder: 1,
+            timeType: 'hour'
+        },
+        {
+            title: 'Teszt5',
+            isAllDay: true,
+            startingDate: moment.utc('2022-01-20'),
+            endingDate: moment.utc('2022-01-22'),
+            location: {
+                city: 'Balassagyarmat',
+                formattedAddress: 'Kossuth út 12'
+            },
+            reminder: 60,
+            timeType: 'minute'
+        },
+        {
+            title: 'Teszt6',
+            isAllDay: false,
+            startingDate: moment.utc('2022-01-29 13:00'),
+            endingDate: moment.utc('2022-01-31 14:00'),
+            location: {
+                city: 'Balassagyarmat',
+                formattedAddress: 'Kossuth út 12'
+            },
+            reminder: 60,
+            timeType: 'minute'
         }
-    }, []);
-
-    const hours = [
-        { time: '00:00' }, { time: '01:00' }, { time: '02:00' }, { time: '03:00' }, { time: '04:00' },
-        { time: '05:00' }, { time: '06:00' }, { time: '07:00' }, { time: '08:00' }, { time: '09:00' },
-        { time: '10:00' }, { time: '11:00' }, { time: '12:00' }, { time: '13:00' }, { time: '14:00' },
-        { time: '15:00' }, { time: '16:00' }, { time: '17:00' }, { time: '18:00' }, { time: '19:00' },
-        { time: '20:00' }, { time: '21:00' }, { time: '22:00' }, { time: '23:00' }
     ];
 
-    const getItemLayout = (data, index) => {
-        return {
-            length: 120,
-            offset: 120 * index,
-            index
-        };
-    };
+    const currentActivities = activities.filter((item) => {
+        return moment(selectedDate).isBetween(moment(item.startingDate), moment(item.endingDate), 'day', '[]');
+    }).sort((a, b) => {
+        return a.startingDate - b.startingDate;
+    });
 
     return (
         <View style={ styles.container }>
@@ -146,15 +206,21 @@ const CalendarScreen = props => {
             >
                 <View style={ styles.dayDetailsContainer }>
                     <Title content={ selectedDate } />
-                    <FlatList
-                        ref={ flatListRef }
-                        style={ styles.flatList }
-                        data={ hours }
-                        keyExtractor={ (item, index) => index.toString() }
-                        renderItem={ ({ index, item }) => <CalendarDayItem item={ item } /> }
-                        initialScrollIndex={ currentDate.getHours() }
-                        getItemLayout={ getItemLayout }
-                    />
+                    { currentActivities.length > 0 ?
+                      <FlatList
+                          ref={ flatListRef }
+                          style={ styles.flatList }
+                          data={ currentActivities }
+                          renderItem={ ({ index, item }) => <CalendarDayItem
+                              item={ item }
+                              selectedDate={ selectedDate }
+                          /> }
+                          keyExtractor={ (item, index) => index.toString() }
+                      /> :
+                      <Text style={ styles.noActivity }>
+                          Nincs programod a mai napra!{ '\n' }Hozz létre újat!
+                      </Text>
+                    }
                     <Button
                         onPress={ () => {
                             setIsOpen(!isOpen);
@@ -200,6 +266,14 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: Colors.darkPurple,
         marginVertical: 10
+    },
+    noActivity: {
+        fontFamily: 'open-sans-bold',
+        textAlign: 'center',
+        fontSize: 18,
+        backgroundColor: '#a5f3fc',
+        borderRadius: 10,
+        padding: 6,
     }
 });
 
