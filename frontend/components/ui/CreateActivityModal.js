@@ -21,7 +21,7 @@ import SelectorMap from './SelectorMap';
 import ModeSelectorModal from './ModeSelectorModal';
 import { getAddress } from '../../services/LocationService';
 import { useSelector } from 'react-redux';
-import pick from 'react-native-web/dist/modules/pick';
+import i18n from 'i18n-js';
 
 const CreateActivityModal = props => {
     const location = useSelector(state => state.location.location);
@@ -208,14 +208,14 @@ const CreateActivityModal = props => {
                                 overflow: 'hidden'
                             } }
                         >
-                            { props.isEdit ? 'Esemény módosítása' : 'Esemény létrehozása' }
+                            { props.isEdit ? i18n.t('activityEdit') : i18n.t('activityCreate') }
                         </Modal.Header>
                         <Modal.Body>
                             <View>
                                 <FormControl isInvalid={ title === '' && inputTouched }>
                                     <FormControl.Label>
                                         <Text style={ styles.label }>
-                                            Esemény neve{ props.isEdit ? ': ' + props.item.title : '' }
+                                            { i18n.t('activityName') }
                                         </Text>
                                     </FormControl.Label>
                                     <Input
@@ -238,14 +238,14 @@ const CreateActivityModal = props => {
                                         onChangeText={ (text) => setTitle(text) }
                                     />
                                     <FormControl.ErrorMessage leftIcon={ <WarningOutlineIcon size='xs' /> }>
-                                        Az esemény neve kötelező!
+                                        { i18n.t('activityMissingTitle') }
                                     </FormControl.ErrorMessage>
                                     <Divider
                                         my={ 3 }
                                         thickness={ 2 }
                                     />
                                     <FormControl.Label>
-                                        <Text style={ styles.label }>Időpont</Text>
+                                        <Text style={ styles.label }>{ i18n.t('activityDate') }</Text>
                                     </FormControl.Label>
                                     <HStack
                                         justifyContent='space-evenly'
@@ -254,8 +254,8 @@ const CreateActivityModal = props => {
                                             justifyContent='space-evenly'
                                             space='sm'
                                         >
-                                            <Text style={ styles.dateLabel }>Kezdet</Text>
-                                            <Text style={ styles.dateLabel }>Vége</Text>
+                                            <Text style={ styles.dateLabel }>{ i18n.t('activityStart') }</Text>
+                                            <Text style={ styles.dateLabel }>{ i18n.t('activityEnd') }</Text>
                                         </VStack>
                                         <VStack
                                             justifyContent='space-evenly'
@@ -297,7 +297,7 @@ const CreateActivityModal = props => {
                                         marginTop={ 2 }
                                         marginRight={ 5 }
                                     >
-                                        <Text>Egésznapos</Text>
+                                        <Text>{ i18n.t('activityAllDay') }</Text>
                                         <Switch
                                             size='md'
                                             marginLeft={ 2 }
@@ -322,7 +322,7 @@ const CreateActivityModal = props => {
                                         thickness={ 2 }
                                     />
                                     <FormControl.Label>
-                                        <Text style={ styles.label }>Esemény helye</Text>
+                                        <Text style={ styles.label }>{ i18n.t('activityLocation') }</Text>
                                     </FormControl.Label>
                                     { pickedLocation && <VStack
                                         alignItems='center'
@@ -333,7 +333,9 @@ const CreateActivityModal = props => {
                                             variant='subtle'
                                             style={ { marginLeft: 20, marginBottom: 6 } }
                                             onPress={ () => setLocationPickerVisible(true) }
-                                        >Hely kiválasztása</Button>
+                                        >
+                                            { i18n.t('activityChoosePlace') }
+                                        </Button>
                                     </VStack> }
                                     <View style={ styles.mapContainer }>
                                         <MapView
@@ -357,7 +359,7 @@ const CreateActivityModal = props => {
                                         justifyContent='flex-start'
                                     >
                                         <FormControl.Label>
-                                            <Text style={ styles.label }>Emlékeztető az esemény előtt</Text>
+                                            <Text style={ styles.label }>{ i18n.t('activityReminder') }</Text>
                                         </FormControl.Label>
                                         <Switch
                                             size='md'
@@ -422,15 +424,15 @@ const CreateActivityModal = props => {
                                         } }
                                     >
                                         <Select.Item
-                                            label='perc'
+                                            label={ i18n.t('activityMinute') }
                                             value='minute'
                                         />
                                         <Select.Item
-                                            label='óra'
+                                            label={ i18n.t('activityHour') }
                                             value='hour'
                                         />
                                         <Select.Item
-                                            label='nap'
+                                            label={ i18n.t('activityDay') }
                                             value='day'
                                         />
                                     </Select>
@@ -451,7 +453,7 @@ const CreateActivityModal = props => {
                                         setInputTouched(false);
                                     } }
                                 >
-                                    Cancel
+                                    { i18n.t('cancel') }
                                 </Button>
                                 <Button
                                     onPress={ () => {
@@ -470,7 +472,7 @@ const CreateActivityModal = props => {
                                         }
                                     } }
                                 >
-                                    Save
+                                    { i18n.t('save') }
                                 </Button>
                             </Button.Group>
                         </Modal.Footer>

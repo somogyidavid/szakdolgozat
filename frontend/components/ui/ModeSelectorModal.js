@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, Center, FormControl, Modal } from 'native-base';
+import i18n from 'i18n-js';
 
 const ModeSelectorModal = props => {
     return (
@@ -23,14 +24,14 @@ const ModeSelectorModal = props => {
                                     variant={ props.isCustom ? 'subtle' : 'solid' }
                                     onPress={ () => props.setIsCustom(false) }
                                 >
-                                    Advise
+                                    { i18n.t('advise') }
                                 </Button>
                                 <Button
                                     colorScheme={ 'indigo' }
                                     variant={ props.isCustom ? 'solid' : 'subtle' }
                                     onPress={ () => props.setIsCustom(true) }
                                 >
-                                    Custom
+                                    { i18n.t('custom') }
                                 </Button>
                             </Button.Group>
                         </Center>
@@ -45,7 +46,7 @@ const ModeSelectorModal = props => {
                                 props.setShowModal(false);
                             } }
                         >
-                            Cancel
+                            { i18n.t('cancel') }
                         </Button>
                         <Button
                             onPress={ () => {
@@ -53,7 +54,7 @@ const ModeSelectorModal = props => {
                                 props.setShowModal(false);
                             } }
                         >
-                            Select
+                            { i18n.t('select') }
                         </Button>
                     </Button.Group>
                 </Modal.Footer>

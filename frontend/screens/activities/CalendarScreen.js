@@ -10,6 +10,7 @@ import CalendarDayItem from '../../components/ui/CalendarDayItem';
 import { AntDesign } from '@expo/vector-icons';
 import CreateActivityModal from '../../components/ui/CreateActivityModal';
 import moment from 'moment';
+import * as Localization from 'expo-localization';
 
 LocaleConfig.locales['hu'] = {
     monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus',
@@ -21,7 +22,21 @@ LocaleConfig.locales['hu'] = {
     today: 'Ma'
 };
 
-LocaleConfig.defaultLocale = 'hu';
+LocaleConfig.locales['en'] = {
+    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+        'September', 'Oktober', 'November', 'December'],
+    monthNamesShort: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+        'September', 'Oktober', 'November', 'December'],
+    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    dayNamesShort: ['SU', 'M', 'TU', 'W', 'TH', 'F', 'SA'],
+    today: 'Today'
+};
+
+if (Localization.locale === 'hu-HU') {
+    LocaleConfig.defaultLocale = 'hu';
+} else {
+    LocaleConfig.defaultLocale = 'en';
+}
 
 const CalendarScreen = props => {
     const currentDate = new Date();
@@ -231,7 +246,7 @@ const CalendarScreen = props => {
                           keyExtractor={ (item, index) => index.toString() }
                       /> :
                       <Text style={ styles.noActivity }>
-                          Nincs programod a mai napra!{ '\n' }Hozz létre újat!
+                          { i18n.t('noActivity') }
                       </Text>
                     }
                     <Button

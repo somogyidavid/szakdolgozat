@@ -4,6 +4,7 @@ import { Entypo } from '@expo/vector-icons';
 import moment from 'moment';
 import { HStack, VStack } from 'native-base';
 import CreateActivityModal from './CreateActivityModal';
+import i18n from 'i18n-js';
 
 const CalendarDayItem = props => {
     const [isEdit, setIsEdit] = useState(false);
@@ -41,7 +42,7 @@ const CalendarDayItem = props => {
                         justifyContent='space-evenly'
                     >
                         <Text>
-                            { item.isAllDay ? 'Egész nap' : startingTime + ' - ' + endingTime }
+                            { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
                         </Text>
                         <Entypo
                             name={ 'flow-line' }
