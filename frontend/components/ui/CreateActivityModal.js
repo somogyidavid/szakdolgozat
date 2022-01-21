@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import moment from 'moment';
 import { View, StyleSheet, Dimensions, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import {
     Button,
@@ -20,6 +21,7 @@ import SelectorMap from './SelectorMap';
 import ModeSelectorModal from './ModeSelectorModal';
 import { getAddress } from '../../services/LocationService';
 import { useSelector } from 'react-redux';
+import pick from 'react-native-web/dist/modules/pick';
 
 const CreateActivityModal = props => {
     const location = useSelector(state => state.location.location);
@@ -53,6 +55,26 @@ const CreateActivityModal = props => {
     });
 
     useEffect(() => {
+        if (props.isEdit) {
+            setTitle(props.item.title);
+            setSelectedStartingDate(new Date(props.item.startingDate));
+            setSelectedEndingDate(new Date(props.item.endingDate));
+            setPickedLocation({
+                latitude: props.item.location.latitude,
+                longitude: props.item.location.longitude
+            });
+            setMapRegion({
+                latitude: props.item.location.latitude,
+                longitude: props.item.location.longitude,
+                latitudeDelta: 0.1,
+                longitudeDelta: 0.1
+            });
+            setReminder(props.item.reminder);
+            setTimeType(props.item.timeType);
+        }
+    }, [props.isEdit]);
+
+    useEffect(() => {
         const getAddressHandler = async () => {
             const result = await getAddress({
                 lat: pickedLocation.latitude,
@@ -83,6 +105,9 @@ const CreateActivityModal = props => {
 
         if (isStarting) {
             setSelectedStartingDate(date);
+            if (props.isEdit) {
+                setSelectedEndingDate(date);
+            }
         } else {
             setSelectedEndingDate(date);
         }
@@ -114,6 +139,42 @@ const CreateActivityModal = props => {
         setLocationPickerVisible(false);
     };
 
+    const getData = () => {
+        return {
+            title: title,
+            isAllDay: isAllDay,
+            startingDate: selectedStartingDate,
+            endingDate: selectedEndingDate,
+            location: {
+                city: formattedAddress.city,
+                formattedAddress: formattedAddress.formattedAddress,
+                latitude: pickedLocation.latitude,
+                longitude: pickedLocation.longitude
+            },
+            reminder: reminder,
+            timeType: timeType
+        };
+    };
+
+    const resetUI = () => {
+        setTitle('');
+        setInputTouched(false);
+        setSelectedStartingDate(new Date());
+        setSelectedEndingDate(new Date());
+        setPickedLocation({
+            latitude: location.lat,
+            longitude: location.lng
+        });
+        setMapRegion({
+            latitude: location.lat,
+            longitude: location.lng,
+            latitudeDelta: 0.1,
+            longitudeDelta: 0.1
+        });
+        setReminder(60);
+        setTimeType('minute');
+    };
+
     return (
         <View>
             <ModeSelectorModal
@@ -125,8 +186,8 @@ const CreateActivityModal = props => {
                 setIsCustom={ setIsCustom }
             />
             <Modal
-                isOpen={ isCustom && didSelectMode }
-                onClose={ () => props.setShowModal(false) }
+                isOpen={ isCustom && didSelectMode || props.isEdit }
+                onClose={ () => props.isEdit ? props.editHandler() : props.setShowModal(false) }
             >
                 <KeyboardAvoidingView
                     behavior='height'
@@ -143,23 +204,19 @@ const CreateActivityModal = props => {
                                 bg: 'indigo.500',
                                 color: '#FFF',
                                 borderRadius: 10,
-                                padding: 2
+                                padding: 2,
+                                overflow: 'hidden'
                             } }
                         >
-                            Esemény létrehozása
+                            { props.isEdit ? 'Esemény módosítása' : 'Esemény létrehozása' }
                         </Modal.Header>
                         <Modal.Body>
                             <View>
                                 <FormControl isInvalid={ title === '' && inputTouched }>
-                                    <FormControl.Label
-                                        _text={ {
-                                            bg: 'indigo.500',
-                                            color: '#FFF',
-                                            borderRadius: 10,
-                                            padding: 2
-                                        } }
-                                    >
-                                        Esemény neve
+                                    <FormControl.Label>
+                                        <Text style={ styles.label }>
+                                            Esemény neve{ props.isEdit ? ': ' + props.item.title : '' }
+                                        </Text>
                                     </FormControl.Label>
                                     <Input
                                         value={ title }
@@ -237,12 +294,15 @@ const CreateActivityModal = props => {
                                     <HStack
                                         alignItems='center'
                                         justifyContent='flex-end'
+                                        marginTop={ 2 }
                                         marginRight={ 5 }
                                     >
                                         <Text>Egésznapos</Text>
                                         <Switch
                                             size='md'
+                                            marginLeft={ 2 }
                                             colorScheme='indigo'
+                                            defaultIsChecked={ props.isEdit }
                                             isChecked={ isAllDay }
                                             onToggle={ () => setIsAllDay(!isAllDay) }
                                         />
@@ -250,7 +310,7 @@ const CreateActivityModal = props => {
                                     <View>
                                         { dateTimePickerVisible && <DatePicker
                                             value={ isStarting ? selectedStartingDate : selectedEndingDate }
-                                            minimumDate={ isStarting ? new Date() : selectedStartingDate }
+                                            minimumDate={ isStarting ? props.isEdit ? selectedStartingDate : new Date() : selectedStartingDate }
                                             mode={ dateTimePickerMode }
                                             is24Hour={ true }
                                             display='default'
@@ -303,6 +363,7 @@ const CreateActivityModal = props => {
                                             size='md'
                                             colorScheme='indigo'
                                             isChecked={ reminder > 0 }
+                                            defaultIsChecked={ props.reminder > 0 }
                                             onToggle={ () => reminder > 0 ? setReminder(0) : setReminder(60) }
                                         />
                                     </HStack>
@@ -319,7 +380,7 @@ const CreateActivityModal = props => {
                                         maximumValue={ 120 }
                                         step={ 10 }
                                         minimumTrackTintColor='#818cf8'
-                                        maximumTrackTintColor='#000000'
+                                        maximumTrackTintColor='#808080'
                                         thumbTintColor='#3730a3'
                                         disabled={ reminder <= 0 }
                                         onValueChange={ (value) => {
@@ -386,8 +447,8 @@ const CreateActivityModal = props => {
                                     variant='ghost'
                                     colorScheme='blueGray'
                                     onPress={ () => {
+                                        props.isEdit ? props.editHandler() : setDidSelectMode(false);
                                         setInputTouched(false);
-                                        setDidSelectMode(false);
                                     } }
                                 >
                                     Cancel
@@ -395,33 +456,14 @@ const CreateActivityModal = props => {
                                 <Button
                                     onPress={ () => {
                                         if (title !== '') {
-                                            const data = {
-                                                title: title,
-                                                isAllDay: isAllDay,
-                                                startingDate: selectedStartingDate,
-                                                endingDate: selectedEndingDate,
-                                                location: formattedAddress,
-                                                reminder: reminder,
-                                                timeType: timeType
-                                            };
+                                            const data = getData();
                                             console.log(data);
-                                            setTitle('');
-                                            setInputTouched(false);
-                                            setSelectedStartingDate(new Date());
-                                            setSelectedEndingDate(new Date());
-                                            setPickedLocation({
-                                                latitude: location.lat,
-                                                longitude: location.lng
-                                            });
-                                            setMapRegion({
-                                                latitude: location.lat,
-                                                longitude: location.lng,
-                                                latitudeDelta: 0.1,
-                                                longitudeDelta: 0.1
-                                            });
-                                            setReminder(60);
-                                            setTimeType('minute');
-                                            setDidSelectMode(false);
+                                            resetUI();
+                                            if (props.isEdit) {
+                                                props.editHandler();
+                                            } else {
+                                                setDidSelectMode(false);
+                                            }
                                         } else {
                                             Alert.alert('Hiba!', 'Az esemény nevét kötelező megadni!');
                                             setInputTouched(true);
@@ -459,7 +501,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#6366f1',
         color: '#FFF',
         borderRadius: 10,
-        padding: 6
+        padding: 6,
+        overflow: 'hidden'
     },
     cityLabel: {
         textAlign: 'center',

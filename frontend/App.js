@@ -11,6 +11,9 @@ import Translations from './i18n/translations';
 import { Asset } from 'expo-asset';
 import { NativeBaseProvider } from 'native-base/src/core/NativeBaseProvider';
 import { extendTheme } from 'native-base';
+import moment from 'moment';
+
+moment.locale(Localization.locale);
 
 i18n.translations = Translations;
 i18n.locale = Localization.locale;
@@ -54,6 +57,7 @@ LogBox.ignoreLogs(['Cannot update a component']);
 LogBox.ignoreLogs(['Can\'t perform a React state update']);
 LogBox.ignoreLogs(['Non-serializable values were found']);
 LogBox.ignoreLogs(['Deprecation warning: value provided is not in a recognized RFC2822 or ISO format.']);
+LogBox.ignoreLogs(['When server rendering, you must wrap your application in an <SSRProvider>']);
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Dimensions, FlatList, Text } from 'react-native';
-import { PresenceTransition, Toast, Button, Fab, Icon, Box, Center, Modal, FormControl, Input } from 'native-base';
+import { PresenceTransition, Toast, Button, Fab, Icon } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import Colors from '../../constants/Colors';
@@ -43,6 +43,7 @@ const CalendarScreen = props => {
 
     useEffect(() => {
         if (isFocused) {
+            setIsOpen(false);
             setMargin(145);
             Toast.show({
                 title: i18n.t('tip'),
@@ -67,7 +68,9 @@ const CalendarScreen = props => {
             endingDate: moment.utc('2022-01-28'),
             location: {
                 city: 'Balassagyarmat',
-                formattedAddress: 'Kossuth út 12'
+                formattedAddress: 'Kossuth út 12',
+                latitude: 48.0722596,
+                longitude: 19.2990538
             },
             reminder: 60,
             timeType: 'minute'
@@ -79,7 +82,9 @@ const CalendarScreen = props => {
             endingDate: moment.utc('2022-01-20 15:00'),
             location: {
                 city: 'Budapest',
-                formattedAddress: 'Kossuth út 16'
+                formattedAddress: 'Kossuth út 16',
+                latitude: 48.0722596,
+                longitude: 19.2990538
             },
             reminder: 1,
             timeType: 'hour'
@@ -91,7 +96,9 @@ const CalendarScreen = props => {
             endingDate: moment.utc('2022-01-20 16:30'),
             location: {
                 city: 'Kecskemét',
-                formattedAddress: 'Rákóczi út 12'
+                formattedAddress: 'Rákóczi út 12',
+                latitude: 48.0722596,
+                longitude: 19.2990538
             },
             reminder: 10,
             timeType: 'minute'
@@ -103,7 +110,9 @@ const CalendarScreen = props => {
             endingDate: moment.utc('2022-01-20 15:00'),
             location: {
                 city: 'Budapest',
-                formattedAddress: 'Kossuth út 16'
+                formattedAddress: 'Kossuth út 16',
+                latitude: 48.0722596,
+                longitude: 19.2990538
             },
             reminder: 1,
             timeType: 'hour'
@@ -115,7 +124,9 @@ const CalendarScreen = props => {
             endingDate: moment.utc('2022-01-22'),
             location: {
                 city: 'Balassagyarmat',
-                formattedAddress: 'Kossuth út 12'
+                formattedAddress: 'Kossuth út 12',
+                latitude: 48.0722596,
+                longitude: 19.2990538
             },
             reminder: 60,
             timeType: 'minute'
@@ -127,7 +138,9 @@ const CalendarScreen = props => {
             endingDate: moment.utc('2022-01-31 14:00'),
             location: {
                 city: 'Balassagyarmat',
-                formattedAddress: 'Kossuth út 12'
+                formattedAddress: 'Kossuth út 12',
+                latitude: 48.0722596,
+                longitude: 19.2990538
             },
             reminder: 60,
             timeType: 'minute'
