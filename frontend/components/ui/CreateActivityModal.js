@@ -22,6 +22,7 @@ import ModeSelectorModal from './ModeSelectorModal';
 import { getAddress } from '../../services/LocationService';
 import { useSelector } from 'react-redux';
 import i18n from 'i18n-js';
+import ActivityAdvisorModal from './ActivityAdvisorModal';
 
 const CreateActivityModal = props => {
     const location = useSelector(state => state.location.location);
@@ -483,6 +484,13 @@ const CreateActivityModal = props => {
                 visible={ locationPickerVisible }
                 closeHandler={ mapModalHandler }
                 saveHandler={ saveLocationHandler }
+            />
+            <ActivityAdvisorModal
+                isOpen={ !isCustom && didSelectMode }
+                onCloseHandler={ () => {
+                    setDidSelectMode(false);
+                    props.setShowModal(false);
+                } }
             />
         </View>
     );
