@@ -224,6 +224,7 @@ const CalendarScreen = props => {
                 <CreateActivityModal
                     showModal={ showModal }
                     setShowModal={ setShowModal }
+                    navigation={ props.navigation }
                 />
             </PresenceTransition>
             <PresenceTransition

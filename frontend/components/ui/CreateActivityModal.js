@@ -491,6 +491,7 @@ const CreateActivityModal = props => {
                     setDidSelectMode(false);
                     props.setShowModal(false);
                 } }
+                navigation={ props.navigation }
             />
         </View>
     );
