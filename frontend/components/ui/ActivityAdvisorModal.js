@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, StyleSheet } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
 import {
     Button,
-    Center,
     Divider,
     FlatList,
-    FormControl, HStack,
+    HStack,
     Modal,
-    ScrollView,
-    Stack,
-    Text,
     View,
-    VStack
 } from 'native-base';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchActivities } from '../../services/ActivitiesService';
-import { ActivitySkeleton } from './ActivitySkeleton';
 import { Ionicons } from '@expo/vector-icons';
 import ActivityItem from './ActivityItem';
 
@@ -26,6 +20,7 @@ const ActivityAdvisorModal = props => {
     const isLoading = useSelector(state => state.activities.isLoading);
     const activities = useSelector(state => state.activities.activities);
     const [modalOpen, setModalOpen] = useState(false);
+    const [selectedActivity, setSelectedActivity] = useState('');
 
     const getActivitiesHandler = async () => {
         const options = {
@@ -78,20 +73,38 @@ const ActivityAdvisorModal = props => {
                     _scrollview={ {
                         scrollEnabled: false,
                         nestedScrollEnabled: false,
-                        horizontal: true
+                        horizontal: true,
+                        showsHorizontalScrollIndicator: false,
+                        showsVerticalScrollIndicator: false
                     } }
+                    style={ isLoading ? {
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginLeft: (Dimensions.get('window').width * 0.75) / 2
+                    } : {} }
                 >
-                    <View>
-                        <FlatList
-                            data={ activities.filter(item => {
-                                return item.rating || item.price_level || item.photos;
-                            }) }
-                            renderItem={ ({ index, item }) => <ActivityItem item={ item } /> }
-                            keyExtractor={ (item, index) => index.toString() }
-                            refreshing={ isLoading }
-                            onRefresh={ () => getActivitiesHandler() }
-                        />
-                    </View>
+                    { isLoading ?
+                      <View style={ styles.loadingSpinner }>
+                          <ActivityIndicator
+                              size='large'
+                              color='#000'
+                          />
+                      </View> :
+                      <View>
+                          <FlatList
+                              data={ activities.filter(item => {
+                                  return item.rating || item.price_level || item.photos;
+                              }) }
+                              renderItem={ ({ index, item }) => <ActivityItem
+                                  item={ item }
+                                  setSelectedActivity={ setSelectedActivity }
+                                  selected={ item.place_id === selectedActivity }
+                              /> }
+                              keyExtractor={ (item, index) => index.toString() }
+                              refreshing={ isLoading }
+                              onRefresh={ () => getActivitiesHandler() }
+                          />
+                      </View> }
                 </Modal.Body>
                 <HStack
                     justifyContent='space-evenly'
@@ -99,7 +112,7 @@ const ActivityAdvisorModal = props => {
                 >
                     <Button
                         style={ styles.refreshButton }
-                        onPress={ () => console.log('refresh') }
+                        onPress={ () => getActivitiesHandler() }
                         size={ 10 }
                     >
                         Új programokat kérek
@@ -125,6 +138,7 @@ const ActivityAdvisorModal = props => {
                             variant='ghost'
                             colorScheme='blueGray'
                             onPress={ () => {
+                                setSelectedActivity('');
                                 props.onCloseHandler();
                                 setModalOpen(false);
                             } }
@@ -160,6 +174,10 @@ const styles = StyleSheet.create({
     filterButton: {
         marginRight: 4,
         borderRadius: 10
+    },
+    loadingSpinner: {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 

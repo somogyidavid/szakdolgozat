@@ -1,26 +1,48 @@
 import React from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import { HStack, Image, Text, View, VStack } from 'native-base';
+import { FlatList, HStack, Image, Text, View, VStack } from 'native-base';
 import { AirbnbRating, Rating } from 'react-native-ratings';
 import ENV from '../../constants/env';
+import Label from './Label';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const ActivityItem = props => {
-    const { item } = props;
+    const { item, setSelectedActivity, selected } = props;
 
     return (
         <TouchableOpacity
-            style={ styles.container }
+            style={ selected ?
+                {
+                    ...styles.container,
+                    backgroundColor: '#a5b4fc',
+                    height: item.name.length > 30 ? 270 : 245,
+                    borderColor: '#000'
+                } :
+                { ...styles.container, height: item.name.length > 30 ? 270 : 245 } }
             activeOpacity={ 0.65 }
+            onPress={ () => setSelectedActivity(item.place_id) }
         >
             <VStack>
                 <HStack justifyContent='flex-start'>
-                    <Text style={ styles.title }>{ item.name }</Text>
+                    <Text
+                        style={ selected ? {
+                            ...styles.title,
+                            backgroundColor: '#6366f1',
+                            color: 'white'
+                        } : styles.title }
+                    >{ item.name }</Text>
                 </HStack>
-                <HStack justifyContent='flex-start'>
+                <HStack
+                    justifyContent='flex-start'
+                    alignItems='center'
+                >
                     { item.rating && <AirbnbRating
-                        starContainerStyle={ styles.rating }
+                        starContainerStyle={ selected ? {
+                            ...styles.rating,
+                            backgroundColor: '#6366f1'
+                        } : styles.rating }
                         selectedColor='#fbbf24'
-                        unSelectedColor='#a3a3a3'
+                        unSelectedColor={ selected ? '#e5e5e5' : '#a3a3a3' }
                         defaultRating={ Math.ceil(item.rating / 0.5) * 0.5 }
                         count={ 5 }
                         size={ 16 }
@@ -28,9 +50,13 @@ const ActivityItem = props => {
                         isDisabled={ true }
                     /> }
                     { item.price_level && <AirbnbRating
-                        starContainerStyle={ { ...styles.rating, marginLeft: 10 } }
-                        selectedColor='#16a34a'
-                        unSelectedColor='#a3a3a3'
+                        starContainerStyle={ selected ? {
+                            ...styles.rating,
+                            backgroundColor: '#6366f1',
+                            marginLeft: 10
+                        } : { ...styles.rating, marginLeft: 10 } }
+                        selectedColor={ selected ? '#4ade80' : '#16a34a' }
+                        unSelectedColor={ selected ? '#e5e5e5' : '#a3a3a3' }
                         defaultRating={ Math.ceil(item.price_level / 0.5) * 0.5 }
                         count={ 5 }
                         size={ 16 }
@@ -38,9 +64,25 @@ const ActivityItem = props => {
                         isDisabled={ true }
                         starImage={ require('../../assets/images/money.png') }
                     /> }
+                    { item.opening_hours && <HStack
+                        alignItems='center'
+                        style={ selected ? {
+                            ...styles.opening,
+                            backgroundColor: '#6366f1'
+                        } : styles.opening }
+                        space={ 1 }
+                    >
+                        <Text style={ selected ? { color: '#FFF' } : { color: '#000' } }>
+                            { item.opening_hours.open_now ? 'Nyitva' : 'Zárva' }
+                        </Text>
+                        <FontAwesome5
+                            name={ item.opening_hours.open_now ? 'door-open' : 'door-closed' }
+                            color={ selected ? '#FFF' : '#000' }
+                        />
+                    </HStack> }
                 </HStack>
                 <HStack>
-                    <Text>{ item.vicinity }</Text>
+                    <Text style={ styles.address }>{ item.vicinity }</Text>
                 </HStack>
                 <HStack>
                     { item.photos ?
@@ -49,12 +91,22 @@ const ActivityItem = props => {
                           alt='Image'
                           width={ 120 }
                           height={ 120 }
+                          borderWidth={ 1 }
+                          borderColor={ '#000' }
                           borderRadius={ 10 }
                           overflow='hidden'
                           style={ { marginTop: 4 } }
                       /> :
                       <Text>MISSING IMAGE - TODO</Text>
                     }
+                    <FlatList
+                        data={ item.types.slice(0, 4) }
+                        renderItem={ ({ index, item }) => <Label
+                            text={ item }
+                            color={ 'hsl(' + Math.floor(Math.random() * 361) + ',50%,75%)' }
+                        /> }
+                        keyExtractor={ (item, index) => index.toString() }
+                    />
                 </HStack>
             </VStack>
         </TouchableOpacity>
@@ -83,6 +135,17 @@ const styles = StyleSheet.create({
     rating: {
         backgroundColor: '#d4d4d4',
         marginVertical: 6,
+        borderRadius: 10
+    },
+    address: {
+        fontFamily: 'open-sans',
+        fontSize: 12
+    },
+    opening: {
+        backgroundColor: '#d4d4d4',
+        paddingVertical: 1,
+        paddingHorizontal: 6,
+        marginLeft: 6,
         borderRadius: 10
     }
 });

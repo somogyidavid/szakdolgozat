@@ -1489,13 +1489,14 @@ const LocationReducer = (state = initialState, action) => {
             };
         }
         case FETCH_LOCATION_SUCCESS: {
+            initialState.location = payload.location;
             return {
                 ...state,
                 isLoading: false,
                 location: payload.location,
                 address: payload.address,
                 weather: payload.weather,
-                errors: []
+                errors: [],
             };
         }
         case FETCH_LOCATION_ERROR: {

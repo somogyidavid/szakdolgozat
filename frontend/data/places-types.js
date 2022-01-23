@@ -25,5 +25,6 @@ export const PlacesTypes = [
     { title: 'Tourist Attraction', type: 'tourist_attraction' },
     { title: 'Train Station', type: 'train_station' },
     { title: 'University', type: 'university' },
-    { title: 'Store', type: 'store' }
+    { title: 'Store', type: 'store' },
+    { title: 'Zoo', type: 'zoo' }
 ];
