@@ -4,7 +4,7 @@ import { FlatList, HStack, Image, Text, View, VStack } from 'native-base';
 import { AirbnbRating, Rating } from 'react-native-ratings';
 import ENV from '../../constants/env';
 import Label from './Label';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 const ActivityItem = props => {
     const { item, setSelectedActivity, selected } = props;
@@ -15,10 +15,10 @@ const ActivityItem = props => {
                 {
                     ...styles.container,
                     backgroundColor: '#a5b4fc',
-                    height: item.name.length > 30 ? 270 : 245,
+                    height: item.name.length > 30 ? 275 : 250,
                     borderColor: '#000'
                 } :
-                { ...styles.container, height: item.name.length > 30 ? 270 : 245 } }
+                { ...styles.container, height: item.name.length > 30 ? 275 : 250 } }
             activeOpacity={ 0.65 }
             onPress={ () => setSelectedActivity(item.place_id) }
         >
@@ -81,7 +81,18 @@ const ActivityItem = props => {
                         />
                     </HStack> }
                 </HStack>
-                <HStack>
+                <HStack
+                    space={ 2 }
+                    alignItems='center'
+                >
+                    <HStack style={ styles.userRatings }>
+                        <MaterialIcons
+                            name='rate-review'
+                            size={ 24 }
+                            color='black'
+                        />
+                        <Text>{ item.user_ratings_total }</Text>
+                    </HStack>
                     <Text style={ styles.address }>{ item.vicinity }</Text>
                 </HStack>
                 <HStack>
@@ -146,6 +157,11 @@ const styles = StyleSheet.create({
         paddingVertical: 1,
         paddingHorizontal: 6,
         marginLeft: 6,
+        borderRadius: 10
+    },
+    userRatings: {
+        backgroundColor: '#d4d4d4',
+        padding: 2,
         borderRadius: 10
     }
 });
