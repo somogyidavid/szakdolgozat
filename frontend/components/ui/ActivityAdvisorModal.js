@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import {
     Button,
     Divider,
     FlatList,
     HStack,
-    Modal, Toast,
+    Modal, Text, Toast,
     View,
 } from 'native-base';
 import i18n from 'i18n-js';
@@ -14,6 +14,8 @@ import { fetchActivities } from '../../services/ActivitiesService';
 import { Ionicons } from '@expo/vector-icons';
 import ActivityItem from './ActivityItem';
 import FilterModal from './FilterModal';
+import DateTimePickerModal from './DateTimePickerModal';
+import moment from 'moment';
 
 const ActivityAdvisorModal = props => {
     const dispatch = useDispatch();
@@ -22,6 +24,11 @@ const ActivityAdvisorModal = props => {
     const activities = useSelector(state => state.activities.activities);
     const [modalOpen, setModalOpen] = useState(false);
     const [filterOpen, setFilterOpen] = useState(false);
+    const [timePickerOpen, setTimePickerOpen] = useState(false);
+    const [selectedStartingDate, setSelectedStartingDate] = useState(new Date());
+    const [selectedEndingDate, setSelectedEndingDate] = useState(new Date());
+    const [dateSelected, setDateSelected] = useState(false);
+    const [isAllDay, setIsAllDay] = useState(true);
     const [selectedActivity, setSelectedActivity] = useState('');
     const [filters, setFilters] = useState({
         minimumRating: 1,
@@ -143,9 +150,24 @@ const ActivityAdvisorModal = props => {
                             />
                         </Button>
                     </HStack>
+                    { dateSelected && <HStack justifyContent='center'>
+                        <TouchableOpacity
+                            activeOpacity={ 0.65 }
+                            onPress={ () => setDateSelected(false) }
+                        >
+                            <Text style={ styles.chosenDate }>A kiválasztott dátum:{ '\n' }
+                                { isAllDay ?
+                                  moment.utc(selectedStartingDate).format('YYYY-MM-DD') :
+                                  moment.utc(selectedStartingDate).format('YYYY-MM-DD HH:mm') }{ '-től ' }
+                                { isAllDay ?
+                                  moment.utc(selectedEndingDate).format('YYYY-MM-DD') :
+                                  moment.utc(selectedEndingDate).format('YYYY-MM-DD HH:mm') }{ '-ig' }
+                            </Text>
+                        </TouchableOpacity>
+                    </HStack> }
                     <Modal.Footer>
                         <Divider
-                            my={ 3 }
+                            my={ 1 }
                             thickness={ 2 }
                         />
                         <Button.Group space={ 2 }>
@@ -154,6 +176,7 @@ const ActivityAdvisorModal = props => {
                                 colorScheme='blueGray'
                                 onPress={ () => {
                                     setSelectedActivity('');
+                                    setDateSelected(false);
                                     props.onCloseHandler();
                                     setModalOpen(false);
                                 } }
@@ -162,18 +185,27 @@ const ActivityAdvisorModal = props => {
                             </Button>
                             <Button
                                 onPress={ () => {
-                                    console.log(activities.find((item) => {
-                                        return item.place_id === selectedActivity;
-                                    }));
-                                    setSelectedActivity('');
-                                    props.onCloseHandler();
-                                    setModalOpen(false);
-                                    Toast.show({
-                                        title: i18n.t('success'),
-                                        description: 'A program bekerült a naptáradba!',
-                                        status: 'success',
-                                        placement: 'bottom'
-                                    });
+                                    if (selectedActivity) {
+                                        if (dateSelected) {
+                                            console.log(activities.find((item) => {
+                                                return item.place_id === selectedActivity;
+                                            }));
+                                            setSelectedActivity('');
+                                            setDateSelected(false);
+                                            props.onCloseHandler();
+                                            setModalOpen(false);
+                                            Toast.show({
+                                                title: i18n.t('success'),
+                                                description: 'A program bekerült a naptáradba!',
+                                                status: 'success',
+                                                placement: 'bottom'
+                                            });
+                                        } else {
+                                            setTimePickerOpen(true);
+                                        }
+                                    } else {
+                                        Alert.alert('Hiba!', 'Válassz egy programot!');
+                                    }
                                 } }
                             >
                                 Hozzáadás a programjaimhoz
@@ -187,6 +219,17 @@ const ActivityAdvisorModal = props => {
                 setFilterOpen={ setFilterOpen }
                 filters={ filters }
                 setFilters={ setFilters }
+            />
+            <DateTimePickerModal
+                isOpen={ timePickerOpen }
+                setTimePickerOpen={ setTimePickerOpen }
+                selectedStartingDate={ selectedStartingDate }
+                setSelectedStartingDate={ setSelectedStartingDate }
+                selectedEndingDate={ selectedEndingDate }
+                setSelectedEndingDate={ setSelectedEndingDate }
+                setDateSelected={ setDateSelected }
+                isAllDay={ isAllDay }
+                setIsAllDay={ setIsAllDay }
             />
         </View>
     );
@@ -205,6 +248,17 @@ const styles = StyleSheet.create({
     loadingSpinner: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    chosenDate: {
+        width: '100%',
+        textAlign: 'center',
+        backgroundColor: '#06b6d4',
+        color: '#FFF',
+        marginVertical: 2,
+        paddingVertical: 2,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        overflow: 'hidden'
     }
 });
 

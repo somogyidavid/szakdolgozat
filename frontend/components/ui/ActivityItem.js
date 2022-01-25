@@ -85,13 +85,18 @@ const ActivityItem = props => {
                     space={ 2 }
                     alignItems='center'
                 >
-                    <HStack style={ styles.userRatings }>
+                    <HStack
+                        style={ selected ? {
+                            ...styles.userRatings,
+                            backgroundColor: '#6366f1'
+                        } : styles.userRatings }
+                    >
                         <MaterialIcons
                             name='rate-review'
                             size={ 24 }
-                            color='black'
+                            color={ selected ? '#FFF' : '#000' }
                         />
-                        <Text>{ item.user_ratings_total }</Text>
+                        <Text style={ selected ? { color: '#FFF' } : { color: '#000' } }>{ item.user_ratings_total }</Text>
                     </HStack>
                     <Text style={ styles.address }>{ item.vicinity }</Text>
                 </HStack>
