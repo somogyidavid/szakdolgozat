@@ -6,7 +6,7 @@ import Colors from '../../constants/Colors';
 const Title = props => {
     return (
         <View style={ { ...styles.titleContainer, ...props.style } }>
-            <Card style={ styles.titleCard }>
+            <Card style={ { ...styles.titleCard, ...props.cardStyle } }>
                 <Text
                     style={ { ...styles.title, ...props.titleStyle } }
                 >{ props.content }</Text>

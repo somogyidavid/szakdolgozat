@@ -120,6 +120,7 @@ const ActivityAdvisorModal = props => {
                                       item={ item }
                                       setSelectedActivity={ setSelectedActivity }
                                       selected={ item.place_id === selectedActivity }
+                                      touchable={ true }
                                   /> }
                                   keyExtractor={ (item, index) => index.toString() }
                                   refreshing={ isLoading }

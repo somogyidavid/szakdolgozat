@@ -7,10 +7,12 @@ import Label from './Label';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 const ActivityItem = props => {
-    const { item, setSelectedActivity, selected } = props;
+    const { item, setSelectedActivity, selected, touchable } = props;
+
+    const TouchableComponent = touchable ? TouchableOpacity : View;
 
     return (
-        <TouchableOpacity
+        <TouchableComponent
             style={ selected ?
                 {
                     ...styles.container,
@@ -52,9 +54,8 @@ const ActivityItem = props => {
                     { item.price_level && <AirbnbRating
                         starContainerStyle={ selected ? {
                             ...styles.rating,
-                            backgroundColor: '#6366f1',
-                            marginLeft: 10
-                        } : { ...styles.rating, marginLeft: 10 } }
+                            backgroundColor: '#6366f1'
+                        } : styles.rating }
                         selectedColor={ selected ? '#4ade80' : '#16a34a' }
                         unSelectedColor={ selected ? '#e5e5e5' : '#a3a3a3' }
                         defaultRating={ Math.ceil(item.price_level / 0.5) * 0.5 }
@@ -85,7 +86,7 @@ const ActivityItem = props => {
                     space={ 2 }
                     alignItems='center'
                 >
-                    <HStack
+                    { item.user_ratings_total && <HStack
                         style={ selected ? {
                             ...styles.userRatings,
                             backgroundColor: '#6366f1'
@@ -96,9 +97,14 @@ const ActivityItem = props => {
                             size={ 24 }
                             color={ selected ? '#FFF' : '#000' }
                         />
-                        <Text style={ selected ? { color: '#FFF' } : { color: '#000' } }>{ item.user_ratings_total }</Text>
-                    </HStack>
-                    <Text style={ styles.address }>{ item.vicinity }</Text>
+                        <Text style={ selected ? { color: '#FFF' } : { color: '#000' } }>
+                            { item.user_ratings_total }
+                        </Text>
+                    </HStack> }
+                    <Text style={ styles.address }>
+                        { item.vicinity.includes('(') ?
+                          item.vicinity.substring(0, item.vicinity.indexOf('(')) : item.vicinity }
+                    </Text>
                 </HStack>
                 <HStack>
                     { item.photos ?
@@ -125,7 +131,7 @@ const ActivityItem = props => {
                     />
                 </HStack>
             </VStack>
-        </TouchableOpacity>
+        </TouchableComponent>
     );
 };
 
@@ -151,6 +157,7 @@ const styles = StyleSheet.create({
     rating: {
         backgroundColor: '#d4d4d4',
         marginVertical: 6,
+        marginRight: 6,
         borderRadius: 10
     },
     address: {
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#d4d4d4',
         paddingVertical: 1,
         paddingHorizontal: 6,
-        marginLeft: 6,
+        marginVertical: 6,
         borderRadius: 10
     },
     userRatings: {
