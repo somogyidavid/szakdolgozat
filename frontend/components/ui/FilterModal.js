@@ -29,12 +29,12 @@ const FilterModal = props => {
                         overflow: 'hidden'
                     } }
                 >
-                    Szűrés
+                    { i18n.t('filter') }
                 </Modal.Header>
                 <Modal.Body>
                     <VStack>
                         <View style={ styles.card }>
-                            <Text style={ styles.label }>Minimum értékelés</Text>
+                            <Text style={ styles.label }>{ i18n.t('minRating') }</Text>
                             <AirbnbRating
                                 defaultRating={ minimumRating }
                                 size={ 30 }
@@ -46,7 +46,7 @@ const FilterModal = props => {
                             />
                         </View>
                         <View style={ styles.card }>
-                            <Text style={ styles.label }>Maximum értékelés</Text>
+                            <Text style={ styles.label }>{ i18n.t('maxRating') }</Text>
                             <AirbnbRating
                                 defaultRating={ maximumRating }
                                 size={ 30 }
@@ -58,7 +58,7 @@ const FilterModal = props => {
                             />
                         </View>
                         <View style={ styles.card }>
-                            <Text style={ styles.label }>Minimum ár</Text>
+                            <Text style={ styles.label }>{ i18n.t('minPrice') }</Text>
                             <AirbnbRating
                                 defaultRating={ minimumPrice }
                                 size={ 30 }
@@ -71,7 +71,7 @@ const FilterModal = props => {
                             />
                         </View>
                         <View style={ styles.card }>
-                            <Text style={ styles.label }>Maximum ár</Text>
+                            <Text style={ styles.label }>{ i18n.t('maxPrice') }</Text>
                             <AirbnbRating
                                 defaultRating={ maximumPrice }
                                 size={ 30 }

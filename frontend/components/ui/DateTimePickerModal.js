@@ -61,7 +61,7 @@ const DateTimePickerModal = props => {
             <Modal.Content
                 maxWidth={ 400 }
                 width={ Dimensions.get('window').width - 40 }
-                height={ Dimensions.get('window').height * 0.35 }
+                height={ Dimensions.get('window').height * 0.45 }
             >
                 <Modal.Header
                     _text={ {
@@ -73,7 +73,7 @@ const DateTimePickerModal = props => {
                         overflow: 'hidden'
                     } }
                 >
-                    Válassz időpontot!
+                    { i18n.t('chooseDate') }
                 </Modal.Header>
                 <Modal.Body>
                     <VStack>
@@ -83,7 +83,7 @@ const DateTimePickerModal = props => {
                             space={ 6 }
                         >
                             <VStack style={ styles.container }>
-                                <Text style={ styles.text }>Kezdés</Text>
+                                <Text style={ styles.text }>{ i18n.t('activityStart') }</Text>
                                 <Button
                                     onPress={ () => {
                                         setIsStarting(true);
@@ -95,7 +95,7 @@ const DateTimePickerModal = props => {
                                 </Button>
                             </VStack>
                             <VStack style={ styles.container }>
-                                <Text style={ styles.text }>Vége</Text>
+                                <Text style={ styles.text }>{ i18n.t('activityEnd') }</Text>
                                 <Button
                                     onPress={ () => {
                                         setIsStarting(false);
@@ -111,7 +111,7 @@ const DateTimePickerModal = props => {
                             justifyContent='center'
                             alignItems='center'
                         >
-                            <Text>Egész nap</Text>
+                            <Text>{ i18n.t('activityAllDay') }</Text>
                             <Switch
                                 size='md'
                                 marginLeft={ 2 }
@@ -150,7 +150,7 @@ const DateTimePickerModal = props => {
                                 setTimePickerOpen(false);
                             } }
                         >
-                            Beállít
+                            { i18n.t('setDate') }
                         </Button>
                     </Button.Group>
                 </Modal.Footer>

@@ -88,7 +88,7 @@ const ActivityAdvisorModal = props => {
                             overflow: 'hidden'
                         } }
                     >
-                        Válassz az alábbi programajánlatok közül!
+                        { i18n.t('chooseActivity') }
                     </Modal.Header>
                     <Modal.Body
                         _scrollview={ {
@@ -136,7 +136,7 @@ const ActivityAdvisorModal = props => {
                             onPress={ () => getActivitiesHandler() }
                             size={ 10 }
                         >
-                            Új programokat kérek
+                            { i18n.t('requestNewActivities') }
                         </Button>
                         <Button
                             style={ styles.filterButton }
@@ -155,13 +155,18 @@ const ActivityAdvisorModal = props => {
                             activeOpacity={ 0.65 }
                             onPress={ () => setDateSelected(false) }
                         >
-                            <Text style={ styles.chosenDate }>A kiválasztott dátum:{ '\n' }
-                                { isAllDay ?
-                                  moment.utc(selectedStartingDate).format('YYYY-MM-DD') :
-                                  moment.utc(selectedStartingDate).format('YYYY-MM-DD HH:mm') }{ '-től ' }
-                                { isAllDay ?
-                                  moment.utc(selectedEndingDate).format('YYYY-MM-DD') :
-                                  moment.utc(selectedEndingDate).format('YYYY-MM-DD HH:mm') }{ '-ig' }
+                            <Text style={ styles.chosenDate }>{ i18n.t('chosenDate', {
+                                fromDate:
+                                    isAllDay ?
+                                    moment.utc(selectedStartingDate).format('YYYY.MM.DD') :
+                                    moment.utc(selectedStartingDate).format('YYYY.MM.DD HH:mm'),
+
+                                toDate:
+                                    isAllDay ?
+                                    moment.utc(selectedEndingDate).format('YYYY.MM.DD') :
+                                    moment.utc(selectedEndingDate).format('YYYY.MM.DD HH:mm')
+
+                            }) }
                             </Text>
                         </TouchableOpacity>
                     </HStack> }
@@ -208,7 +213,7 @@ const ActivityAdvisorModal = props => {
                                     }
                                 } }
                             >
-                                Hozzáadás a programjaimhoz
+                                { i18n.t('addToMyActivities') }
                             </Button>
                         </Button.Group>
                     </Modal.Footer>

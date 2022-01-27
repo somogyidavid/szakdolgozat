@@ -10,7 +10,7 @@ const ModeSelectorModal = props => {
             onClose={ () => props.setShowModal(false) }
         >
             <Modal.Content maxWidth='400px'>
-                <Modal.Header>Select Mode</Modal.Header>
+                <Modal.Header>{ i18n.t('selectMode') }</Modal.Header>
                 <Modal.Body>
                     <FormControl>
                         <Center>
