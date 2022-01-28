@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, StyleSheet, ActivityIndicator, SafeAreaView, TouchableOpacity } from 'react-native';
 import Title from '../../components/ui/Title';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSights } from '../../services/SightsService';
 import ActivityItem from '../../components/ui/ActivityItem';
-import { useIsFocused } from '@react-navigation/native';
-import { Toast } from 'native-base';
+import SightDetailsModal from '../../components/ui/SightDetailsModal';
 
 const SightsScreen = props => {
     const dispatch = useDispatch();
     const location = useSelector(state => state.location.location);
     const isLoading = useSelector(state => state.sights.isLoading);
     const sights = useSelector(state => state.sights.sights);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedSight, setSelectedSight] = useState();
 
     const getSightsHandler = async () => {
         dispatch(fetchSights({
@@ -53,7 +54,10 @@ const SightsScreen = props => {
                                           renderItem={ ({ index, item }) => {
                                               return (
                                                   <TouchableOpacity
-                                                      onPress={ () => console.log('pressed') }
+                                                      onPress={ () => {
+                                                          setSelectedSight(sights.find(element => element.place_id === item.place_id));
+                                                          setIsOpen(true);
+                                                      } }
                                                       activeOpacity={ 0.6 }
                                                   >
                                                       <ActivityItem
@@ -63,7 +67,7 @@ const SightsScreen = props => {
                                                   </TouchableOpacity>
                                               );
                                           } }
-                                          keyExtractor={ (item, index) => index.toString() }
+                                          keyExtractor={ (item, index) => item.place_id }
                                           onRefresh={ getSightsHandler }
                                           refreshing={ isLoading }
                                       /> :
@@ -71,6 +75,12 @@ const SightsScreen = props => {
                         Sajnos nem található nevezetesség a környezetedben!
                     </Text> }
               </SafeAreaView> }
+            <SightDetailsModal
+                isOpen={ isOpen }
+                setIsOpen={ setIsOpen }
+                selectedSight={ selectedSight }
+                setSelectedSight={ setSelectedSight }
+            />
         </View>
     );
 };

@@ -1,31 +1,35 @@
-import { FETCH_SIGHTS_REQUEST, FETCH_SIGHTS_SUCCESS, FETCH_SIGHTS_FAILED } from '../../constants/SightsConstants';
+import {
+    FETCH_PLACE_DETAILS_REQUEST,
+    FETCH_PLACE_DETAILS_SUCCESS,
+    FETCH_PLACE_DETAILS_FAILED
+} from '../../constants/PlaceDetailsConstants';
 
 const initialState = {
     isLoading: false,
-    sights: [],
+    placeDetails: {},
     errors: []
 };
 
-const SightsReducer = (state = initialState, action) => {
+const PlaceDetailsReducer = (state = initialState, action) => {
     const { type, payload } = action;
 
     switch (type) {
-        case FETCH_SIGHTS_REQUEST: {
+        case FETCH_PLACE_DETAILS_REQUEST: {
             return {
                 ...state,
                 isLoading: true,
                 errors: []
             };
         }
-        case FETCH_SIGHTS_SUCCESS: {
+        case FETCH_PLACE_DETAILS_SUCCESS: {
             return {
                 ...state,
                 isLoading: false,
-                sights: payload.sights,
+                placeDetails: payload.placeDetails,
                 errors: []
             };
         }
-        case FETCH_SIGHTS_FAILED: {
+        case FETCH_PLACE_DETAILS_FAILED: {
             return {
                 ...state,
                 isLoading: false,
@@ -37,4 +41,4 @@ const SightsReducer = (state = initialState, action) => {
     }
 };
 
-export default SightsReducer;
+export default PlaceDetailsReducer;
