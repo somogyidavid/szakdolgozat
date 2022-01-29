@@ -57,7 +57,8 @@ LogBox.ignoreLogs(['Cannot update a component']);
 LogBox.ignoreLogs(['Can\'t perform a React state update']);
 LogBox.ignoreLogs(['Non-serializable values were found']);
 LogBox.ignoreLogs(['Deprecation warning: value provided is not in a recognized RFC2822 or ISO format.']);
-LogBox.ignoreLogs(['When server rendering, you must wrap your application in an <SSRProvider>']);
+LogBox.ignoreLogs(['When server rendering, you must wrap your application in an']);
+LogBox.ignoreLogs(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation']);
 
 const App = () => {
     const [fontLoaded, setFontLoaded] = useState(false);
