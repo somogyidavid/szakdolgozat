@@ -16,6 +16,7 @@ import ActivityItem from './ActivityItem';
 import FilterModal from './FilterModal';
 import DateTimePickerModal from './DateTimePickerModal';
 import moment from 'moment';
+import { insertUserActivity } from '../../services/UserActivitiesService';
 
 const ActivityAdvisorModal = props => {
     const dispatch = useDispatch();
@@ -193,9 +194,39 @@ const ActivityAdvisorModal = props => {
                                 onPress={ () => {
                                     if (selectedActivity) {
                                         if (dateSelected) {
-                                            console.log(activities.find((item) => {
+                                            const item = activities.find((item) => {
                                                 return item.place_id === selectedActivity;
+                                            });
+                                            dispatch(insertUserActivity({
+                                                name: item.name,
+                                                isAllDay: isAllDay,
+                                                startingDate: selectedStartingDate,
+                                                endingDate: selectedEndingDate,
+                                                location: {
+                                                    city: '',
+                                                    formattedAddress: item.vicinity,
+                                                    latitude: item.geometry.location.lat,
+                                                    longitude: item.geometry.location.lng
+                                                },
+                                                reminder: 60,
+                                                timeType: 'minute',
+                                                details: item
                                             }));
+                                            console.log({
+                                                name: item.name,
+                                                isAllDay: isAllDay,
+                                                startingDate: selectedStartingDate,
+                                                endingDate: selectedEndingDate,
+                                                location: {
+                                                    city: '',
+                                                    formattedAddress: item.vicinity,
+                                                    latitude: item.geometry.location.lat,
+                                                    longitude: item.geometry.location.lng
+                                                },
+                                                reminder: 60,
+                                                timeType: 'minute',
+                                                details: item
+                                            });
                                             setSelectedActivity('');
                                             setDateSelected(false);
                                             props.onCloseHandler();

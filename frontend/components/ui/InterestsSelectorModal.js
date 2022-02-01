@@ -33,6 +33,8 @@ const InterestsSelectorModal = props => {
             const result = await AsyncStorage.getItem('firstLaunch');
             setVisible(result ? JSON.parse(result).firstLaunch : visible);
             setIsLoading(false);
+
+            // AsyncStorage.removeItem('firstLaunch');
         };
 
         const onViewableItemsChanged = useRef(({ changed, viewableItems }) => {

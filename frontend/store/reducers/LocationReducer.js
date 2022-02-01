@@ -1489,7 +1489,6 @@ const LocationReducer = (state = initialState, action) => {
             };
         }
         case FETCH_LOCATION_SUCCESS: {
-            initialState.location = payload.location;
             return {
                 ...state,
                 isLoading: false,
@@ -1507,7 +1506,7 @@ const LocationReducer = (state = initialState, action) => {
             };
         }
         default:
-            return initialState;
+            return state;
     }
 
 };

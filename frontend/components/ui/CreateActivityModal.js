@@ -57,7 +57,7 @@ const CreateActivityModal = props => {
 
     useEffect(() => {
         if (props.isEdit) {
-            setTitle(props.item.title);
+            setTitle(props.item.name);
             setSelectedStartingDate(new Date(props.item.startingDate));
             setSelectedEndingDate(new Date(props.item.endingDate));
             setPickedLocation({
@@ -142,7 +142,7 @@ const CreateActivityModal = props => {
 
     const getData = () => {
         return {
-            title: title,
+            name: title,
             isAllDay: isAllDay,
             startingDate: selectedStartingDate,
             endingDate: selectedEndingDate,
@@ -153,7 +153,8 @@ const CreateActivityModal = props => {
                 longitude: pickedLocation.longitude
             },
             reminder: reminder,
-            timeType: timeType
+            timeType: timeType,
+            details: {}
         };
     };
 
