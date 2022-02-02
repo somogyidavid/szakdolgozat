@@ -11,6 +11,7 @@ import { AntDesign } from '@expo/vector-icons';
 import CreateActivityModal from '../../components/ui/CreateActivityModal';
 import moment from 'moment';
 import * as Localization from 'expo-localization';
+import { useSelector } from 'react-redux';
 
 LocaleConfig.locales['hu'] = {
     monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus',
@@ -42,6 +43,7 @@ const CalendarScreen = props => {
     const currentDate = new Date();
     const flatListRef = useRef();
     const isFocused = useIsFocused();
+    const activities = useSelector(state => state.userActivities.activities);
     const [margin, setMargin] = useState(145);
     const [isOpen, setIsOpen] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -75,93 +77,6 @@ const CalendarScreen = props => {
         }
     }, [isFocused]);
 
-    const activities = [
-        {
-            title: 'Teszt',
-            isAllDay: true,
-            startingDate: moment.utc('2022-01-25'),
-            endingDate: moment.utc('2022-01-28'),
-            location: {
-                city: 'Balassagyarmat',
-                formattedAddress: 'Kossuth út 12',
-                latitude: 48.0722596,
-                longitude: 19.2990538
-            },
-            reminder: 60,
-            timeType: 'minute'
-        },
-        {
-            title: 'Teszt2',
-            isAllDay: false,
-            startingDate: moment.utc('2022-01-20 13:00'),
-            endingDate: moment.utc('2022-01-20 15:00'),
-            location: {
-                city: 'Budapest',
-                formattedAddress: 'Kossuth út 16',
-                latitude: 48.0722596,
-                longitude: 19.2990538
-            },
-            reminder: 1,
-            timeType: 'hour'
-        },
-        {
-            title: 'Teszt3',
-            isAllDay: false,
-            startingDate: moment.utc('2022-01-20 15:30'),
-            endingDate: moment.utc('2022-01-20 16:30'),
-            location: {
-                city: 'Kecskemét',
-                formattedAddress: 'Rákóczi út 12',
-                latitude: 48.0722596,
-                longitude: 19.2990538
-            },
-            reminder: 10,
-            timeType: 'minute'
-        },
-        {
-            title: 'Teszt4',
-            isAllDay: false,
-            startingDate: moment.utc('2022-01-20 11:00'),
-            endingDate: moment.utc('2022-01-20 15:00'),
-            location: {
-                city: 'Budapest',
-                formattedAddress: 'Kossuth út 16',
-                latitude: 48.0722596,
-                longitude: 19.2990538
-            },
-            reminder: 1,
-            timeType: 'hour'
-        },
-        {
-            title: 'Teszt5',
-            isAllDay: true,
-            startingDate: moment.utc('2022-01-20'),
-            endingDate: moment.utc('2022-01-22'),
-            location: {
-                city: 'Balassagyarmat',
-                formattedAddress: 'Kossuth út 12',
-                latitude: 48.0722596,
-                longitude: 19.2990538
-            },
-            reminder: 60,
-            timeType: 'minute'
-        },
-        {
-            title: 'Teszt6',
-            isAllDay: false,
-            startingDate: moment.utc('2022-01-29 13:00'),
-            endingDate: moment.utc('2022-01-31 14:00'),
-            location: {
-                city: 'Balassagyarmat',
-                formattedAddress: 'Kossuth út 12',
-                latitude: 48.0722596,
-                longitude: 19.2990538
-            },
-            reminder: 60,
-            timeType: 'minute'
-        }
-    ];
-
     const currentActivities = activities.filter((item) => {
         return moment(selectedDate).isBetween(moment(item.startingDate), moment(item.endingDate), 'day', '[]');
     }).sort((a, b) => {
@@ -170,7 +85,10 @@ const CalendarScreen = props => {
 
     return (
         <View style={ styles.container }>
-            <Title content={ i18n.t('myCalendar') } />
+            <Title
+                content={ i18n.t('myCalendar') }
+                cardStyle={ { backgroundColor: '#155e75' } }
+            />
             <PresenceTransition
                 visible={ !isOpen }
                 initial={ { opacity: 0, scale: 0 } }
@@ -193,7 +111,7 @@ const CalendarScreen = props => {
                         setMarkedDates({
                             [day.dateString]: {
                                 selected: true,
-                                selectedColor: Colors.darkPurple,
+                                selectedColor: '#155e75',
                                 marked: true,
                                 dotColor: 'white'
                             }
@@ -209,13 +127,12 @@ const CalendarScreen = props => {
                 { isFocused && <Fab
                     placement={ 'bottom-right' }
                     renderInPortal={ true }
-                    colorScheme={ 'indigo' }
                     icon={ <Icon
                         color='white'
                         as={ <AntDesign name='plus' /> }
                         size='sm'
                     /> }
-                    style={ { marginBottom: margin } }
+                    style={ { marginBottom: margin, backgroundColor: '#155e75' } }
                     onPress={ () => {
                         Toast.closeAll();
                         setShowModal(true);
@@ -271,7 +188,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: Colors.palePurple,
+        backgroundColor: '#cffafe',
         padding: 4
     },
     calendar: {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserActivities } from '../../services/UserActivitiesService';

@@ -4,6 +4,7 @@ import { HStack, Image, Text, View, VStack } from 'native-base';
 import moment from 'moment';
 import ENV from '../../constants/env';
 import i18n from 'i18n-js';
+import { Entypo } from '@expo/vector-icons';
 
 const UserActivityItem = props => {
     const { item } = props;
@@ -11,27 +12,61 @@ const UserActivityItem = props => {
     return (
         <TouchableOpacity activeOpacity={ 0.6 }>
             <View style={ styles.container }>
-                <VStack>
+                <VStack
+                    space={ 3 }
+                    alignItems='flex-start'
+                    justifyContent='space-evenly'
+                >
                     <Text style={ styles.title }>{ item.name }</Text>
-                    <Text>{ item.location.formattedAddress }</Text>
-                    <HStack>
+                    <HStack alignItems='center'>
+                        <Entypo
+                            name='location'
+                            size={ 24 }
+                            color='black'
+                            style={ styles.icon }
+                        />
+                        <Text>{ item.location.formattedAddress }</Text>
+                    </HStack>
+                    <HStack alignItems='center'>
+                        <Entypo
+                            name='calendar'
+                            size={ 24 }
+                            color='black'
+                            style={ styles.icon }
+                        />
                         { item.isAllDay && <Text style={ styles.isAllDay }>{ i18n.t('activityAllDay') }:</Text> }
                         <Text>
                             { moment.utc(item.startingDate).format('YYYY.MM.DD') }{ ' - ' }
                             { moment.utc(item.endingDate).format('YYYY.MM.DD') }
                         </Text>
                     </HStack>
-                    <Text>
-                        { i18n.t('activityReminder') }: { item.reminder } { i18n.t(`activity${ item.timeType[0].toUpperCase() + item.timeType.substring(1) }`) }
-                    </Text>
+                    <HStack alignItems='center'>
+                        <Entypo
+                            name='clock'
+                            size={ 24 }
+                            color='black'
+                            style={ styles.icon }
+                        />
+                        <Text>
+                            { i18n.t('activityReminder') }: { item.reminder } { i18n.t(`activity${ item.timeType[0].toUpperCase() + item.timeType.substring(1) }`) }
+                        </Text>
+                    </HStack>
                     { item.details.photos &&
-                        <Image
-                            source={ { uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${ item.details.photos[0].photo_reference }&key=${ ENV().googleApiKey }` } }
-                            width={ 120 }
-                            height={ 120 }
-                            alt='Image'
-                            style={ styles.image }
-                        /> }
+                        <HStack alignItems='center'>
+                            <Entypo
+                                name='image'
+                                size={ 24 }
+                                color='black'
+                                style={ styles.icon }
+                            />
+                            <Image
+                                source={ { uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${ item.details.photos[0].photo_reference }&key=${ ENV().googleApiKey }` } }
+                                width={ 120 }
+                                height={ 120 }
+                                alt='Image'
+                                style={ styles.image }
+                            />
+                        </HStack> }
                 </VStack>
             </View>
         </TouchableOpacity>
@@ -52,7 +87,7 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     image: {
-        marginVertical: 4,
+        marginLeft: 2,
         borderRadius: 10,
         overflow: 'hidden',
         borderColor: '#065f46',
@@ -60,6 +95,9 @@ const styles = StyleSheet.create({
     },
     isAllDay: {
         marginRight: 8
+    },
+    icon: {
+        marginRight: 4
     }
 });
 

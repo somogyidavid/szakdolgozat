@@ -33,23 +33,35 @@ const CalendarDayItem = props => {
             >
                 <VStack
                     alignItems='flex-start'
-                    space='lg'
+                    space={ 4 }
                 >
-                    <Text style={ styles.title }>{ item.title }</Text>
+                    <Text style={ styles.title }>{ item.name }</Text>
                     <HStack
-                        space='sm'
+                        space={ 1 }
                         alignItems='center'
                         justifyContent='space-evenly'
                     >
+                        <Entypo
+                            name={ 'calendar' }
+                            size={ 22 }
+                            color={ 'black' }
+                            style={ { marginRight: 4 } }
+                        />
                         <Text>
                             { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
                         </Text>
+                    </HStack>
+                    <HStack
+                        alignItems='center'
+                        justifyContent='space-evenly'
+                    >
                         <Entypo
-                            name={ 'flow-line' }
-                            size={ 25 }
+                            name={ 'location' }
+                            size={ 22 }
                             color={ 'black' }
+                            style={ { marginRight: 4 } }
                         />
-                        <Text>{ item.location.city } - { item.location.formattedAddress }</Text>
+                        <Text>{ item.location.city && item.location.city + ' - ' }{ item.location.formattedAddress }</Text>
                     </HStack>
                 </VStack>
             </TouchableOpacity>
@@ -62,10 +74,19 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 10,
         borderRadius: 20,
-        height: 100,
+        height: 140,
         backgroundColor: '#a5f3fc',
         borderWidth: 2,
-        borderColor: '#164e63'
+        borderColor: '#67e8f9',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.30,
+        shadowRadius: 4.65,
+
+        elevation: 8,
     },
     title: {
         fontFamily: 'open-sans-bold',

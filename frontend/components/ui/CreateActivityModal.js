@@ -20,11 +20,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import SelectorMap from './SelectorMap';
 import ModeSelectorModal from './ModeSelectorModal';
 import { getAddress } from '../../services/LocationService';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import i18n from 'i18n-js';
 import ActivityAdvisorModal from './ActivityAdvisorModal';
+import { insertUserActivity } from '../../services/UserActivitiesService';
 
 const CreateActivityModal = props => {
+    const dispatch = useDispatch();
     const location = useSelector(state => state.location.location);
 
     const [didSelectMode, setDidSelectMode] = useState(false);
@@ -461,6 +463,7 @@ const CreateActivityModal = props => {
                                     onPress={ () => {
                                         if (title !== '') {
                                             const data = getData();
+                                            dispatch(insertUserActivity(data));
                                             console.log(data);
                                             resetUI();
                                             if (props.isEdit) {
