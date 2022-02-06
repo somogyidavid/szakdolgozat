@@ -3,45 +3,45 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import i18n from 'i18n-js';
 
-const slides = [
-    {
-        key: '1',
-        title: i18n.t('tripAdvising'),
-        text: i18n.t('tripAdvisingDescription'),
-        image: require('../assets/images/travel.png'),
-        backgroundColor: '#59b2ab',
-    },
-    {
-        key: '2',
-        title: i18n.t('countlessOpportunities'),
-        text: i18n.t('countlessOpportunitiesDescription'),
-        image: { uri: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/road-trip-771921.png' },
-        backgroundColor: '#febe29',
-    },
-    {
-        key: '3',
-        title: i18n.t('calendar'),
-        text: i18n.t('calendarDescription'),
-        image: require('../assets/images/calendar.jpg'),
-        backgroundColor: '#22bcb5',
-    },
-    {
-        key: '4',
-        title: i18n.t('statistics'),
-        text: i18n.t('statisticsDescription'),
-        image: require('../assets/images/statistics.jpg'),
-        backgroundColor: '#febe29'
-    },
-    {
-        key: '5',
-        title: 'To be continued...',
-        text: 'To be continued...',
-        image: { uri: 'https://png.pngitem.com/pimgs/s/207-2073499_translate-platform-from-english-to-spanish-work-in.png' },
-        backgroundColor: '#22bcb5'
-    }
-];
-
 const AboutAppScreen = props => {
+    const slides = [
+        {
+            key: '1',
+            title: i18n.t('tripAdvising'),
+            text: i18n.t('tripAdvisingDescription'),
+            image: require('../assets/images/travel.png'),
+            backgroundColor: '#59b2ab',
+        },
+        {
+            key: '2',
+            title: i18n.t('countlessOpportunities'),
+            text: i18n.t('countlessOpportunitiesDescription'),
+            image: { uri: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/road-trip-771921.png' },
+            backgroundColor: '#febe29',
+        },
+        {
+            key: '3',
+            title: i18n.t('calendar'),
+            text: i18n.t('calendarDescription'),
+            image: require('../assets/images/calendar.jpg'),
+            backgroundColor: '#22bcb5',
+        },
+        {
+            key: '4',
+            title: i18n.t('statistics'),
+            text: i18n.t('statisticsDescription'),
+            image: require('../assets/images/statistics.jpg'),
+            backgroundColor: '#febe29'
+        },
+        {
+            key: '5',
+            title: 'To be continued...',
+            text: 'To be continued...',
+            image: { uri: 'https://png.pngitem.com/pimgs/s/207-2073499_translate-platform-from-english-to-spanish-work-in.png' },
+            backgroundColor: '#22bcb5'
+        }
+    ];
+
     const renderItem = ({ item }) => {
         return (
             <View style={ { ...styles.itemContainer, backgroundColor: item.backgroundColor } }>

@@ -20,6 +20,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { useDispatch } from 'react-redux';
 import { logout } from '../services/AuthService';
 import AboutAppScreen from '../screens/AboutAppScreen';
+import StatisticsScreen from '../screens/user/StatisticsScreen';
 
 const defaultNavOptions = {
     headerStyle: {
@@ -176,6 +177,20 @@ export const AboutAppNavigator = () => {
     );
 };
 
+const StatisticsStackNavigator = createStackNavigator();
+
+export const StatisticsNavigator = () => {
+    return (
+        <StatisticsStackNavigator.Navigator>
+            <StatisticsStackNavigator.Screen
+                name={ 'Statistics' }
+                component={ StatisticsScreen }
+                options={ { headerShown: false } }
+            />
+        </StatisticsStackNavigator.Navigator>
+    );
+};
+
 const ActivityDrawerNavigator = createDrawerNavigator();
 
 export const ActivityNavigator = () => {
@@ -269,22 +284,6 @@ export const ActivityNavigator = () => {
                 } }
             />
             <ActivityDrawerNavigator.Screen
-                name='OptionsStack'
-                component={ OptionsNavigator }
-                options={ {
-                    title: i18n.t('options'),
-                    drawerIcon: () => {
-                        return (
-                            <Ionicons
-                                name={ Platform.OS === 'android' ? 'md-options-outline' : 'ios-options-outline' }
-                                size={ 30 }
-                                color='#FFF'
-                            />
-                        );
-                    }
-                } }
-            />
-            <ActivityDrawerNavigator.Screen
                 name='ProfileStack'
                 component={ ProfileNavigator }
                 options={ {
@@ -301,6 +300,22 @@ export const ActivityNavigator = () => {
                 } }
             />
             <ActivityDrawerNavigator.Screen
+                name='StatisticsStack'
+                component={ StatisticsNavigator }
+                options={ {
+                    title: 'Statisztikák',
+                    drawerIcon: () => {
+                        return (
+                            <Ionicons
+                                name={ Platform.OS === 'android' ? 'md-stats-chart-outline' : 'ios-stats-chart-outline' }
+                                size={ 30 }
+                                color='#FFF'
+                            />
+                        );
+                    }
+                } }
+            />
+            <ActivityDrawerNavigator.Screen
                 name='AboutAppStack'
                 component={ AboutAppNavigator }
                 options={ {
@@ -309,6 +324,22 @@ export const ActivityNavigator = () => {
                         return (
                             <Entypo
                                 name={ 'light-bulb' }
+                                size={ 30 }
+                                color='#FFF'
+                            />
+                        );
+                    }
+                } }
+            />
+            <ActivityDrawerNavigator.Screen
+                name='OptionsStack'
+                component={ OptionsNavigator }
+                options={ {
+                    title: i18n.t('options'),
+                    drawerIcon: () => {
+                        return (
+                            <Ionicons
+                                name={ Platform.OS === 'android' ? 'md-options-outline' : 'ios-options-outline' }
                                 size={ 30 }
                                 color='#FFF'
                             />

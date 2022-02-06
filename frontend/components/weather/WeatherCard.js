@@ -122,7 +122,12 @@ const WeatherCard = props => {
                     </View>
                     <View style={ styles.currentTemperature }>
                         <View style={ styles.temperatureContainer }>
-                            <Text style={ styles.temperature }>{ weather.current.temp.toFixed(0) }{ String.fromCharCode(8451) }</Text>
+                            <Text style={ styles.temperature }>
+                                { weather.current.temp < 0 && weather.current.temp > -1 ?
+                                  Math.abs(weather.current.temp.toFixed(0)) :
+                                  weather.current.temp.toFixed(0) }
+                                { String.fromCharCode(8451) }
+                            </Text>
                         </View>
                         <Text style={ styles.feelsLike }>
                             { i18n.t('feelsLike') } { weather.current.feels_like.toFixed(0) }{ String.fromCharCode(8451) }
