@@ -116,6 +116,15 @@ const ActivityAdvisorModal = props => {
                               <FlatList
                                   data={ activities.filter(item => {
                                       return item.rating || item.price_level || item.photos;
+                                  }).filter(item => {
+                                      if (item.rating && !item.price_level) {
+                                          return item.rating >= filters.minimumRating && item.rating <= filters.maximumRating;
+                                      } else if (!item.rating && item.price_level) {
+                                          return item.price_level >= filters.minimumPrice && item.price_level <= filters.maximumPrice;
+                                      } else {
+                                          return item.rating >= filters.minimumRating && item.rating <= filters.maximumRating &&
+                                              item.price_level >= filters.minimumPrice && item.price_level <= filters.maximumPrice;
+                                      }
                                   }) }
                                   renderItem={ ({ index, item }) => <ActivityItem
                                       item={ item }

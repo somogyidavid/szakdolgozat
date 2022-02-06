@@ -12,6 +12,18 @@ const FilterModal = props => {
     const [minimumPrice, setMinimumPrice] = useState(filters.minimumPrice);
     const [maximumPrice, setMaximumPrice] = useState(filters.maximumPrice);
 
+    useEffect(() => {
+        if (minimumRating > maximumRating) {
+            setMaximumRating(minimumRating);
+        }
+    }, [minimumRating, maximumRating]);
+
+    useEffect(() => {
+        if (minimumPrice > maximumPrice) {
+            setMaximumPrice(minimumPrice);
+        }
+    }, [minimumPrice, maximumPrice]);
+
     return (
         <Modal isOpen={ isOpen }>
             <Modal.Content

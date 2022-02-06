@@ -4,7 +4,7 @@ import { FlatList, HStack, Image, Text, View, VStack } from 'native-base';
 import { AirbnbRating, Rating } from 'react-native-ratings';
 import ENV from '../../constants/env';
 import Label from './Label';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 const ActivityItem = props => {
     const { item, setSelectedActivity, selected, touchable } = props;
@@ -119,7 +119,12 @@ const ActivityItem = props => {
                           overflow='hidden'
                           style={ { marginTop: 4 } }
                       /> :
-                      <Text>MISSING IMAGE - TODO</Text>
+                      <Entypo
+                          name='image'
+                          size={ 120 }
+                          color='black'
+                          style={ styles.icon }
+                      />
                     }
                     <FlatList
                         data={ item.types.slice(0, 4) }
@@ -174,6 +179,16 @@ const styles = StyleSheet.create({
     userRatings: {
         backgroundColor: '#d4d4d4',
         padding: 2,
+        borderRadius: 10
+    },
+    icon: {
+        backgroundColor: '#d4d4d4',
+        width: 130,
+        height: 130,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 4,
+        padding: 4,
         borderRadius: 10
     }
 });

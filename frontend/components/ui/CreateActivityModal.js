@@ -179,8 +179,6 @@ const CreateActivityModal = props => {
         setTimeType('minute');
     };
 
-    console.log(reminder);
-
     return (
         <View>
             <ModeSelectorModal
