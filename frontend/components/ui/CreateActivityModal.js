@@ -179,6 +179,8 @@ const CreateActivityModal = props => {
         setTimeType('minute');
     };
 
+    console.log(reminder);
+
     return (
         <View>
             <ModeSelectorModal
@@ -370,7 +372,14 @@ const CreateActivityModal = props => {
                                             colorScheme='indigo'
                                             isChecked={ reminder > 0 }
                                             defaultIsChecked={ props.reminder > 0 }
-                                            onToggle={ () => reminder > 0 ? setReminder(0) : setReminder(60) }
+                                            onToggle={ () => {
+                                                if (reminder > 0) {
+                                                    setReminder(0);
+                                                } else {
+                                                    setReminder(60);
+                                                    setTimeType('minute');
+                                                }
+                                            } }
                                         />
                                     </HStack>
                                 </FormControl>
@@ -381,7 +390,7 @@ const CreateActivityModal = props => {
                                 >
                                     <Slider
                                         style={ { width: 300, height: 40 } }
-                                        value={ 60 }
+                                        value={ reminder > 0 ? 60 : reminder }
                                         minimumValue={ 10 }
                                         maximumValue={ 120 }
                                         step={ 10 }
