@@ -30,6 +30,8 @@ const ActivityAdvisorModal = props => {
     const [selectedEndingDate, setSelectedEndingDate] = useState(new Date());
     const [dateSelected, setDateSelected] = useState(false);
     const [isAllDay, setIsAllDay] = useState(true);
+    const [reminder, setReminder] = useState(60);
+    const [timeType, setTimeType] = useState('minute');
     const [selectedActivity, setSelectedActivity] = useState('');
     const [filters, setFilters] = useState({
         minimumRating: 1,
@@ -49,11 +51,6 @@ const ActivityAdvisorModal = props => {
 
         dispatch(fetchActivities(options.location, options.types));
     };
-
-    // TODO
-    // useEffect(() => {
-    //
-    // }, [filters])
 
     useEffect(() => {
         const getActivities = async () => {
@@ -171,7 +168,6 @@ const ActivityAdvisorModal = props => {
                                     isAllDay ?
                                     moment.utc(selectedStartingDate).format('YYYY.MM.DD') :
                                     moment.utc(selectedStartingDate).format('YYYY.MM.DD HH:mm'),
-
                                 toDate:
                                     isAllDay ?
                                     moment.utc(selectedEndingDate).format('YYYY.MM.DD') :
@@ -193,6 +189,8 @@ const ActivityAdvisorModal = props => {
                                 onPress={ () => {
                                     setSelectedActivity('');
                                     setDateSelected(false);
+                                    setReminder(60);
+                                    setTimeType('minute');
                                     props.onCloseHandler();
                                     setModalOpen(false);
                                 } }
@@ -217,8 +215,8 @@ const ActivityAdvisorModal = props => {
                                                     latitude: item.geometry.location.lat,
                                                     longitude: item.geometry.location.lng
                                                 },
-                                                reminder: 60,
-                                                timeType: 'minute',
+                                                reminder: reminder,
+                                                timeType: timeType,
                                                 details: item
                                             }));
                                             console.log({
@@ -232,10 +230,12 @@ const ActivityAdvisorModal = props => {
                                                     latitude: item.geometry.location.lat,
                                                     longitude: item.geometry.location.lng
                                                 },
-                                                reminder: 60,
-                                                timeType: 'minute',
+                                                reminder: reminder,
+                                                timeType: timeType,
                                                 details: item
                                             });
+                                            setReminder(60);
+                                            setTimeType('minute');
                                             setSelectedActivity('');
                                             setDateSelected(false);
                                             props.onCloseHandler();
@@ -276,6 +276,10 @@ const ActivityAdvisorModal = props => {
                 setDateSelected={ setDateSelected }
                 isAllDay={ isAllDay }
                 setIsAllDay={ setIsAllDay }
+                reminder={ reminder }
+                setReminder={ setReminder }
+                timeType={ timeType }
+                setTimeType={ setTimeType }
             />
         </View>
     );

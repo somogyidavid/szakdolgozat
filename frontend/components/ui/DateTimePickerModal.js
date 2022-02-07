@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Dimensions, Platform, StyleSheet } from 'react-native';
-import { Button, HStack, Modal, Switch, Text, View, VStack } from 'native-base';
+import { Button, CheckIcon, HStack, Modal, Select, Switch, Text, View, VStack } from 'native-base';
 import i18n from 'i18n-js';
 import DatePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import Slider from '@react-native-community/slider';
 
 const DateTimePickerModal = props => {
     const {
@@ -15,11 +16,16 @@ const DateTimePickerModal = props => {
         setSelectedEndingDate,
         setDateSelected,
         isAllDay,
-        setIsAllDay
+        setIsAllDay,
+        reminder,
+        setReminder,
+        timeType,
+        setTimeType
     } = props;
     const [dataTimePickerVisible, setDateTimePickerVisible] = useState(false);
     const [isStarting, setIsStarting] = useState(true);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
+
 
     const onChange = (event, selectedPickerDate) => {
         let selectedDate = selectedPickerDate;
@@ -61,7 +67,7 @@ const DateTimePickerModal = props => {
             <Modal.Content
                 maxWidth={ 400 }
                 width={ Dimensions.get('window').width - 40 }
-                height={ Dimensions.get('window').height * 0.45 }
+                height={ Dimensions.get('window').height * 0.55 }
             >
                 <Modal.Header
                     _text={ {
@@ -121,6 +127,89 @@ const DateTimePickerModal = props => {
                                 onToggle={ () => setIsAllDay(!isAllDay) }
                             />
                         </HStack>
+                        <VStack alignItems='center'>
+                            <HStack
+                                justifyContent='center'
+                                alignItems='center'
+                            >
+                                <Text style={ styles.text }>{ i18n.t('activityReminder') }</Text>
+                                <Switch
+                                    size='md'
+                                    colorScheme='indigo'
+                                    isChecked={ reminder > 0 }
+                                    defaultIsChecked={ props.reminder > 0 }
+                                    onToggle={ () => {
+                                        if (reminder > 0) {
+                                            setReminder(0);
+                                        } else {
+                                            setReminder(60);
+                                            setTimeType('minute');
+                                        }
+                                    } }
+                                />
+                            </HStack>
+                            <Slider
+                                style={ { width: 300, height: 40 } }
+                                value={ reminder > 0 ? 60 : reminder }
+                                minimumValue={ 10 }
+                                maximumValue={ 120 }
+                                step={ 10 }
+                                minimumTrackTintColor='#818cf8'
+                                maximumTrackTintColor='#808080'
+                                thumbTintColor='#3730a3'
+                                disabled={ reminder <= 0 }
+                                onValueChange={ (value) => {
+                                    if (timeType === 'minute') {
+                                        setReminder(value);
+                                    } else {
+                                        setReminder(value / 10);
+                                    }
+                                } }
+                            />
+                            { reminder > 0 && < HStack
+                                justifyContent='center'
+                                alignItems='center'
+                            >
+                                <Text>{ reminder }</Text>
+                                <Select
+                                    selectedValue={ timeType }
+                                    minWidth={ 140 }
+                                    placeholder='Válassz az alábbiak közül!'
+                                    textAlign='center'
+                                    _selectedItem={ {
+                                        bg: 'teal.600',
+                                        endIcon: <CheckIcon size='5' />,
+                                    } }
+                                    _item={ { justifyContent: 'center' } }
+                                    mt={ 1 }
+                                    ml={ 2 }
+                                    onValueChange={ (itemValue) => {
+                                        if (itemValue === 'hour' && timeType !== 'day') {
+                                            setReminder(reminder / 10);
+                                        } else if (itemValue === 'day' && timeType !== 'hour') {
+                                            setReminder(reminder / 10);
+                                        } else if (itemValue === 'minute'
+                                            && (timeType === 'hour' || timeType === 'day')) {
+                                            setReminder(reminder * 10);
+                                        }
+                                        setTimeType(itemValue);
+                                    } }
+                                >
+                                    <Select.Item
+                                        label={ i18n.t('activityMinute') }
+                                        value='minute'
+                                    />
+                                    <Select.Item
+                                        label={ i18n.t('activityHour') }
+                                        value='hour'
+                                    />
+                                    <Select.Item
+                                        label={ i18n.t('activityDay') }
+                                        value='day'
+                                    />
+                                </Select>
+                            </HStack> }
+                        </VStack>
                     </VStack>
                     <View>
                         { dataTimePickerVisible && <DatePicker
@@ -167,6 +256,7 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'center',
         marginBottom: 10,
+        paddingHorizontal: 6,
         backgroundColor: '#818cf8',
         color: '#FFF',
         fontFamily: 'open-sans-bold',
