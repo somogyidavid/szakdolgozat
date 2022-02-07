@@ -36,32 +36,33 @@ const CalendarDayItem = props => {
                     space={ 4 }
                 >
                     <Text style={ styles.title }>{ item.name }</Text>
-                    <HStack
-                        space={ 1 }
-                        alignItems='center'
-                        justifyContent='center'
-                    >
-                        <Entypo
-                            name={ 'calendar' }
-                            size={ 22 }
-                            color={ 'black' }
-                            style={ { marginRight: 4, marginLeft: 10 } }
-                        />
-                        <Text>
-                            { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
-                        </Text>
-                    </HStack>
-                    <HStack
-                        alignItems='center'
-                        justifyContent='center'
-                    >
-                        <Entypo
-                            name={ 'location' }
-                            size={ 22 }
-                            color={ 'black' }
-                            style={ { marginRight: 4, marginLeft: 10 } }
-                        />
-                        <Text>{ item.location.city && item.location.city + ' - ' }{ item.location.formattedAddress }</Text>
+                    <HStack>
+                        <VStack
+                            space={ 2 }
+                        >
+                            <Entypo
+                                name={ 'calendar' }
+                                size={ 22 }
+                                color={ 'black' }
+                                style={ { marginRight: 10 } }
+                            />
+                            <Entypo
+                                name={ 'location' }
+                                size={ 22 }
+                                color={ 'black' }
+                                style={ { marginRight: 10 } }
+                            />
+                        </VStack>
+                        <VStack
+                            space={ 2 }
+                        >
+                            <Text style={ styles.text }>
+                                { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
+                            </Text>
+                            <Text style={ styles.text }>
+                                { item.location.city && item.location.city + ' - ' }{ item.location.formattedAddress }
+                            </Text>
+                        </VStack>
                     </HStack>
                 </VStack>
             </TouchableOpacity>
@@ -91,6 +92,10 @@ const styles = StyleSheet.create({
     title: {
         fontFamily: 'open-sans-bold',
         fontSize: 16
+    },
+    text: {
+        textAlign: 'left',
+        marginHorizontal: 6
     }
 });
 

@@ -45,6 +45,7 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-google-fit": "^0.18.2",
     "react-native-image-slider-box": "^1.1.15",
+    "react-native-input-spinner": "^1.7.12",
     "react-native-maps": "0.28.0",
     "react-native-paper": "^4.9.2",
     "react-native-ratings": "^8.1.0",

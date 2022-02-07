@@ -11,7 +11,7 @@ import {
     Modal,
     Switch,
     Text,
-    VStack, Select, CheckIcon, WarningOutlineIcon
+    VStack, Select, CheckIcon, WarningOutlineIcon, Toast
 } from 'native-base';
 import Slider from '@react-native-community/slider';
 import MapView, { Marker } from 'react-native-maps';
@@ -471,7 +471,12 @@ const CreateActivityModal = props => {
                                         if (title !== '') {
                                             const data = getData();
                                             dispatch(insertUserActivity(data));
-                                            console.log(data);
+                                            Toast.show({
+                                                title: i18n.t('success'),
+                                                description: 'A program bekerült a naptáradba!',
+                                                status: 'success',
+                                                placement: 'bottom'
+                                            });
                                             resetUI();
                                             if (props.isEdit) {
                                                 props.editHandler();

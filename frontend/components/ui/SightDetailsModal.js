@@ -1,6 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import { Button, Divider, FlatList, HStack, Image, Modal, PresenceTransition, Text, View, VStack } from 'native-base';
+import {
+    Button,
+    Divider,
+    FlatList,
+    HStack,
+    Image,
+    Modal,
+    PresenceTransition,
+    Text,
+    Toast,
+    View,
+    VStack
+} from 'native-base';
 import { SliderBox } from 'react-native-image-slider-box';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
@@ -322,6 +334,12 @@ const SightDetailsModal = props => {
                                             timeType: timeType,
                                             details: placeDetails
                                         }));
+                                        Toast.show({
+                                            title: i18n.t('success'),
+                                            description: 'A program bekerült a naptáradba!',
+                                            status: 'success',
+                                            placement: 'bottom'
+                                        });
                                         setReminder(60);
                                         setTimeType('minute');
                                         setDateSelected(false);

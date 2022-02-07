@@ -219,21 +219,6 @@ const ActivityAdvisorModal = props => {
                                                 timeType: timeType,
                                                 details: item
                                             }));
-                                            console.log({
-                                                name: item.name,
-                                                isAllDay: isAllDay,
-                                                startingDate: selectedStartingDate,
-                                                endingDate: selectedEndingDate,
-                                                location: {
-                                                    city: '',
-                                                    formattedAddress: item.vicinity,
-                                                    latitude: item.geometry.location.lat,
-                                                    longitude: item.geometry.location.lng
-                                                },
-                                                reminder: reminder,
-                                                timeType: timeType,
-                                                details: item
-                                            });
                                             setReminder(60);
                                             setTimeType('minute');
                                             setSelectedActivity('');
