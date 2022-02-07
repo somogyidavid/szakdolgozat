@@ -389,11 +389,12 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         flex: 1,
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
     },
     secondaryContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginBottom: getStatusBarHeight() / 2
+        marginTop: getStatusBarHeight(),
+        marginBottom: 8
     }
 });

@@ -107,60 +107,63 @@ const SightDetailsModal = props => {
                                           alt='Icon'
                                       />
                                   </TouchableOpacity> }
-                              <Button
-                                  variant='solid'
-                                  style={ addressOpen ? styles.activeButton : styles.inactiveButton }
-                                  _pressed={ {
-                                      style: {
-                                          backgroundColor: '#a3a3a3',
-                                          borderRadius: 10,
-                                          overflow: 'hidden'
-                                      }
-                                  } }
-                                  onPress={ () => setAddressOpen(!addressOpen) }
-                              >
-                                  <MaterialIcons
-                                      name='place'
-                                      size={ 20 }
-                                      color='black'
-                                  />
-                              </Button>
-                              <Button
-                                  variant='solid'
-                                  style={ openingsOpen ? styles.activeButton : styles.inactiveButton }
-                                  _pressed={ {
-                                      style: {
-                                          backgroundColor: '#a3a3a3',
-                                          borderRadius: 10,
-                                          overflow: 'hidden'
-                                      }
-                                  } }
-                                  onPress={ () => setOpeningOpen(!openingsOpen) }
-                              >
-                                  <Entypo
-                                      name='calendar'
-                                      size={ 20 }
-                                      color='black'
-                                  />
-                              </Button>
-                              <Button
-                                  variant='solid'
-                                  style={ phoneOpen ? styles.activeButton : styles.inactiveButton }
-                                  _pressed={ {
-                                      style: {
-                                          backgroundColor: '#a3a3a3',
-                                          borderRadius: 10,
-                                          overflow: 'hidden'
-                                      }
-                                  } }
-                                  onPress={ () => setPhoneOpen(!phoneOpen) }
-                              >
-                                  <Entypo
-                                      name='phone'
-                                      size={ 20 }
-                                      color='black'
-                                  />
-                              </Button>
+                              { placeDetails.formatted_address &&
+                                  <Button
+                                      variant='solid'
+                                      style={ addressOpen ? styles.activeButton : styles.inactiveButton }
+                                      _pressed={ {
+                                          style: {
+                                              backgroundColor: '#a3a3a3',
+                                              borderRadius: 10,
+                                              overflow: 'hidden'
+                                          }
+                                      } }
+                                      onPress={ () => setAddressOpen(!addressOpen) }
+                                  >
+                                      <MaterialIcons
+                                          name='place'
+                                          size={ 20 }
+                                          color='black'
+                                      />
+                                  </Button> }
+                              { placeDetails.opening_hours &&
+                                  <Button
+                                      variant='solid'
+                                      style={ openingsOpen ? styles.activeButton : styles.inactiveButton }
+                                      _pressed={ {
+                                          style: {
+                                              backgroundColor: '#a3a3a3',
+                                              borderRadius: 10,
+                                              overflow: 'hidden'
+                                          }
+                                      } }
+                                      onPress={ () => setOpeningOpen(!openingsOpen) }
+                                  >
+                                      <Entypo
+                                          name='calendar'
+                                          size={ 20 }
+                                          color='black'
+                                      />
+                                  </Button> }
+                              { placeDetails.formatted_phone_number &&
+                                  <Button
+                                      variant='solid'
+                                      style={ phoneOpen ? styles.activeButton : styles.inactiveButton }
+                                      _pressed={ {
+                                          style: {
+                                              backgroundColor: '#a3a3a3',
+                                              borderRadius: 10,
+                                              overflow: 'hidden'
+                                          }
+                                      } }
+                                      onPress={ () => setPhoneOpen(!phoneOpen) }
+                                  >
+                                      <Entypo
+                                          name='phone'
+                                          size={ 20 }
+                                          color='black'
+                                      />
+                                  </Button> }
                           </HStack>
                           <PresenceTransition
                               visible={ addressOpen }
@@ -259,6 +262,10 @@ const SightDetailsModal = props => {
                             { i18n.t('back') }
                         </Button>
                         <Button
+                            variant='solid'
+                            colorScheme='secondary'
+                            bg='fuchsia.800'
+                            _pressed={ { backgroundColor: 'fuchsia.600' } }
                             onPress={ () => console.log('pressed') }
                         >
                             Gomb

@@ -39,13 +39,13 @@ const CalendarDayItem = props => {
                     <HStack
                         space={ 1 }
                         alignItems='center'
-                        justifyContent='space-evenly'
+                        justifyContent='center'
                     >
                         <Entypo
                             name={ 'calendar' }
                             size={ 22 }
                             color={ 'black' }
-                            style={ { marginRight: 4 } }
+                            style={ { marginRight: 4, marginLeft: 10 } }
                         />
                         <Text>
                             { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
@@ -53,13 +53,13 @@ const CalendarDayItem = props => {
                     </HStack>
                     <HStack
                         alignItems='center'
-                        justifyContent='space-evenly'
+                        justifyContent='center'
                     >
                         <Entypo
                             name={ 'location' }
                             size={ 22 }
                             color={ 'black' }
-                            style={ { marginRight: 4 } }
+                            style={ { marginRight: 4, marginLeft: 10 } }
                         />
                         <Text>{ item.location.city && item.location.city + ' - ' }{ item.location.formattedAddress }</Text>
                     </HStack>

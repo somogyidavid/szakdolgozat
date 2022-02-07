@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import i18n from 'i18n-js';
@@ -32,15 +32,10 @@ const AboutAppScreen = props => {
             text: i18n.t('statisticsDescription'),
             image: require('../assets/images/statistics.jpg'),
             backgroundColor: '#febe29'
-        },
-        {
-            key: '5',
-            title: 'To be continued...',
-            text: 'To be continued...',
-            image: { uri: 'https://png.pngitem.com/pimgs/s/207-2073499_translate-platform-from-english-to-spanish-work-in.png' },
-            backgroundColor: '#22bcb5'
         }
     ];
+
+    const sliderRef = useRef();
 
     const renderItem = ({ item }) => {
         return (
@@ -58,6 +53,7 @@ const AboutAppScreen = props => {
     return (
         <View style={ styles.container }>
             <AppIntroSlider
+                ref={ sliderRef }
                 data={ slides }
                 renderItem={ renderItem }
                 showPrevButton={ true }
@@ -67,10 +63,11 @@ const AboutAppScreen = props => {
                 doneLabel={ i18n.t('done') }
                 prevLabel={ i18n.t('back') }
                 onDone={ () => {
-                    console.log('Done');
+                    sliderRef.current.goToSlide(0);
+                    props.navigation.navigate('OverviewTab');
                 } }
                 onSkip={ () => {
-                    console.log('Skip');
+                    props.navigation.navigate('OverviewTab');
                 } }
             />
         </View>
