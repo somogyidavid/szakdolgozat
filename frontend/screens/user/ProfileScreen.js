@@ -7,14 +7,32 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import InputSpinner from 'react-native-input-spinner';
 import i18n from 'i18n-js';
 import ProfileCard from '../../components/ui/ProfileCard';
+import { fetchUser, editUser } from '../../services/UserService';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProfileScreen = props => {
+    const dispatch = useDispatch();
     const nameInputRef = useRef();
     const descriptionInputRef = useRef();
     const [visible, setVisible] = useState(true);
     const [name, setName] = useState('');
     const [age, setAge] = useState(18);
     const [description, setDescription] = useState('');
+
+    const isLoading = useSelector(state => state.user.isLoading);
+    const user = useSelector(state => state.user.user);
+
+    const getUserHandler = async () => {
+        dispatch(fetchUser());
+    };
+
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', getUserHandler);
+
+        return () => {
+            unsubscribe();
+        };
+    }, [getUserHandler]);
 
     return (
         <TouchableWithoutFeedback
@@ -30,9 +48,9 @@ const ProfileScreen = props => {
                     animate={ { opacity: 1, scale: 1, transition: { duration: 250 } } }
                 >
                     <ProfileCard
-                        name={ name }
-                        age={ age }
-                        description={ description }
+                        name={ user.name }
+                        age={ user.age }
+                        description={ user.description }
                     />
                 </PresenceTransition>
                 <View style={ styles.formContainer }>
@@ -119,6 +137,12 @@ const ProfileScreen = props => {
                         style={ styles.saveButton }
                         _text={ { style: styles.buttonText } }
                         _pressed={ { style: styles.pressedButton } }
+                        onPress={ () => dispatch(editUser({
+                            email: 'test@test.com',
+                            name,
+                            age,
+                            description
+                        })) }
                     >
                         { i18n.t('save') }
                     </Button>
