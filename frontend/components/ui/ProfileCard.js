@@ -3,9 +3,10 @@ import { StyleSheet } from 'react-native';
 import { Text, View } from 'native-base';
 import Colors from '../../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import i18n from 'i18n-js';
 
 const ProfileCard = props => {
-    const { name, age, description } = props;
+    const { name, age, description, interests } = props;
 
     return (
         <View style={ styles.card }>
@@ -14,9 +15,13 @@ const ProfileCard = props => {
                 size={ 80 }
                 color='#FFF'
             />
-            <Text style={ styles.text }>{ name }</Text>
-            <Text style={ styles.text }>Kor: { age } év</Text>
-            <Text style={ styles.text }>{ 'Leírás:\n' + description }</Text>
+            { name !== '' && <Text style={ styles.text }>{ name }</Text> }
+            { age > 0 && <Text style={ styles.text }>Kor: { age } év</Text> }
+            { description !== '' && <Text style={ styles.text }>{ 'Leírás:\n' + description }</Text> }
+            <Text style={ styles.text }>
+                { 'Érdeklődési körök:\n' }
+                { i18n.t(interests[0]) }, { i18n.t(interests[1]) }, { i18n.t(interests[2]) }, { i18n.t(interests[3]) }, { i18n.t(interests[4]) }
+            </Text>
         </View>
     );
 };
@@ -43,8 +48,12 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontFamily: 'open-sans',
         fontSize: 16,
-        paddingVertical: 2,
-        textAlign: 'center'
+        padding: 4,
+        marginVertical: 2,
+        borderRadius: 10,
+        overflow: 'hidden',
+        textAlign: 'center',
+        backgroundColor: Colors.darkPurple
     }
 });
 

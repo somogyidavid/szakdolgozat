@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import Colors from '../../constants/Colors';
 import SeparatorLine from '../../components/ui/SeparatorLine';
-import { Button, FormControl, Icon, Input, PresenceTransition } from 'native-base';
+import { Button, FormControl, Icon, Input, PresenceTransition, ScrollView } from 'native-base';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import InputSpinner from 'react-native-input-spinner';
 import i18n from 'i18n-js';
@@ -14,7 +14,7 @@ const ProfileScreen = props => {
     const dispatch = useDispatch();
     const nameInputRef = useRef();
     const descriptionInputRef = useRef();
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
     const [name, setName] = useState('');
     const [age, setAge] = useState(18);
     const [description, setDescription] = useState('');
@@ -41,7 +41,7 @@ const ProfileScreen = props => {
                 nameInputRef.current.blur();
             } }
         >
-            <View style={ styles.container }>
+            <ScrollView style={ styles.container }>
                 <PresenceTransition
                     visible={ visible }
                     initial={ { opacity: 0, scale: 0 } }
@@ -51,6 +51,7 @@ const ProfileScreen = props => {
                         name={ user.name }
                         age={ user.age }
                         description={ user.description }
+                        interests={ user.interests }
                     />
                 </PresenceTransition>
                 <View style={ styles.formContainer }>
@@ -137,17 +138,20 @@ const ProfileScreen = props => {
                         style={ styles.saveButton }
                         _text={ { style: styles.buttonText } }
                         _pressed={ { style: styles.pressedButton } }
-                        onPress={ () => dispatch(editUser({
-                            email: 'test@test.com',
-                            name,
-                            age,
-                            description
-                        })) }
+                        onPress={ () => {
+                            dispatch(editUser({
+                                email: 'test@test.com',
+                                name,
+                                age,
+                                description
+                            }));
+                            setVisible(true);
+                        } }
                     >
                         { i18n.t('save') }
                     </Button>
                 </View>
-            </View>
+            </ScrollView>
         </TouchableWithoutFeedback>
     );
 };

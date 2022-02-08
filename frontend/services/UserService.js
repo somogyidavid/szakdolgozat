@@ -11,7 +11,8 @@ let user = {
     email: 'test@test.com',
     name: '',
     age: 0,
-    description: ''
+    description: '',
+    interests: ['park', 'restaurant', 'museum', 'spa', 'zoo']
 };
 
 export const fetchUser = () => {
@@ -33,7 +34,8 @@ export const editUser = (editedUser) => {
                 email: 'test@test.com',
                 name: editedUser.name,
                 age: editedUser.age,
-                description: editedUser.description
+                description: editedUser.description,
+                interests: user.interests
             };
             dispatch(editUserSuccess(user));
         } catch (err) {
