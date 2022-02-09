@@ -7,6 +7,11 @@ import i18n from 'i18n-js';
 
 const ProfileCard = props => {
     const { name, age, description, interests } = props;
+    let interestString = '';
+
+    if (interests) {
+        interestString = interests.map(item => i18n.t(item)).join(', ');
+    }
 
     return (
         <View style={ styles.card }>
@@ -18,10 +23,9 @@ const ProfileCard = props => {
             { name !== '' && <Text style={ styles.text }>{ name }</Text> }
             { age > 0 && <Text style={ styles.text }>Kor: { age } év</Text> }
             { description !== '' && <Text style={ styles.text }>{ 'Leírás:\n' + description }</Text> }
-            <Text style={ styles.text }>
-                { 'Érdeklődési körök:\n' }
-                { i18n.t(interests[0]) }, { i18n.t(interests[1]) }, { i18n.t(interests[2]) }, { i18n.t(interests[3]) }, { i18n.t(interests[4]) }
-            </Text>
+            { interests && <Text style={ styles.text }>
+                { 'Érdeklődési körök:\n' }{ interestString }
+            </Text> }
         </View>
     );
 };
@@ -50,6 +54,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         padding: 4,
         marginVertical: 2,
+        marginHorizontal: 6,
         borderRadius: 10,
         overflow: 'hidden',
         textAlign: 'center',

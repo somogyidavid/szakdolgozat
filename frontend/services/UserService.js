@@ -6,13 +6,14 @@ import {
     editUserSuccess,
     editUserFailed
 } from '../store/actions/UserActions';
+import moment from 'moment';
 
 let user = {
     email: 'test@test.com',
     name: '',
     age: 0,
     description: '',
-    interests: ['park', 'restaurant', 'museum', 'spa', 'zoo']
+    interests: []
 };
 
 export const fetchUser = () => {
@@ -35,7 +36,7 @@ export const editUser = (editedUser) => {
                 name: editedUser.name,
                 age: editedUser.age,
                 description: editedUser.description,
-                interests: user.interests
+                interests: editedUser.interests
             };
             dispatch(editUserSuccess(user));
         } catch (err) {

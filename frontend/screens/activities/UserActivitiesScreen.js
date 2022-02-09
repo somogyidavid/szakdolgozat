@@ -47,6 +47,14 @@ const UserActivitiesScreen = props => {
                   onRefresh={ getUserActivitiesHandler }
                   refreshing={ isLoading }
               /> }
+            <TouchableOpacity
+                activeOpacity={ 0.65 }
+                onPress={ () => props.navigation.navigate('StatisticsStack') }
+            >
+                <Text style={ styles.statisticsButton }>
+                    Érdekelne statisztika az aktivitásodról és szokásaidról? Nézd meg itt!
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -65,6 +73,18 @@ const styles = StyleSheet.create({
     flatList: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    statisticsButton: {
+        textAlign: 'center',
+        color: '#FFF',
+        fontFamily: 'open-sans-bold',
+        fontSize: 14,
+        paddingVertical: 6,
+        paddingHorizontal: 4,
+        margin: 6,
+        backgroundColor: '#047857',
+        borderRadius: 10,
+        overflow: 'hidden'
     }
 });
 

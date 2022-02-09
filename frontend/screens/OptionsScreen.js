@@ -4,9 +4,10 @@ import Colors from '../constants/Colors';
 import i18n from 'i18n-js';
 import SeparatorLine from '../components/ui/SeparatorLine';
 import { Button, HStack, PresenceTransition, Switch, VStack } from 'native-base';
-import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { logout } from '../services/AuthService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OptionsScreen = props => {
     const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const OptionsScreen = props => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={ 0.65 }
-                    onPress={ () => console.log('pressed') }
+                    onPress={ () => console.log('change password') }
                 >
                     <VStack style={ styles.itemContainer }>
                         <HStack>
@@ -81,6 +82,33 @@ const OptionsScreen = props => {
                                     color='#FFF'
                                 />
                                 <Text style={ styles.text }>Jelszó változtatás</Text>
+                            </HStack>
+                            <HStack style={ { flex: 1 } }>
+                                <Ionicons
+                                    name='chevron-forward'
+                                    size={ 26 }
+                                    color='#FFF'
+                                />
+                            </HStack>
+                        </HStack>
+                    </VStack>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={ 0.65 }
+                    onPress={ () => {
+                        AsyncStorage.removeItem('firstLaunch');
+                        props.navigation.navigate('OverviewTab');
+                    } }
+                >
+                    <VStack style={ styles.itemContainer }>
+                        <HStack>
+                            <HStack style={ { flex: 12 } }>
+                                <MaterialIcons
+                                    name='local-attraction'
+                                    size={ 26 }
+                                    color='#FFF'
+                                />
+                                <Text style={ styles.text }>Érdeklődési körök módosítása</Text>
                             </HStack>
                             <HStack style={ { flex: 1 } }>
                                 <Ionicons

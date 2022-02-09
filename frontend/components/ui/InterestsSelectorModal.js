@@ -19,8 +19,13 @@ import HelpButton from './HelpButton';
 import InterestsSelectorItem from './InterestsSelectorItem';
 import { AntDesign } from '@expo/vector-icons';
 import i18n from 'i18n-js';
+import { useDispatch, useSelector } from 'react-redux';
+import { editUser } from '../../services/UserService';
+import { Toast } from 'native-base';
 
 const InterestsSelectorModal = props => {
+        const dispatch = useDispatch();
+        const user = useSelector(state => state.user.user);
         const flatList = useRef(null);
         const [visible, setVisible] = useState(true);
         const [isLoading, setIsLoading] = useState(false);
@@ -147,7 +152,19 @@ const InterestsSelectorModal = props => {
                             onPress={ async () => {
                                 await addToStorageHandler();
                                 setVisible(false);
-                                console.log(chosenItems);
+                                dispatch(editUser({
+                                    email: 'test@test.com',
+                                    name: user.name,
+                                    age: user.age,
+                                    description: user.description,
+                                    interests: chosenItems
+                                }));
+                                Toast.show({
+                                    title: i18n.t('success'),
+                                    description: 'Érdeklődési körök sikeresen elmentve!',
+                                    status: 'success',
+                                    placement: 'bottom'
+                                });
                             } }
                         />
                     </View>
