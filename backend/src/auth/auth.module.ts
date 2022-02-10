@@ -5,6 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { expirationTime } from '../../constants/constants';
 
 @Module({
     imports: [ UsersModule,
@@ -12,7 +13,7 @@ import { JwtStrategy } from './jwt.strategy';
         JwtModule.register({
             secret: 'ekkethesissecret',
             signOptions: {
-                expiresIn: '1h'
+                expiresIn: expirationTime.time
             }
         }) ],
     controllers: [ AuthController ],

@@ -15,6 +15,8 @@ import {
 } from '../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import env from '../constants/env';
+import api from '../helpers/api';
+import { expirationTime } from '../constants/constants';
 
 const axios = require('axios');
 
@@ -45,23 +47,16 @@ export const signup = (email, password) => {
         try {
             dispatch(signupRequest());
 
-            const response = await axios.post(signupUri, JSON.stringify({
-                    email: email,
-                    password: password,
-                    returnSecureToken: true
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
+            const response = await api.post('/auth/register', {
+                email: email,
+                password: password
+            });
 
             dispatch(signupSuccess(email, password));
-            dispatch(authenticate(response.data.localId, response.data.idToken, parseInt(response.data.expiresIn * 1000)));
+            dispatch(authenticate(response.data.user._id, response.data.token, expirationTime.value * 1000));
 
-            const expirationDate = new Date(new Date().getTime() + +response.data.expiresIn * 1000);
-            await saveDataToStorage(response.data.idToken, response.data.localId, expirationDate);
+            const expirationDate = new Date(new Date().getTime() + +expirationTime.value * 1000);
+            await saveDataToStorage(response.data.token, response.data.user._id, expirationDate);
         } catch (err) {
             dispatch(signupFailed(err));
         }
@@ -75,37 +70,42 @@ export const login = (email, password) => {
         try {
             dispatch(loginRequest());
 
-            const response = await axios.post(signInUri, JSON.stringify({
-                    email: email,
-                    password: password,
-                    returnSecureToken: true
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            ).catch(err => {
-                let errorId = 'BASIC_ERROR';
-                if (err.response.data) {
-                    errorId = err.response.data.error.message;
-                }
-                let message = 'Something went wrong!';
+            // const response = await axios.post(signInUri, JSON.stringify({
+            //         email: email,
+            //         password: password,
+            //         returnSecureToken: true
+            //     }),
+            //     {
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         }
+            //     }
+            // ).catch(err => {
+            //     let errorId = 'BASIC_ERROR';
+            //     if (err.response.data) {
+            //         errorId = err.response.data.error.message;
+            //     }
+            //     let message = 'Something went wrong!';
+            //
+            //     if (errorId === 'INVALID_PASSWORD') {
+            //         message = 'Invalid password!';
+            //     }
+            //
+            //     throw new Error(message);
+            // });
 
-                if (errorId === 'INVALID_PASSWORD') {
-                    message = 'Invalid password!';
-                }
-
-                throw new Error(message);
+            const response = await api.post('/auth/login', {
+                email: email,
+                password: password
             });
 
             dispatch(loginSuccess(email, password));
-            dispatch(authenticate(response.data.localId, response.data.idToken, parseInt(response.data.expiresIn * 1000)));
+            dispatch(authenticate(response.data.user._id, response.data.token, expirationTime.value * 1000));
 
-            const expirationDate = new Date(new Date().getTime() + +response.data.expiresIn * 1000);
-            await saveDataToStorage(response.data.idToken, response.data.localId, expirationDate);
+            const expirationDate = new Date(new Date().getTime() + +expirationTime.value * 1000);
+            await saveDataToStorage(response.data.token, response.data.user._id, expirationDate);
         } catch (err) {
-            dispatch(loginFailed(err.message));
+            dispatch(loginFailed(err.response));
         }
     };
 };
