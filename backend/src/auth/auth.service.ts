@@ -28,7 +28,9 @@ export class AuthService {
         const userDto: UserDto = {
             _id: user._id,
             email: user.email,
-            name: '',
+            name: user.name,
+            age: user.age,
+            interests: user.interests,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
             lastLogin: user.lastLogin
@@ -49,6 +51,8 @@ export class AuthService {
             _id: registeredUser._id,
             email: registeredUser.email,
             name: '',
+            age: 0,
+            interests: [],
             createdAt: registeredUser.createdAt,
             updatedAt: registeredUser.updatedAt,
             lastLogin: registeredUser.lastLogin

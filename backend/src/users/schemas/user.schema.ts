@@ -1,5 +1,5 @@
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { plugin, pre, prop } from '@typegoose/typegoose';
+import { modelOptions, plugin, pre, prop, Severity } from '@typegoose/typegoose';
 import * as Validator from './validators/user.validator';
 import * as UniqueValidator from 'mongoose-unique-validator';
 import * as bcrypt from 'bcryptjs';
@@ -7,9 +7,10 @@ import { Types } from 'mongoose';
 
 let userValidator = new Validator.UserValidator();
 
-interface User extends TimeStamps {
+interface User extends Base {
 }
 
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @pre<User>('save', function (next: any) {
     let user = this;
     if (!user.isModified('password')) {
@@ -21,7 +22,7 @@ interface User extends TimeStamps {
 @plugin(UniqueValidator, {
     message: 'A(z) {VALUE} email már használatban van!'
 })
-class User implements Base {
+class User extends TimeStamps {
 
     @prop()
     _id: Types.ObjectId;
@@ -47,6 +48,20 @@ class User implements Base {
         } ]
     })
     password!: string;
+
+    @prop({
+        validate: [ {
+            validator: userValidator.nameLengthValidator,
+            message: 'A név hossza nem megfelelő!'
+        } ]
+    })
+    name?: string;
+
+    @prop()
+    age?: number;
+
+    @prop()
+    interests?: string[];
 
     @prop()
     lastLogin!: Date;
