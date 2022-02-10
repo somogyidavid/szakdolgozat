@@ -15,7 +15,6 @@ import {
 } from '../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import env from '../constants/env';
-import api from '../helpers/api';
 import { expirationTime } from '../constants/constants';
 
 const axios = require('axios');
@@ -41,8 +40,6 @@ export const authenticate = (userId, token, expiryTime) => {
 };
 
 export const signup = (email, password) => {
-    const signupUri = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${ env().firebaseApiKey }`;
-
     return async (dispatch) => {
         try {
             dispatch(signupRequest());
@@ -64,35 +61,9 @@ export const signup = (email, password) => {
 };
 
 export const login = (email, password) => {
-    const signInUri = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${ env().firebaseApiKey }`;
-
     return async (dispatch) => {
         try {
             dispatch(loginRequest());
-
-            // const response = await axios.post(signInUri, JSON.stringify({
-            //         email: email,
-            //         password: password,
-            //         returnSecureToken: true
-            //     }),
-            //     {
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         }
-            //     }
-            // ).catch(err => {
-            //     let errorId = 'BASIC_ERROR';
-            //     if (err.response.data) {
-            //         errorId = err.response.data.error.message;
-            //     }
-            //     let message = 'Something went wrong!';
-            //
-            //     if (errorId === 'INVALID_PASSWORD') {
-            //         message = 'Invalid password!';
-            //     }
-            //
-            //     throw new Error(message);
-            // });
 
             const response = await api.post('/auth/login', {
                 email: email,

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -12,6 +12,12 @@ import { DeleteUserDto } from './dto/DeleteUserDto';
 @Controller('users')
 export class UsersController {
     constructor(private readonly userService: UsersService) {
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/:userId')
+    async getUserById(@Param('userId') userId: string): Promise<User> {
+        return await this.userService.findById(new Types.ObjectId(userId));
     }
 
     @UseGuards(AuthGuard('jwt'))

@@ -21,10 +21,26 @@ const ProfileScreen = props => {
 
     const isLoading = useSelector(state => state.user.isLoading);
     const user = useSelector(state => state.user.user);
+    const userId = useSelector(state => state.auth.userId);
 
     const getUserHandler = async () => {
-        dispatch(fetchUser());
+        dispatch(fetchUser(userId));
     };
+
+    useEffect(() => {
+        if (user.name !== '' || user.age > 0 || user.description !== '') {
+            if (user.name !== '') {
+                setName(user.name);
+            }
+            if (user.age > 0) {
+                setAge(user.age);
+            }
+            if (user.description !== '') {
+                setDescription(user.description);
+            }
+            setVisible(true);
+        }
+    }, [user]);
 
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', getUserHandler);
@@ -140,7 +156,8 @@ const ProfileScreen = props => {
                         _pressed={ { style: styles.pressedButton } }
                         onPress={ () => {
                             dispatch(editUser({
-                                email: 'test@test.com',
+                                userId: userId,
+                                email: user.email,
                                 name,
                                 age,
                                 description

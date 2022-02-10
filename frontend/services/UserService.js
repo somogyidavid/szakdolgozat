@@ -6,23 +6,27 @@ import {
     editUserSuccess,
     editUserFailed
 } from '../store/actions/UserActions';
-import moment from 'moment';
+import api from '../helpers/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getHeader } from '../constants/constants';
 
-let user = {
-    email: 'test@test.com',
-    name: '',
-    age: 0,
-    description: '',
-    interests: []
-};
-
-export const fetchUser = () => {
+export const fetchUser = (userId) => {
     return async (dispatch) => {
         try {
             dispatch(fetchUserRequest());
-            dispatch(fetchUserSuccess(user));
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.get(`/users/${ userId }`, getHeader(token));
+
+            dispatch(fetchUserSuccess({
+                email: response.data.email,
+                name: response.data.name,
+                age: response.data.age,
+                interests: response.data.interests
+            }));
         } catch (err) {
-            dispatch(fetchUserFailed(err));
+            dispatch(fetchUserFailed(err.response));
         }
     };
 };
@@ -31,14 +35,21 @@ export const editUser = (editedUser) => {
     return async (dispatch) => {
         try {
             dispatch(editUserRequest());
-            user = {
-                email: 'test@test.com',
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.put(`/users/${ editedUser.userId }`, {
                 name: editedUser.name,
                 age: editedUser.age,
-                description: editedUser.description,
                 interests: editedUser.interests
-            };
-            dispatch(editUserSuccess(user));
+            }, getHeader(token));
+
+            dispatch(editUserSuccess({
+                email: response.data.email,
+                name: response.data.name,
+                age: response.data.age,
+                interests: response.data.interests
+            }));
         } catch (err) {
             dispatch(editUserFailed(err));
         }
