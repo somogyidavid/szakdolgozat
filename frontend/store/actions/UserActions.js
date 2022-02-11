@@ -4,7 +4,13 @@ import {
     FETCH_USER_FAILED,
     EDIT_USER_REQUEST,
     EDIT_USER_SUCCESS,
-    EDIT_USER_FAILED
+    EDIT_USER_FAILED,
+    CHANGE_PASSWORD_REQUEST,
+    CHANGE_PASSWORD_SUCCESS,
+    CHANGE_PASSWORD_FAILED,
+    DELETE_USER_REQUEST,
+    DELETE_USER_SUCCESS,
+    DELETE_USER_FAILED
 } from '../../constants/UserConstants';
 
 export const fetchUserRequest = () => {
@@ -49,6 +55,54 @@ export const editUserSuccess = (user) => {
 export const editUserFailed = (errors) => {
     return {
         type: EDIT_USER_FAILED,
+        payload: {
+            errors
+        }
+    };
+};
+
+export const changePasswordRequest = () => {
+    return {
+        type: CHANGE_PASSWORD_REQUEST
+    };
+};
+
+export const changePasswordSuccess = (user) => {
+    return {
+        type: CHANGE_PASSWORD_SUCCESS,
+        payload: {
+            user
+        }
+    };
+};
+
+export const changePasswordFailed = (errors) => {
+    return {
+        type: CHANGE_PASSWORD_FAILED,
+        payload: {
+            errors
+        }
+    };
+};
+
+export const deleteUserRequest = () => {
+    return {
+        type: DELETE_USER_REQUEST
+    };
+};
+
+export const deleteUserSuccess = (user) => {
+    return {
+        type: DELETE_USER_SUCCESS,
+        payload: {
+            user
+        }
+    };
+};
+
+export const deleteUserFailed = (errors) => {
+    return {
+        type: DELETE_USER_FAILED,
         payload: {
             errors
         }

@@ -7,6 +7,7 @@ import { Types } from 'mongoose';
 import { UpdateUserDto } from './dto/UpdateUserDto';
 import { DeleteUserDto } from './dto/DeleteUserDto';
 import * as bcrypt from 'bcryptjs';
+import { ChangePasswordDto } from './dto/ChangePasswordDto';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +29,7 @@ export class UsersService {
             password: authRegisterDto.password,
             name: '',
             age: 0,
+            description: '',
             interests: []
         });
 
@@ -35,19 +37,15 @@ export class UsersService {
     }
 
     async updateUser(userId: Types.ObjectId, updateUserDto: UpdateUserDto): Promise<User> {
-        // return await this.userModel.findOneAndUpdate({ _id: userId }, updateUserDto, {
-        //     new: true
-        // }).select('-password').exec();
-
         let updatedUser = await this.userModel.findById(userId);
 
         if (!updatedUser) {
             throw new BadRequestException('Nincs ilyen regisztrált felhasználó!');
         }
 
-        updatedUser.password = updateUserDto.password ? updateUserDto.password : updatedUser.password;
         updatedUser.name = updateUserDto.name ? updateUserDto.name : updatedUser.name;
         updatedUser.age = updateUserDto.age ? updateUserDto.age : updatedUser.age;
+        updatedUser.description = updateUserDto.description ? updateUserDto.description : updatedUser.description;
         updatedUser.interests = updateUserDto.interests ? updateUserDto.interests : updatedUser.interests;
 
         await updatedUser.save();
@@ -63,11 +61,26 @@ export class UsersService {
         const correctPassword = await bcrypt.compare(deleteUserDto.password, user.password);
 
         if (!correctPassword) {
-            console.log(user.password);
-            console.log(deleteUserDto.password);
-            throw new BadRequestException('A jelszó nem megfelelő!');
+            throw new BadRequestException('A jelszó hibás!');
         }
 
         return await this.userModel.findOneAndRemove({ _id: userId }).select('-password').exec();
+    }
+
+    async changePassword(userId: Types.ObjectId, changePasswordDto: ChangePasswordDto): Promise<User> {
+        if (changePasswordDto.newPassword !== changePasswordDto.newPasswordConfirm) {
+            throw new BadRequestException('A jelszavak nem egyeznek meg!');
+        }
+        const user = await this.userModel.findById(userId);
+
+        const correctPassword = await bcrypt.compare(changePasswordDto.password, user.password);
+
+        if (!correctPassword) {
+            throw new BadRequestException('A jelszó hibás!');
+        }
+
+        user.password = changePasswordDto.newPassword;
+        await user.save();
+        return user;
     }
 }

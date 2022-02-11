@@ -5,6 +5,7 @@ export class UserDto {
     email: string;
     name: string;
     age: number;
+    description: string;
     interests: string[];
     lastLogin: Date;
     createdAt: Date;

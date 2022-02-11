@@ -109,6 +109,9 @@ export const logoutSuccess = () => {
 
 export const logoutFailed = (errors) => {
     return {
-        type: LOGOUT_ERROR
+        type: LOGOUT_ERROR,
+        payload: {
+            errors
+        }
     };
 };

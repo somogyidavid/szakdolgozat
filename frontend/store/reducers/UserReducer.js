@@ -4,7 +4,12 @@ import {
     FETCH_USER_FAILED,
     EDIT_USER_REQUEST,
     EDIT_USER_SUCCESS,
-    EDIT_USER_FAILED
+    EDIT_USER_FAILED,
+    CHANGE_PASSWORD_REQUEST,
+    DELETE_USER_REQUEST,
+    CHANGE_PASSWORD_SUCCESS,
+    DELETE_USER_SUCCESS,
+    CHANGE_PASSWORD_FAILED, DELETE_USER_FAILED
 } from '../../constants/UserConstants';
 
 const initialState = {
@@ -18,6 +23,8 @@ const UserReducer = (state = initialState, action) => {
 
     switch (type) {
         case FETCH_USER_REQUEST:
+        case CHANGE_PASSWORD_REQUEST:
+        case DELETE_USER_REQUEST:
         case EDIT_USER_REQUEST: {
             return {
                 ...state,
@@ -26,6 +33,8 @@ const UserReducer = (state = initialState, action) => {
             };
         }
         case EDIT_USER_SUCCESS:
+        case CHANGE_PASSWORD_SUCCESS:
+        case DELETE_USER_SUCCESS:
         case FETCH_USER_SUCCESS: {
             return {
                 ...state,
@@ -35,11 +44,13 @@ const UserReducer = (state = initialState, action) => {
             };
         }
         case FETCH_USER_FAILED:
+        case CHANGE_PASSWORD_FAILED:
+        case DELETE_USER_FAILED:
         case EDIT_USER_FAILED: {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         default:

@@ -49,7 +49,7 @@ const AuthReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         case SIGNUP_REQUEST: {
@@ -73,7 +73,7 @@ const AuthReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         case LOGIN_REQUEST: {
@@ -97,7 +97,7 @@ const AuthReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         case LOGOUT_REQUEST: {
@@ -118,7 +118,7 @@ const AuthReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         case DID_TRY_AUTO_LOGIN: {

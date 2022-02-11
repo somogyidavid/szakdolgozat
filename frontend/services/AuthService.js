@@ -16,6 +16,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import env from '../constants/env';
 import { expirationTime } from '../constants/constants';
+import api from '../helpers/api';
 
 const axios = require('axios');
 

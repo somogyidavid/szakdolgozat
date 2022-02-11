@@ -14,10 +14,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
 import Button from '../../components/ui/Button';
+import { Toast } from 'native-base';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
-
-// TODO: Error handling
 
 const formReducer = (state, action) => {
     const { type } = action;
@@ -48,11 +47,10 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = props => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState();
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
-    let stateErr = useSelector(state => state.auth.errors);
+    const errors = useSelector(state => state.auth.errors);
+    const isLoading = useSelector(state => state.auth.isLoading);
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -67,10 +65,16 @@ const AuthScreen = props => {
     });
 
     useEffect(() => {
-        if (stateErr.data) {
-            Alert.alert('An error occurred!', stateErr.data.message, [{ text: 'Okay' }]);
+        if (errors.length > 0) {
+            console.log(errors[0]);
+            Toast.show({
+                title: i18n.t('error'),
+                description: errors[0] ? errors[0].data.message : 'Ismeretlen hiba történt!',
+                status: 'error',
+                placement: 'bottom'
+            });
         }
-    }, [stateErr]);
+    }, [errors]);
 
     const authHandler = async () => {
         let action;
@@ -81,15 +85,7 @@ const AuthScreen = props => {
             action = login(formState.inputValues.email, formState.inputValues.password);
         }
 
-        setError(null);
-        setIsLoading(true);
-
-        try {
-            await dispatch(action);
-        } catch (err) {
-            setError(err.message);
-        }
-        setIsLoading(false);
+        dispatch(action);
     };
 
     const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {

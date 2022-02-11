@@ -61,6 +61,9 @@ class User extends TimeStamps {
     age?: number;
 
     @prop()
+    description?: string;
+
+    @prop()
     interests?: string[];
 
     @prop()

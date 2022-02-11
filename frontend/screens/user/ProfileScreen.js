@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import Colors from '../../constants/Colors';
 import SeparatorLine from '../../components/ui/SeparatorLine';
 import { Button, FormControl, Icon, Input, PresenceTransition, ScrollView } from 'native-base';
@@ -14,7 +14,7 @@ const ProfileScreen = props => {
     const dispatch = useDispatch();
     const nameInputRef = useRef();
     const descriptionInputRef = useRef();
-    const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(true);
     const [name, setName] = useState('');
     const [age, setAge] = useState(18);
     const [description, setDescription] = useState('');
@@ -26,22 +26,7 @@ const ProfileScreen = props => {
     const getUserHandler = async () => {
         dispatch(fetchUser(userId));
     };
-
-    useEffect(() => {
-        if (user.name !== '' || user.age > 0 || user.description !== '') {
-            if (user.name !== '') {
-                setName(user.name);
-            }
-            if (user.age > 0) {
-                setAge(user.age);
-            }
-            if (user.description !== '') {
-                setDescription(user.description);
-            }
-            setVisible(true);
-        }
-    }, [user]);
-
+    
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', getUserHandler);
 
@@ -58,18 +43,25 @@ const ProfileScreen = props => {
             } }
         >
             <ScrollView style={ styles.container }>
-                <PresenceTransition
-                    visible={ visible }
-                    initial={ { opacity: 0, scale: 0 } }
-                    animate={ { opacity: 1, scale: 1, transition: { duration: 250 } } }
-                >
-                    <ProfileCard
-                        name={ user.name }
-                        age={ user.age }
-                        description={ user.description }
-                        interests={ user.interests }
-                    />
-                </PresenceTransition>
+                { isLoading ?
+                  <View style={ styles.loadingSpinner }>
+                      <ActivityIndicator
+                          size='large'
+                          color='#FFF'
+                      />
+                  </View> :
+                  <PresenceTransition
+                      visible={ visible }
+                      initial={ { opacity: 0, scale: 0 } }
+                      animate={ { opacity: 1, scale: 1, transition: { duration: 250 } } }
+                  >
+                      <ProfileCard
+                          name={ user.name }
+                          age={ user.age }
+                          description={ user.description }
+                          interests={ user.interests }
+                      />
+                  </PresenceTransition> }
                 <View style={ styles.formContainer }>
                     <SeparatorLine text={ 'Adatok' } />
                     <FormControl ml={ 12 }>
@@ -177,6 +169,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.darkPurple
+    },
+    loadingSpinner: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 40
     },
     formContainer: {
         backgroundColor: Colors.irisPurple,
