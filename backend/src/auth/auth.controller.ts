@@ -4,9 +4,15 @@ import { AuthLoginDto } from './dto/AuthLoginDto';
 import { AuthenticatedDto } from './dto/AuthenticatedDto';
 import { AuthRegisterDto } from './dto/AuthRegisterDto';
 import { ApiTags } from '@nestjs/swagger';
+import { CastErrorExceptionFilter } from '../exceptions/castError-exception.filter';
+import { ValidationExceptionFilter } from '../exceptions/validation-exception.filter';
+import { ApiErrorExceptionFilter } from '../exceptions/ApiError-exception.filter';
 
 @ApiTags('Auth')
 @Controller('auth')
+@UseFilters(new CastErrorExceptionFilter())
+@UseFilters(new ValidationExceptionFilter())
+@UseFilters(new ApiErrorExceptionFilter())
 export class AuthController {
     constructor(private readonly authService: AuthService) {
     }

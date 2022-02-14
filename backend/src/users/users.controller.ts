@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -8,9 +8,15 @@ import { ReqUser } from '../auth/decorators/requser.decorator';
 import { Types } from 'mongoose';
 import { DeleteUserDto } from './dto/DeleteUserDto';
 import { ChangePasswordDto } from './dto/ChangePasswordDto';
+import { CastErrorExceptionFilter } from '../exceptions/castError-exception.filter';
+import { ValidationExceptionFilter } from '../exceptions/validation-exception.filter';
+import { ApiErrorExceptionFilter } from '../exceptions/ApiError-exception.filter';
 
 @ApiTags('Users')
 @Controller('users')
+@UseFilters(new CastErrorExceptionFilter())
+@UseFilters(new ValidationExceptionFilter())
+@UseFilters(new ApiErrorExceptionFilter())
 export class UsersController {
     constructor(private readonly userService: UsersService) {
     }

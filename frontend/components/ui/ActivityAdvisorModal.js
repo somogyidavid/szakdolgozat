@@ -225,12 +225,6 @@ const ActivityAdvisorModal = props => {
                                             setDateSelected(false);
                                             props.onCloseHandler();
                                             setModalOpen(false);
-                                            Toast.show({
-                                                title: i18n.t('success'),
-                                                description: 'A program bekerült a naptáradba!',
-                                                status: 'success',
-                                                placement: 'bottom'
-                                            });
                                         } else {
                                             setTimePickerOpen(true);
                                         }

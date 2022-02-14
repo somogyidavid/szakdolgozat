@@ -4,7 +4,11 @@ import {
     FETCH_USER_ACTIVITIES_FAILED,
     INSERT_USER_ACTIVITY_REQUEST,
     INSERT_USER_ACTIVITY_SUCCESS,
-    INSERT_USER_ACTIVITY_FAILED
+    INSERT_USER_ACTIVITY_FAILED,
+    EDIT_USER_ACTIVITY_REQUEST,
+    DELETE_USER_ACTIVITY_REQUEST,
+    EDIT_USER_ACTIVITY_SUCCESS,
+    DELETE_USER_ACTIVITY_SUCCESS, EDIT_USER_ACTIVITY_FAILED, DELETE_USER_ACTIVITY_FAILED
 } from '../../constants/UserActivitiesConstants';
 
 const initialState = {
@@ -18,6 +22,8 @@ const UserActivitiesReducer = (state = initialState, action) => {
 
     switch (type) {
         case INSERT_USER_ACTIVITY_REQUEST:
+        case EDIT_USER_ACTIVITY_REQUEST:
+        case DELETE_USER_ACTIVITY_REQUEST:
         case FETCH_USER_ACTIVITIES_REQUEST: {
             return {
                 ...state,
@@ -41,12 +47,36 @@ const UserActivitiesReducer = (state = initialState, action) => {
                 errors: []
             };
         }
+        case EDIT_USER_ACTIVITY_SUCCESS: {
+            return {
+                ...state,
+                isLoading: false,
+                activities: state.activities.map((activity) => {
+                    if (activity._id === payload.activity._id) {
+                        return payload.activity;
+                    }
+
+                    return activity;
+                }),
+                errors: []
+            };
+        }
+        case DELETE_USER_ACTIVITY_SUCCESS: {
+            return {
+                ...state,
+                isLoading: false,
+                activities: state.activities.filter(activity => activity._id !== payload.activity._id),
+                errors: []
+            };
+        }
         case INSERT_USER_ACTIVITY_FAILED:
+        case EDIT_USER_ACTIVITY_FAILED:
+        case DELETE_USER_ACTIVITY_FAILED:
         case FETCH_USER_ACTIVITIES_FAILED: {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         default:

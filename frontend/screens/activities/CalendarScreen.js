@@ -11,7 +11,8 @@ import { AntDesign } from '@expo/vector-icons';
 import CreateActivityModal from '../../components/ui/CreateActivityModal';
 import moment from 'moment';
 import * as Localization from 'expo-localization';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserActivities } from '../../services/UserActivitiesService';
 
 LocaleConfig.locales['hu'] = {
     monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus',
@@ -40,6 +41,7 @@ if (Localization.locale === 'hu-HU') {
 }
 
 const CalendarScreen = props => {
+    const dispatch = useDispatch();
     const currentDate = new Date();
     const flatListRef = useRef();
     const isFocused = useIsFocused();
@@ -57,6 +59,19 @@ const CalendarScreen = props => {
             dotColor: 'white'
         }
     });
+
+    const getUserActivitiesHandler = async () => {
+        dispatch(fetchUserActivities());
+    };
+
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', getUserActivitiesHandler);
+
+        return () => {
+            unsubscribe();
+        };
+    }, [getUserActivitiesHandler]);
+
 
     useEffect(() => {
         if (isFocused) {

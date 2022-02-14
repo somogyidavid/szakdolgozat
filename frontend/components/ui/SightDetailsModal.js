@@ -334,12 +334,6 @@ const SightDetailsModal = props => {
                                             timeType: timeType,
                                             details: placeDetails
                                         }));
-                                        Toast.show({
-                                            title: i18n.t('success'),
-                                            description: 'A program bekerült a naptáradba!',
-                                            status: 'success',
-                                            placement: 'bottom'
-                                        });
                                         setReminder(60);
                                         setTimeType('minute');
                                         setDateSelected(false);

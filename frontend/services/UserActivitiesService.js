@@ -4,33 +4,29 @@ import {
     fetchUserActivitiesFailed,
     insertUserActivityRequest,
     insertUserActivitySuccess,
-    insertUserActivityFailed
+    insertUserActivityFailed,
+    editUserActivityRequest,
+    editUserActivityFailed,
+    editUserActivitySuccess,
+    deleteUserActivityRequest, deleteUserActivitySuccess, deleteUserActivityFailed
 } from '../store/actions/UserActivitiesActions';
 import moment from 'moment';
-
-const axios = require('axios');
-
-export const tempActivities = [{
-    name: 'Gösser Club Panzió és Étterem',
-    isAllDay: true,
-    startingDate: moment('2022-01-30'),
-    endingDate: moment('2022-01-30'),
-    location: {
-        city: 'Balassagyarmat',
-        formattedAddress: 'Balassagyarmat, Teleki László utca 14',
-        latitude: 48.0770013,
-        longitude: 19.2942338
-    },
-    reminder: 60,
-    timeType: 'minute',
-    details: {}
-}];
+import api from '../helpers/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getHeader } from '../constants/constants';
+import { Toast } from 'native-base';
+import i18n from 'i18n-js';
 
 export const fetchUserActivities = () => {
     return async (dispatch) => {
         try {
             dispatch(fetchUserActivitiesRequest());
-            dispatch(fetchUserActivitiesSuccess(tempActivities));
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.get('/activities', getHeader(token));
+
+            dispatch(fetchUserActivitiesSuccess(response.data));
         } catch (err) {
             dispatch(fetchUserActivitiesFailed(err));
         }
@@ -41,10 +37,64 @@ export const insertUserActivity = (activity) => {
     return async (dispatch) => {
         try {
             dispatch(insertUserActivityRequest());
-            tempActivities.push(activity);
-            dispatch(insertUserActivitySuccess(activity));
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.post('/activities/create', activity, getHeader(token));
+
+            dispatch(insertUserActivitySuccess(response.data));
+            Toast.show({
+                title: i18n.t('success'),
+                description: 'A program bekerült a naptáradba!',
+                status: 'success',
+                placement: 'bottom'
+            });
         } catch (err) {
-            dispatch(insertUserActivityFailed(err));
+            dispatch(insertUserActivityFailed(err.response));
+        }
+    };
+};
+
+export const editUserActivity = (activity) => {
+    return async (dispatch) => {
+        try {
+            dispatch(editUserActivityRequest());
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.put(`/activities/${ activity._id }`, activity, getHeader(token));
+
+            dispatch(editUserActivitySuccess(response.data));
+            Toast.show({
+                title: i18n.t('success'),
+                description: 'Sikeres módosítás!',
+                status: 'success',
+                placement: 'bottom'
+            });
+        } catch (err) {
+            dispatch(editUserActivityFailed(err.response));
+        }
+    };
+};
+
+export const deleteUserActivity = (activity) => {
+    return async (dispatch) => {
+        try {
+            dispatch(deleteUserActivityRequest());
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.delete(`/activities/${ activity._id }`, getHeader(token));
+
+            dispatch(deleteUserActivitySuccess(response.data));
+            Toast.show({
+                title: i18n.t('success'),
+                description: 'Sikeres törlés!',
+                status: 'success',
+                placement: 'bottom'
+            });
+        } catch (err) {
+            dispatch(deleteUserActivityFailed(err.response));
         }
     };
 };

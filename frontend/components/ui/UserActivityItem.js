@@ -51,7 +51,7 @@ const UserActivityItem = props => {
                             { i18n.t('activityReminder') }: { item.reminder } { i18n.t(`activity${ item.timeType[0].toUpperCase() + item.timeType.substring(1) }`) }
                         </Text>
                     </HStack>
-                    { item.details.photos &&
+                    { item.photoReference &&
                         <HStack alignItems='center'>
                             <Entypo
                                 name='image'
@@ -60,7 +60,7 @@ const UserActivityItem = props => {
                                 style={ styles.icon }
                             />
                             <Image
-                                source={ { uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${ item.details.photos[0].photo_reference }&key=${ ENV().googleApiKey }` } }
+                                source={ { uri: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${ item.photoReference }&key=${ ENV().googleApiKey }` } }
                                 width={ 120 }
                                 height={ 120 }
                                 alt='Image'

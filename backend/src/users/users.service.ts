@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuthRegisterDto } from '../auth/dto/AuthRegisterDto';
 import { InjectModel } from 'nestjs-typegoose';
 import User from './schemas/user.schema';

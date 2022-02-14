@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
-import { HStack, VStack } from 'native-base';
+import { HStack, PresenceTransition, VStack } from 'native-base';
 import CreateActivityModal from './CreateActivityModal';
 import i18n from 'i18n-js';
+import SeparatorLine from './SeparatorLine';
+import { useDispatch } from 'react-redux';
+import { deleteUserActivity } from '../../services/UserActivitiesService';
 
 const CalendarDayItem = props => {
+    const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const { item, selectedDate } = props;
 
     const startingTime = moment(selectedDate).isSame(moment(item.startingDate), 'day') ?
@@ -20,16 +25,15 @@ const CalendarDayItem = props => {
     };
 
     return (
-        <View>
+        <View style={ styles.container }>
             <CreateActivityModal
                 isEdit={ isEdit }
                 editHandler={ editHandler }
                 item={ item }
             />
             <TouchableOpacity
-                style={ styles.container }
                 activeOpacity={ 0.6 }
-                onPress={ () => setIsEdit(true) }
+                onPress={ () => setIsOpen(!isOpen) }
             >
                 <VStack
                     alignItems='flex-start'
@@ -66,6 +70,72 @@ const CalendarDayItem = props => {
                     </HStack>
                 </VStack>
             </TouchableOpacity>
+            <PresenceTransition
+                visible={ isOpen }
+                initial={ { scale: 0, opacity: 0 } }
+                animate={ { scale: 1, opacity: 1, transition: { duration: 250 } } }
+            >
+                <SeparatorLine title='' />
+                <HStack
+                    space={ 2 }
+                    mt={ 1 }
+                    justifyContent='space-evenly'
+                >
+                    <TouchableOpacity
+                        activeOpacity={ 0.6 }
+                        style={ styles.detailsButton }
+                        onPress={ () => setIsEdit(true) }
+                    >
+                        <VStack
+                            space={ 1 }
+                            alignItems='center'
+                        >
+                            <Feather
+                                name='edit'
+                                size={ 24 }
+                                color='#FFF'
+                            />
+                            <Text style={ styles.buttonText }>Módosítás</Text>
+                        </VStack>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={ 0.6 }
+                        style={ styles.detailsButton }
+                        onPress={ () => console.log(props.item._id) }
+                    >
+                        <VStack
+                            space={ 1 }
+                            alignItems='center'
+                        >
+                            <Entypo
+                                name='magnifying-glass'
+                                size={ 24 }
+                                color='#FFF'
+                            />
+                            <Text style={ styles.buttonText }>Részletek</Text>
+                        </VStack>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={ 0.6 }
+                        style={ styles.detailsButton }
+                        onPress={ () => {
+                            dispatch(deleteUserActivity(props.item));
+                        } }
+                    >
+                        <VStack
+                            space={ 1 }
+                            alignItems='center'
+                        >
+                            <MaterialIcons
+                                name='delete'
+                                size={ 24 }
+                                color='#FFF'
+                            />
+                            <Text style={ styles.buttonText }>Törlés</Text>
+                        </VStack>
+                    </TouchableOpacity>
+                </HStack>
+            </PresenceTransition>
         </View>
     );
 };
@@ -75,7 +145,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 10,
         borderRadius: 20,
-        height: 140,
         backgroundColor: '#a5f3fc',
         borderWidth: 2,
         borderColor: '#67e8f9',
@@ -96,6 +165,17 @@ const styles = StyleSheet.create({
     text: {
         textAlign: 'left',
         marginHorizontal: 6
+    },
+    detailsButton: {
+        backgroundColor: '#155e75',
+        borderRadius: 10,
+        overflow: 'hidden',
+        padding: 8,
+        width: Dimensions.get('window').width / 4
+    },
+    buttonText: {
+        color: '#FFF',
+        fontFamily: 'open-sans'
     }
 });
 

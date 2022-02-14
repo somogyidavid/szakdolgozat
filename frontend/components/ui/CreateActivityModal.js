@@ -23,7 +23,7 @@ import { getAddress } from '../../services/LocationService';
 import { useDispatch, useSelector } from 'react-redux';
 import i18n from 'i18n-js';
 import ActivityAdvisorModal from './ActivityAdvisorModal';
-import { insertUserActivity } from '../../services/UserActivitiesService';
+import { editUserActivity, insertUserActivity } from '../../services/UserActivitiesService';
 
 const CreateActivityModal = props => {
     const dispatch = useDispatch();
@@ -56,6 +56,19 @@ const CreateActivityModal = props => {
         city: 'Budapest',
         formattedAddress: 'Budapest'
     });
+
+    const errors = useSelector(state => state.userActivities.errors);
+
+    useEffect(() => {
+        if (errors.length > 0) {
+            Toast.show({
+                title: i18n.t('error'),
+                description: errors[0] && errors[0].data.errors ? errors[0].data.errors[0].message : 'Ismeretlen hiba történt!',
+                status: 'error',
+                placement: 'bottom'
+            });
+        }
+    }, [errors]);
 
     useEffect(() => {
         if (props.isEdit) {
@@ -144,6 +157,7 @@ const CreateActivityModal = props => {
 
     const getData = () => {
         return {
+            _id: props.item._id,
             name: title,
             isAllDay: isAllDay,
             startingDate: selectedStartingDate,
@@ -156,7 +170,7 @@ const CreateActivityModal = props => {
             },
             reminder: reminder,
             timeType: timeType,
-            details: {}
+            photoReference: props.item.photoReference
         };
     };
 
@@ -470,19 +484,14 @@ const CreateActivityModal = props => {
                                     onPress={ () => {
                                         if (title !== '') {
                                             const data = getData();
-                                            dispatch(insertUserActivity(data));
-                                            Toast.show({
-                                                title: i18n.t('success'),
-                                                description: 'A program bekerült a naptáradba!',
-                                                status: 'success',
-                                                placement: 'bottom'
-                                            });
-                                            resetUI();
                                             if (props.isEdit) {
+                                                dispatch(editUserActivity(data));
                                                 props.editHandler();
                                             } else {
+                                                dispatch(insertUserActivity(data));
                                                 setDidSelectMode(false);
                                             }
+                                            resetUI();
                                         } else {
                                             Alert.alert('Hiba!', 'Az esemény nevét kötelező megadni!');
                                             setInputTouched(true);

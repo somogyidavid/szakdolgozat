@@ -4,8 +4,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
-import { TypegooseConnectionOptions, TypegooseModule } from 'nestjs-typegoose';
 import { ActivitiesModule } from './activities/activities.module';
+import { TypegooseConnectionOptions, TypegooseModule } from 'nestjs-typegoose';
+
 
 @Module({
     imports: [ ConfigModule.forRoot({
