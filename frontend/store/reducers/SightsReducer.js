@@ -29,7 +29,7 @@ const SightsReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: false,
-                errors: payload.errors
+                errors: [...state.errors, payload.errors]
             };
         }
         default:

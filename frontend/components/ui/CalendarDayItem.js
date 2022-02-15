@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
-import { HStack, PresenceTransition, VStack } from 'native-base';
+import { Center, HStack, PresenceTransition, VStack } from 'native-base';
 import CreateActivityModal from './CreateActivityModal';
 import i18n from 'i18n-js';
 import SeparatorLine from './SeparatorLine';
@@ -69,6 +69,14 @@ const CalendarDayItem = props => {
                         </VStack>
                     </HStack>
                 </VStack>
+                <Center mt={ 2 }>
+                    <Entypo
+                        name={ isOpen ? 'chevron-up' : 'chevron-down' }
+                        size={ 24 }
+                        color='#FFF'
+                        style={ styles.chevron }
+                    />
+                </Center>
             </TouchableOpacity>
             <PresenceTransition
                 visible={ isOpen }
@@ -176,6 +184,12 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#FFF',
         fontFamily: 'open-sans'
+    },
+    chevron: {
+        backgroundColor: '#155e75',
+        borderRadius: 10,
+        overflow: 'hidden',
+        padding: 4
     }
 });
 

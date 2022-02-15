@@ -1,39 +1,41 @@
 import { fetchLocationRequested, fetchLocationSuccess, fetchLocationFailed } from '../store/actions/LocationActions';
-import ENV from '../constants/env';
-
-const axios = require('axios');
+import { getHeader } from '../constants/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../helpers/api';
 
 export const fetchLocation = (location) => {
-    const addressUri = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${ location.lat },${ location.lng }&sensor=false&key=${ ENV().googleApiKey }`;
-    const weatherUri = `https://api.openweathermap.org/data/2.5/onecall?lat=${ location.lat }&lon=${ location.lng }&units=metric&exclude=minutely&appid=${ ENV().openWeathersApiKey }`;
-
-
     return async (dispatch) => {
         try {
             dispatch(fetchLocationRequested());
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
 
-            const addressResponse = await axios.get(addressUri);
+            const addressResponse = await api.post('/location/address', {
+                latitude: location.lat,
+                longitude: location.lng
+            }, getHeader(token));
 
-            const address = {
-                formattedAddress: addressResponse.data.results[0].formatted_address,
-                city: addressResponse.data.results[0].address_components.filter(item => item.types.includes('locality'))[0].long_name
-            };
 
-            const weatherResponse = await axios.get(weatherUri);
+            const weatherResponse = await api.post('/locations/weather', {
+                latitude: location.lat,
+                longitude: location.lng
+            }, getHeader(token));
 
-            dispatch(fetchLocationSuccess(location, address, weatherResponse.data));
+            dispatch(fetchLocationSuccess(location, addressResponse.data, weatherResponse.data));
         } catch (err) {
-            dispatch(fetchLocationFailed(err));
+            dispatch(fetchLocationFailed(err.response));
         }
     };
 };
 
 export const getAddress = async (location) => {
-    const addressUri = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${ location.lat },${ location.lng }&sensor=false&key=${ ENV().googleApiKey }`;
-    const response = await axios.get(addressUri);
+    const userData = await AsyncStorage.getItem('userData');
+    const token = JSON.parse(userData)['token'];
 
-    return {
-        formattedAddress: response.data.results[0].formatted_address,
-        city: response.data.results[0].address_components.filter(item => item.types.includes('locality'))[0].long_name
-    };
+    const response = await api.post('/locations/address', {
+        latitude: location.lat,
+        longitude: location.lng
+    }, getHeader(token));
+
+    return response.data;
 };

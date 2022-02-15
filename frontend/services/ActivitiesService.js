@@ -3,20 +3,31 @@ import {
     fetchActivitiesSuccess,
     fetchActivitiesFailed
 } from '../store/actions/ActivitiesActions';
-import ENV from '../constants/env';
-
-const axios = require('axios');
+import api from '../helpers/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getHeader } from '../constants/constants';
 
 export const fetchActivities = (location, types, radius = 1500, keyword = '', maxPrice = 4, minPrice = 0, openNow = true) => {
-    const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${ location.latitude }%2C${ location.longitude }&radius=${ radius }&type=${ types }&key=${ ENV().googleApiKey }`;
-
     return async (dispatch) => {
         try {
             dispatch(fetchActivitiesRequest());
-            const activitiesResponse = await axios.get(activitiesUri);
-            dispatch(fetchActivitiesSuccess(activitiesResponse.data.results));
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.post('/activities/recommend/request', {
+                latitude: location.latitude,
+                longitude: location.longitude,
+                types,
+                radius,
+                keyword,
+                maxPrice,
+                minPrice,
+                openNow
+            }, getHeader(token));
+
+            dispatch(fetchActivitiesSuccess(response.data.results));
         } catch (err) {
-            dispatch(fetchActivitiesFailed(err));
+            dispatch(fetchActivitiesFailed(err.response));
         }
     };
 };

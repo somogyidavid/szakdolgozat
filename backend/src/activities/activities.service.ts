@@ -7,6 +7,9 @@ import { CreateActivityDto } from './dto/CreateActivityDto';
 import { CreateLocationDto } from './dto/CreateLocationDto';
 import Location from './schemas/location.schema';
 import { UpdateActivityDto } from './dto/UpdateActivityDto';
+import { RequestActivitiesDto } from './dto/RequestActivitiesDto';
+import { ajax } from 'rxjs/ajax';
+import axios from 'axios';
 
 @Injectable()
 export class ActivitiesService {
@@ -80,5 +83,24 @@ export class ActivitiesService {
         await this.locationModel.findOneAndRemove({ _id: activity.location._id });
 
         return await this.activityModel.findOneAndRemove({ _id: activityId }).exec();
+    }
+
+    async getActivities(requestActivitiesDto: RequestActivitiesDto): Promise<Object> {
+        const {
+            latitude,
+            longitude,
+            types,
+            radius,
+            language,
+            keyword,
+            minPrice,
+            maxPrice,
+            openNow
+        } = requestActivitiesDto;
+
+        const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
+        const response = await axios.get(activitiesUri);
+
+        return response.data;
     }
 }

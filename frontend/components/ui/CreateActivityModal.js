@@ -156,8 +156,7 @@ const CreateActivityModal = props => {
     };
 
     const getData = () => {
-        return {
-            _id: props.item._id,
+        const data = {
             name: title,
             isAllDay: isAllDay,
             startingDate: selectedStartingDate,
@@ -170,8 +169,17 @@ const CreateActivityModal = props => {
             },
             reminder: reminder,
             timeType: timeType,
-            photoReference: props.item.photoReference
+            photoReference: props.item ? props.item.photoReference : ''
         };
+
+        if (props.isEdit) {
+            return {
+                _id: props.item._id,
+                ...data
+            };
+        } else {
+            return data;
+        }
     };
 
     const resetUI = () => {

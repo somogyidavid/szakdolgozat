@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import Activity from './schemas/activity.schema';
@@ -10,6 +10,7 @@ import { UpdateActivityDto } from './dto/UpdateActivityDto';
 import { CastErrorExceptionFilter } from '../exceptions/castError-exception.filter';
 import { ValidationExceptionFilter } from '../exceptions/validation-exception.filter';
 import { ApiErrorExceptionFilter } from '../exceptions/ApiError-exception.filter';
+import { RequestActivitiesDto } from './dto/RequestActivitiesDto';
 
 @ApiTags('Activities')
 @Controller('activities')
@@ -48,5 +49,11 @@ export class ActivitiesController {
     @Delete('/:activityId')
     async deleteActivity(@Param('activityId') activityId: string): Promise<Activity> {
         return await this.activitiesService.deleteActivity(new Types.ObjectId(activityId));
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Post('/recommend/request')
+    async getActivities(@Body() requestActivitiesDto: RequestActivitiesDto): Promise<Object> {
+        return await this.activitiesService.getActivities(requestActivitiesDto);
     }
 }

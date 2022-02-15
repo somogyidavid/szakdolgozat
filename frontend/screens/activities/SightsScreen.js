@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchSights } from '../../services/SightsService';
 import ActivityItem from '../../components/ui/ActivityItem';
 import SightDetailsModal from '../../components/ui/SightDetailsModal';
+import { Toast, VStack } from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const SightsScreen = props => {
     const dispatch = useDispatch();
@@ -14,6 +16,19 @@ const SightsScreen = props => {
     const sights = useSelector(state => state.sights.sights);
     const [isOpen, setIsOpen] = useState(false);
     const [selectedSight, setSelectedSight] = useState();
+
+    const errors = useSelector(state => state.sights.errors);
+
+    useEffect(() => {
+        if (errors.length > 0) {
+            Toast.show({
+                title: i18n.t('error'),
+                description: errors[0] ? errors[0].data.message : 'Ismeretlen hiba történt!',
+                status: 'error',
+                placement: 'bottom'
+            });
+        }
+    }, [errors]);
 
     const getSightsHandler = async () => {
         dispatch(fetchSights({
@@ -71,9 +86,23 @@ const SightsScreen = props => {
                                           onRefresh={ getSightsHandler }
                                           refreshing={ isLoading }
                                       /> :
-                    <Text>
-                        Sajnos nem található nevezetesség a környezetedben!
-                    </Text> }
+                    <VStack alignItems='center'>
+                        <Text style={ styles.text }>
+                            Sajnos nem található nevezetesség a környezetedben!
+                        </Text>
+                        <TouchableOpacity
+                            activeOpacity={ 0.65 }
+                            onPress={ () => getSightsHandler() }
+                        >
+                            <MaterialIcons
+                                name='refresh'
+                                size={ 36 }
+                                color='#FFF'
+                                style={ styles.refreshButton }
+                            />
+                        </TouchableOpacity>
+                    </VStack>
+                  }
               </SafeAreaView> }
             <SightDetailsModal
                 isOpen={ isOpen }
@@ -112,6 +141,13 @@ const styles = StyleSheet.create({
     flatListContainer: {
         flex: 1,
         marginTop: 10,
+    },
+    refreshButton: {
+        backgroundColor: '#86198f',
+        borderRadius: 10,
+        overflow: 'hidden',
+        padding: 6,
+        marginTop: 10
     }
 });
 

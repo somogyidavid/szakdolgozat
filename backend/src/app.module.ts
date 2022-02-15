@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { ActivitiesModule } from './activities/activities.module';
 import { TypegooseConnectionOptions, TypegooseModule } from 'nestjs-typegoose';
+import { LocationsModule } from './locations/locations.module';
 
 
 @Module({
@@ -14,7 +15,7 @@ import { TypegooseConnectionOptions, TypegooseModule } from 'nestjs-typegoose';
     }), TypegooseModule.forRoot(process.env.MONGO_URI, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
-    } as TypegooseConnectionOptions), UsersModule, AuthModule, ActivitiesModule ],
+    } as TypegooseConnectionOptions), UsersModule, AuthModule, ActivitiesModule, LocationsModule ],
     controllers: [ AppController ],
     providers: [ AppService ],
 })

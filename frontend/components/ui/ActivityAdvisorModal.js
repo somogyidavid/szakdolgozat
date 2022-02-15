@@ -46,7 +46,7 @@ const ActivityAdvisorModal = props => {
                 latitude: location.lat,
                 longitude: location.lng
             },
-            types: 'restaurant',
+            types: ['restaurant'],
         };
 
         dispatch(fetchActivities(options.location, options.types));
