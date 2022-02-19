@@ -98,9 +98,18 @@ export class ActivitiesService {
             openNow
         } = requestActivitiesDto;
 
-        const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
-        const response = await axios.get(activitiesUri);
+        let activities = { results: [] };
 
-        return response.data;
+        for (let i = 0; i < types.length; i++) {
+            const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types[i]}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
+            const response = await axios.get(activitiesUri);
+
+            activities.results = [
+                ...activities.results,
+                ...response.data.results
+            ];
+        }
+
+        return activities;
     }
 }

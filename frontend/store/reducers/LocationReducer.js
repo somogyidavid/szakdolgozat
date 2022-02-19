@@ -1474,6 +1474,7 @@ const initialState = {
             }
         ]
     },
+    weatherCategory: 6,
     errors: []
 };
 

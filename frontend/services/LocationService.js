@@ -21,6 +21,8 @@ export const fetchLocation = (location) => {
                 longitude: location.lng
             }, getHeader(token));
 
+            const weatherCategoryResponse = await api.post('/train/predict', {});
+
             dispatch(fetchLocationSuccess(location, addressResponse.data, weatherResponse.data));
         } catch (err) {
             dispatch(fetchLocationFailed(err.response));
