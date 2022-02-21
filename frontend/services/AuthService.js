@@ -15,8 +15,9 @@ import {
 } from '../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import env from '../constants/env';
-import { expirationTime } from '../constants/constants';
+import { expirationTime, getHeader } from '../constants/constants';
 import api from '../helpers/api';
+import { fetchUserFailed, fetchUserRequest, fetchUserSuccess } from '../store/actions/UserActions';
 
 const axios = require('axios');
 
@@ -29,13 +30,21 @@ export const setDidTryAutoLogin = () => {
 };
 
 export const authenticate = (userId, token, expiryTime) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         try {
             dispatch(authenticateRequested());
             dispatch(setLogoutTimer(expiryTime));
             dispatch(authenticateSuccess(userId, token));
         } catch (err) {
             dispatch(authenticateFailed(err));
+        } finally {
+            try {
+                dispatch(fetchUserRequest());
+                const response = await api.get(`/users/${ userId }`, getHeader(token));
+                dispatch(fetchUserSuccess(response.data));
+            } catch (err) {
+                dispatch(fetchUserFailed(err.response));
+            }
         }
     };
 };

@@ -10,20 +10,27 @@ export const fetchLocation = (location) => {
             const userData = await AsyncStorage.getItem('userData');
             const token = JSON.parse(userData)['token'];
 
-            const addressResponse = await api.post('/location/address', {
+            const addressResponse = await api.post('/locations/address', {
                 latitude: location.lat,
                 longitude: location.lng
             }, getHeader(token));
-
 
             const weatherResponse = await api.post('/locations/weather', {
                 latitude: location.lat,
                 longitude: location.lng
             }, getHeader(token));
 
-            const weatherCategoryResponse = await api.post('/train/predict', {});
+            const weatherCategoryResponse = await api.post('/train/predict', {
+                temp: weatherResponse.data.current.temp,
+                feelsLike: weatherResponse.data.current.feels_like,
+                humidity: weatherResponse.data.current.humidity,
+                uvi: 4,
+                clouds: weatherResponse.data.current.clouds,
+                windSpeed: weatherResponse.data.current.windSpeed,
+                weatherId: weatherResponse.data.current.weather[0].id
+            }, getHeader(token));
 
-            dispatch(fetchLocationSuccess(location, addressResponse.data, weatherResponse.data));
+            dispatch(fetchLocationSuccess(location, addressResponse.data, weatherResponse.data, weatherCategoryResponse.data));
         } catch (err) {
             dispatch(fetchLocationFailed(err.response));
         }

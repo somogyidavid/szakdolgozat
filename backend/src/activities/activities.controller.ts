@@ -56,4 +56,10 @@ export class ActivitiesController {
     async getActivities(@Body() requestActivitiesDto: RequestActivitiesDto): Promise<Object> {
         return await this.activitiesService.getActivities(requestActivitiesDto);
     }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/top/:userId')
+    async getTopActivityTypes(@Param('userId') userId: string) {
+
+    }
 }

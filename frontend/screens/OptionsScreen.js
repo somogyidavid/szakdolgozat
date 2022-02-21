@@ -103,7 +103,9 @@ const OptionsScreen = props => {
                                 onPress={ async () => {
                                     await AsyncStorage.removeItem('firstLaunch');
                                     setInterestsVisible(false);
-                                    props.navigation.navigate('OverviewTab');
+                                    props.navigation.navigate('OverviewTab', {
+                                        screen: 'Overview'
+                                    });
                                 } }
                             >
                                 Igen!

@@ -17,12 +17,16 @@ import FilterModal from './FilterModal';
 import DateTimePickerModal from './DateTimePickerModal';
 import moment from 'moment';
 import { insertUserActivity } from '../../services/UserActivitiesService';
+import { PlacesTypes } from '../../data/places-types';
 
 const ActivityAdvisorModal = props => {
     const dispatch = useDispatch();
     const location = useSelector(state => state.location.location);
     const isLoading = useSelector(state => state.activities.isLoading);
     const activities = useSelector(state => state.activities.activities);
+    const interests = useSelector(state => state.user.user).interests;
+    const weatherCategory = useSelector(state => state.location.weatherCategory);
+
     const [modalOpen, setModalOpen] = useState(false);
     const [filterOpen, setFilterOpen] = useState(false);
     const [timePickerOpen, setTimePickerOpen] = useState(false);
@@ -46,7 +50,7 @@ const ActivityAdvisorModal = props => {
                 latitude: location.lat,
                 longitude: location.lng
             },
-            types: ['restaurant'],
+            types: PlacesTypes.filter((item) => item.weatherCategories.includes(weatherCategory) && interests.includes(item.type)),
         };
 
         dispatch(fetchActivities(options.location, options.types));

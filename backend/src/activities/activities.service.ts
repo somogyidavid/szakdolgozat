@@ -101,15 +101,25 @@ export class ActivitiesService {
         let activities = { results: [] };
 
         for (let i = 0; i < types.length; i++) {
-            const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types[i]}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
+            const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types[i]['type']}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
             const response = await axios.get(activitiesUri);
 
             activities.results = [
                 ...activities.results,
-                ...response.data.results
+                ...response.data.results.sort(() => 0.5 - Math.random()).slice(0, 10)
             ];
         }
 
+        activities.results = [ ...new Set(activities.results) ];
         return activities;
+    }
+
+    async getTopActivityTypes(userId: Types.ObjectId): Promise<Object[]> {
+        const count = await this.activityModel.aggregate([ {
+            $count: 'interestCount'
+        } ]);
+
+        console.log(count);
+        return [ count ];
     }
 }

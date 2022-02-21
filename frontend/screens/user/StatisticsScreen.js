@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Alert, Dimensions, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 import SeparatorLine from '../../components/ui/SeparatorLine';
 import i18n from 'i18n-js';
 import { useSelector } from 'react-redux';
 import { LineChart, PieChart } from 'react-native-chart-kit';
+import { View } from 'native-base';
 
 const StatisticsScreen = props => {
     const activities = useSelector(state => state.userActivities.activities);
@@ -15,9 +16,9 @@ const StatisticsScreen = props => {
         backgroundGradientTo: '#08130D',
         backgroundGradientToOpacity: 0.5,
         color: (opacity = 1) => `rgba(26, 255, 146, ${ opacity })`,
-        strokeWidth: 2, // optional, default 3
+        strokeWidth: 2,
         barPercentage: 0.5,
-        useShadowColorFromDataset: false // optional
+        useShadowColorFromDataset: false
     };
 
     const data = [
@@ -80,7 +81,6 @@ const StatisticsScreen = props => {
                 chartConfig={ chartConfig }
                 accessor={ 'count' }
                 backgroundColor={ 'transparent' }
-                paddingLeft={ '15' }
             />
             <SeparatorLine text='Aktivitás' />
             <LineChart
