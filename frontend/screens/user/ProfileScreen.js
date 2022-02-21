@@ -26,7 +26,7 @@ const ProfileScreen = props => {
     const getUserHandler = async () => {
         dispatch(fetchUser(userId));
     };
-    
+
     useEffect(() => {
         const unsubscribe = props.navigation.addListener('focus', getUserHandler);
 
@@ -34,6 +34,14 @@ const ProfileScreen = props => {
             unsubscribe();
         };
     }, [getUserHandler]);
+
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setAge(user.age);
+            setDescription(user.description);
+        }
+    }, []);
 
     return (
         <TouchableWithoutFeedback

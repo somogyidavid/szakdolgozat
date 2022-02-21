@@ -3,22 +3,39 @@ import { Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 import SeparatorLine from '../../components/ui/SeparatorLine';
 import i18n from 'i18n-js';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { LineChart, PieChart } from 'react-native-chart-kit';
 import { View } from 'native-base';
+import { getActivitiesForMonths } from '../../services/StatisticsService';
 
 const StatisticsScreen = props => {
-    const activities = useSelector(state => state.userActivities.activities);
+    const dispatch = useDispatch();
+    const statistics = useSelector(state => state.statistics.statistics);
+
+    const getStatisticsHandler = async () => {
+        dispatch(getActivitiesForMonths());
+    };
+
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener('focus', getStatisticsHandler);
+
+        return () => {
+            unsubscribe();
+        };
+    }, [getStatisticsHandler]);
+
+    console.log(statistics);
 
     const chartConfig = {
         backgroundGradientFrom: '#1E2923',
-        backgroundGradientFromOpacity: 0,
+        backgroundGradientFromOpacity: 0.15,
         backgroundGradientTo: '#08130D',
-        backgroundGradientToOpacity: 0.5,
+        backgroundGradientToOpacity: 0.6,
         color: (opacity = 1) => `rgba(26, 255, 146, ${ opacity })`,
         strokeWidth: 2,
         barPercentage: 0.5,
-        useShadowColorFromDataset: false
+        useShadowColorFromDataset: false,
+        decimalPlaces: 0
     };
 
     const data = [
@@ -60,16 +77,20 @@ const StatisticsScreen = props => {
     ];
 
     const dateData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: ['Jan', 'Feb', 'Már', 'Ápr', 'Máj', 'Jún', 'Júl', 'Aug', 'Szept', 'Okt', 'Nov', 'Dec'],
         datasets: [
             {
-                data: [2, 4, 6, 12, 15, 20],
-                color: (opacity = 1) => `rgba(134, 65, 244, ${ opacity })`, // optional
-                strokeWidth: 3 // optional
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                color: (opacity = 1) => `rgba(134, 65, 244, ${ opacity })`,
+                strokeWidth: 3
             }
         ],
-        legend: ['Activities'] // optional
+        legend: ['Programok száma']
     };
+
+    statistics[0].map((item) => {
+        dateData.datasets[0].data[item.month - 1] = item.count;
+    });
 
     return (
         <View style={ styles.container }>

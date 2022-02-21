@@ -119,7 +119,34 @@ export class ActivitiesService {
             $count: 'interestCount'
         } ]);
 
-        console.log(count);
         return [ count ];
+    }
+
+    async getActivityCountForMonths(userId: Types.ObjectId): Promise<Object[]> {
+        const counts = await this.activityModel.aggregate([
+            {
+                '$match': {
+                    'user': userId
+                }
+            }, {
+                '$group': {
+                    '_id': {
+                        '$month': {
+                            '$toDate': '$startingDate'
+                        }
+                    },
+                    'count': {
+                        '$sum': 1
+                    }
+                }
+            }
+        ]);
+
+        counts.map((item) => {
+            Object.defineProperty(item, 'month', Object.getOwnPropertyDescriptor(item, '_id'));
+            delete item['_id'];
+        });
+
+        return counts;
     }
 }

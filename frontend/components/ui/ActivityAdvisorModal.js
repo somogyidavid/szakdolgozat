@@ -116,7 +116,7 @@ const ActivityAdvisorModal = props => {
                           <View>
                               <FlatList
                                   data={ activities.filter(item => {
-                                      return item.rating || item.price_level || item.photos;
+                                      return (item.rating || item.price_level) && item.photos;
                                   }).filter(item => {
                                       if (item.rating && !item.price_level) {
                                           return item.rating >= filters.minimumRating && item.rating <= filters.maximumRating;
@@ -126,7 +126,7 @@ const ActivityAdvisorModal = props => {
                                           return item.rating >= filters.minimumRating && item.rating <= filters.maximumRating &&
                                               item.price_level >= filters.minimumPrice && item.price_level <= filters.maximumPrice;
                                       }
-                                  }) }
+                                  }).sort((a, b) => a.user_ratings_total < b.user_ratings_total) }
                                   renderItem={ ({ index, item }) => <ActivityItem
                                       item={ item }
                                       setSelectedActivity={ setSelectedActivity }

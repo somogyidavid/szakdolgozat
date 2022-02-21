@@ -45,9 +45,7 @@ const DateTimePickerModal = props => {
 
         if (isStarting) {
             setSelectedStartingDate(date);
-            if (props.isEdit) {
-                setSelectedEndingDate(date);
-            }
+            setSelectedEndingDate(date);
         } else {
             setSelectedEndingDate(date);
         }

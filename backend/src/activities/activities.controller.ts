@@ -58,8 +58,14 @@ export class ActivitiesController {
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get('/top/:userId')
-    async getTopActivityTypes(@Param('userId') userId: string) {
+    @Get('/statistics/top')
+    async getTopActivityTypes(@ReqUser('_id') userId: string) {
+        return await this.activitiesService.getTopActivityTypes(new Types.ObjectId(userId));
+    }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/statistics/months')
+    async getActivityCountForMonths(@ReqUser('_id') userId: string): Promise<Object[]> {
+        return await this.activitiesService.getActivityCountForMonths(new Types.ObjectId(userId));
     }
 }
