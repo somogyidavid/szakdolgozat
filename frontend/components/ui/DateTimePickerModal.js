@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Dimensions, Platform, StyleSheet } from 'react-native';
-import { Button, CheckIcon, HStack, Modal, Select, Switch, Text, View, VStack } from 'native-base';
+import { Dimensions, Modal as BaseModal, Platform, StyleSheet } from 'react-native';
+import { Button, Center, CheckIcon, HStack, Modal, Select, Switch, Text, View, VStack } from 'native-base';
 import i18n from 'i18n-js';
 import DatePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -22,13 +22,30 @@ const DateTimePickerModal = props => {
         timeType,
         setTimeType
     } = props;
-    const [dataTimePickerVisible, setDateTimePickerVisible] = useState(false);
+    const [dateTimePickerVisible, setDateTimePickerVisible] = useState(false);
     const [isStarting, setIsStarting] = useState(true);
     const [dateTimePickerMode, setDateTimePickerMode] = useState('date');
 
+    const renderDatePicker = () => {
+        return (
+            <DatePicker
+                value={ isStarting ? selectedStartingDate : selectedEndingDate }
+                minimumDate={ isStarting ? props.isEdit ? selectedStartingDate : new Date() : selectedStartingDate }
+                mode={ dateTimePickerMode }
+                is24Hour={ true }
+                display={ Platform.OS === 'ios' ? 'spinner' : 'default' }
+                onChange={ onChange }
+                style={ Platform.OS === 'ios' ? {
+                    marginTop: 200,
+                    backgroundColor: '#FFF',
+                    width: '100%'
+                } : {} }
+            />
+        );
+    };
 
     const onChange = (event, selectedPickerDate) => {
-        let selectedDate = selectedPickerDate;
+        let selectedDate;
 
         if (isStarting) {
             selectedDate = selectedStartingDate;
@@ -38,33 +55,43 @@ const DateTimePickerModal = props => {
 
         const date = selectedPickerDate || selectedDate;
 
-        if (dateTimePickerMode === 'time') {
-            date.setHours(date.getHours() + 1);
-        }
         setDateTimePickerVisible(Platform.OS === 'ios');
 
         if (isStarting) {
             setSelectedStartingDate(date);
-            setSelectedEndingDate(date);
+
+            if (date > selectedEndingDate) {
+                setSelectedEndingDate(date);
+            }
         } else {
             setSelectedEndingDate(date);
         }
 
-        if (event.type === 'set' && dateTimePickerMode === 'date' && !isAllDay) {
-            setDateTimePickerMode('time');
-            setDateTimePickerVisible(true);
+        if (Platform.OS !== 'ios') {
+            if (event.type === 'set' && dateTimePickerMode === 'date' && !isAllDay) {
+                setDateTimePickerMode('time');
+                setDateTimePickerVisible(true);
+            }
+            if (dateTimePickerMode === 'time' && !isAllDay) {
+                setDateTimePickerMode('date');
+                setDateTimePickerVisible(Platform.OS === 'ios');
+            }
         }
-        if (dateTimePickerMode === 'time' && !isAllDay) {
-            setDateTimePickerMode('date');
-            setDateTimePickerVisible(Platform.OS === 'ios');
-        }
+    };
+
+    const resetUI = () => {
+        setSelectedStartingDate(new Date());
+        setSelectedEndingDate(new Date());
+        setIsAllDay(true);
+        setReminder(60);
+        setTimeType('minute');
     };
 
     return (
         <Modal isOpen={ isOpen }>
             <Modal.Content
                 maxWidth={ 400 }
-                width={ Dimensions.get('window').width - 40 }
+                width={ Dimensions.get('window').width - 20 }
                 height={ Dimensions.get('window').height * 0.55 }
             >
                 <Modal.Header
@@ -94,8 +121,8 @@ const DateTimePickerModal = props => {
                                         setDateTimePickerVisible(true);
                                     } }
                                 >
-                                    { isAllDay ? moment.utc(selectedStartingDate).format('YYYY-MM-DD') :
-                                      moment.utc(selectedStartingDate).format('YYYY-MM-DD HH:mm') }
+                                    { isAllDay ? moment(selectedStartingDate).format('YYYY-MM-DD') :
+                                      moment(selectedStartingDate).format('YYYY-MM-DD HH:mm') }
                                 </Button>
                             </VStack>
                             <VStack style={ styles.container }>
@@ -106,14 +133,15 @@ const DateTimePickerModal = props => {
                                         setDateTimePickerVisible(true);
                                     } }
                                 >
-                                    { isAllDay ? moment.utc(selectedEndingDate).format('YYYY-MM-DD') :
-                                      moment.utc(selectedEndingDate).format('YYYY-MM-DD HH:mm') }
+                                    { isAllDay ? moment(selectedEndingDate).format('YYYY-MM-DD') :
+                                      moment(selectedEndingDate).format('YYYY-MM-DD HH:mm') }
                                 </Button>
                             </VStack>
                         </HStack>
                         <HStack
                             justifyContent='center'
                             alignItems='center'
+                            mb={ 2 }
                         >
                             <Text>{ i18n.t('activityAllDay') }</Text>
                             <Switch
@@ -128,11 +156,11 @@ const DateTimePickerModal = props => {
                         <VStack alignItems='center'>
                             <HStack
                                 justifyContent='center'
-                                alignItems='center'
                             >
                                 <Text style={ styles.text }>{ i18n.t('activityReminder') }</Text>
                                 <Switch
                                     size='md'
+                                    ml={ 4 }
                                     colorScheme='indigo'
                                     isChecked={ reminder > 0 }
                                     defaultIsChecked={ props.reminder > 0 }
@@ -210,14 +238,51 @@ const DateTimePickerModal = props => {
                         </VStack>
                     </VStack>
                     <View>
-                        { dataTimePickerVisible && <DatePicker
-                            value={ isStarting ? selectedStartingDate : selectedEndingDate }
-                            minimumDate={ isStarting ? new Date() : selectedStartingDate }
-                            mode={ dateTimePickerMode }
-                            is24Hour={ true }
-                            display='default'
-                            onChange={ onChange }
-                        /> }
+                        { Platform.OS !== 'ios' && dateTimePickerVisible && renderDatePicker() }
+                        { Platform.OS === 'ios' && dateTimePickerVisible &&
+                            <BaseModal
+                                transparent={ true }
+                                animationType='fade'
+                                visible={ dateTimePickerVisible }
+                                onRequestClose={ () => setDateTimePickerVisible(false) }
+                            >
+                                <View style={ styles.datePickerModal }>
+                                    { renderDatePicker() }
+                                    <Center
+                                        bg='#FFF'
+                                        pb={ 2 }
+                                        width='100%'
+                                    >
+                                        <Text>{ i18n.t('chooseDate') }</Text>
+                                        <HStack
+                                            space={ 8 }
+                                            pt={ 2 }
+                                        >
+                                            <Button
+                                                onPress={ () => {
+                                                    setDateTimePickerVisible(false);
+                                                    setDateTimePickerMode('date');
+                                                } }
+                                            >
+                                                { i18n.t('cancel') }
+                                            </Button>
+                                            <Button
+                                                onPress={ () => {
+                                                    if (dateTimePickerMode === 'date' && !isAllDay) {
+                                                        setDateTimePickerMode('time');
+                                                    } else {
+                                                        setDateTimePickerMode('date');
+                                                        setDateTimePickerVisible(false);
+                                                    }
+                                                } }
+                                            >
+                                                { i18n.t('save') }
+                                            </Button>
+                                        </HStack>
+                                    </Center>
+                                </View>
+                            </BaseModal>
+                        }
                     </View>
                 </Modal.Body>
                 <Modal.Footer>
@@ -235,6 +300,7 @@ const DateTimePickerModal = props => {
                             onPress={ () => {
                                 setDateSelected(true);
                                 setTimePickerOpen(false);
+                                resetUI();
                             } }
                         >
                             { i18n.t('setDate') }
@@ -262,6 +328,13 @@ const styles = StyleSheet.create({
         padding: 2,
         borderRadius: 10,
         overflow: 'hidden'
+    },
+    datePickerModal: {
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(100, 100, 100, 0.5)',
+        padding: 20
     }
 });
 

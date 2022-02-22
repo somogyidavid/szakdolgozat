@@ -24,8 +24,6 @@ const StatisticsScreen = props => {
         };
     }, [getStatisticsHandler]);
 
-    console.log(statistics);
-
     const chartConfig = {
         backgroundGradientFrom: '#1E2923',
         backgroundGradientFromOpacity: 0.15,
@@ -85,16 +83,18 @@ const StatisticsScreen = props => {
                 strokeWidth: 3
             }
         ],
-        legend: ['Programok száma']
+        legend: [i18n.t('countOfActivities')]
     };
 
-    statistics[0].map((item) => {
-        dateData.datasets[0].data[item.month - 1] = item.count;
-    });
+    if (statistics.length > 0) {
+        statistics[0].map((item) => {
+            dateData.datasets[0].data[item.month - 1] = item.count;
+        });
+    }
 
     return (
         <View style={ styles.container }>
-            <SeparatorLine text='Érdeklődési körök' />
+            <SeparatorLine text={ i18n.t('interests') } />
             <PieChart
                 data={ data }
                 width={ Dimensions.get('window').width * 0.9 }
@@ -102,8 +102,9 @@ const StatisticsScreen = props => {
                 chartConfig={ chartConfig }
                 accessor={ 'count' }
                 backgroundColor={ 'transparent' }
+                paddingLeft={ 10 }
             />
-            <SeparatorLine text='Aktivitás' />
+            <SeparatorLine text={ i18n.t('activity') } />
             <LineChart
                 data={ dateData }
                 width={ Dimensions.get('window').width * 0.9 }

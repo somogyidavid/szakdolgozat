@@ -23,7 +23,7 @@ const SightsScreen = props => {
         if (errors.length > 0) {
             Toast.show({
                 title: i18n.t('error'),
-                description: errors[0] ? errors[0].data.message : 'Ismeretlen hiba történt!',
+                description: errors[0] ? errors[0].data.message : i18n.t('unknownError'),
                 status: 'error',
                 placement: 'bottom'
             });
@@ -51,7 +51,9 @@ const SightsScreen = props => {
                 cardStyle={ { backgroundColor: '#86198f' } }
                 content={ i18n.t('sights') }
             />
-            <Text style={ styles.text }>Néhány hely a közeledben, amit érdemes lehet meglátogatni!</Text>
+            <Text style={ { ...styles.text, paddingHorizontal: 4 } }>
+                { i18n.t('sightsText') }
+            </Text>
             { isLoading ?
               <View style={ styles.loadingSpinner }>
                   <ActivityIndicator
@@ -88,7 +90,7 @@ const SightsScreen = props => {
                                       /> :
                     <VStack alignItems='center'>
                         <Text style={ styles.text }>
-                            Sajnos nem található nevezetesség a környezetedben!
+                            { i18n.t('noSights') }
                         </Text>
                         <TouchableOpacity
                             activeOpacity={ 0.65 }

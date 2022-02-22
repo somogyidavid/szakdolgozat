@@ -15,7 +15,10 @@ export const fetchSights = (location) => {
                 latitude: location.latitude,
                 longitude: location.longitude,
                 radius: 3000,
-                types: ['tourist_attraction'],
+                types: [{
+                    title: 'Tourist Attraction',
+                    type: 'tourist_attraction'
+                }],
                 language: Localization.locale
             }, getHeader(token));
 

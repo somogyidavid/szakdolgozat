@@ -1,14 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Modal,
-    Platform,
-    FlatList,
-    Dimensions,
-    ActivityIndicator
-} from 'react-native';
+import { Dimensions, FlatList, Modal, Platform, StyleSheet, Text, View, } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import Colors from '../../constants/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,8 +29,6 @@ const InterestsSelectorModal = props => {
             const result = await AsyncStorage.getItem('firstLaunch');
             setVisible(result ? JSON.parse(result).firstLaunch : visible);
             setIsLoading(false);
-
-            // AsyncStorage.removeItem('firstLaunch');
         };
 
         const onViewableItemsChanged = useRef(({ changed, viewableItems }) => {

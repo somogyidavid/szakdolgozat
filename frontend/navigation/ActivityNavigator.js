@@ -303,7 +303,7 @@ export const ActivityNavigator = () => {
                 name='StatisticsStack'
                 component={ StatisticsNavigator }
                 options={ {
-                    title: 'Statisztikák',
+                    title: i18n.t('statistics'),
                     drawerIcon: () => {
                         return (
                             <Ionicons
@@ -319,7 +319,7 @@ export const ActivityNavigator = () => {
                 name='AboutAppStack'
                 component={ AboutAppNavigator }
                 options={ {
-                    title: 'Tippek',
+                    title: i18n.t('tips'),
                     drawerIcon: () => {
                         return (
                             <Entypo
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     secondaryContainer: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginTop: getStatusBarHeight(),
+        marginTop: Dimensions.get('window').height * 0.5,
         marginBottom: 8
     }
 });

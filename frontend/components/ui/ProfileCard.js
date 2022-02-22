@@ -21,10 +21,10 @@ const ProfileCard = props => {
                 color='#FFF'
             />
             { name !== '' && <Text style={ styles.text }>{ name }</Text> }
-            { age > 0 && <Text style={ styles.text }>Kor: { age } év</Text> }
-            { description !== '' && <Text style={ styles.text }>{ 'Leírás:\n' + description }</Text> }
+            { age > 0 && <Text style={ styles.text }>{ i18n.t('age') + ': ' + age + ' ' + i18n.t('years') }</Text> }
+            { description !== '' && <Text style={ styles.text }>{ i18n.t('description') + ':\n' + description }</Text> }
             { interests && <Text style={ styles.text }>
-                { 'Érdeklődési körök:\n' }{ interestString }
+                { i18n.t('interests') + ':\n' }{ interestString }
             </Text> }
         </View>
     );

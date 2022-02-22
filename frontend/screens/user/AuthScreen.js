@@ -66,10 +66,9 @@ const AuthScreen = props => {
 
     useEffect(() => {
         if (errors.length > 0) {
-            console.log(errors[0]);
             Toast.show({
                 title: i18n.t('error'),
-                description: errors[0] ? errors[0].data.message : 'Ismeretlen hiba történt!',
+                description: errors[0] ? errors[0].data.message : i18n.t('unknownError'),
                 status: 'error',
                 placement: 'bottom'
             });

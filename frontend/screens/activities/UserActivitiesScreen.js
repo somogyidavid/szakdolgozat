@@ -52,7 +52,7 @@ const UserActivitiesScreen = props => {
                 onPress={ () => props.navigation.navigate('StatisticsStack') }
             >
                 <Text style={ styles.statisticsButton }>
-                    Érdekelne statisztika az aktivitásodról és szokásaidról? Nézd meg itt!
+                    { i18n.t('statisticsButton') }
                 </Text>
             </TouchableOpacity>
         </View>

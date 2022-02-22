@@ -71,10 +71,10 @@ const ProfileScreen = props => {
                       />
                   </PresenceTransition> }
                 <View style={ styles.formContainer }>
-                    <SeparatorLine text={ 'Adatok' } />
+                    <SeparatorLine text={ i18n.t('details') } />
                     <FormControl ml={ 12 }>
                         <FormControl.Label _text={ { style: styles.label } }>
-                            Teljes név
+                            { i18n.t('fullName') }
                         </FormControl.Label>
                         <Input
                             value={ name }
@@ -100,7 +100,7 @@ const ProfileScreen = props => {
                             onChangeText={ (text) => setName(text) }
                         />
                         <FormControl.Label _text={ { style: styles.label } }>
-                            Életkor
+                            { i18n.t('age') }
                         </FormControl.Label>
                         <InputSpinner
                             value={ age }
@@ -119,7 +119,7 @@ const ProfileScreen = props => {
                             buttonPressStyle={ { backgroundColor: Colors.palePurple } }
                         />
                         <FormControl.Label _text={ { style: styles.label } }>
-                            Leírás
+                            { i18n.t('description') }
                         </FormControl.Label>
                         <Input
                             value={ description }

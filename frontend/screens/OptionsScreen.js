@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Linking, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Colors from '../constants/Colors';
 import i18n from 'i18n-js';
-import SeparatorLine from '../components/ui/SeparatorLine';
-import { Button, HStack, Input, Switch, Text, Toast, VStack } from 'native-base';
-import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Button, HStack, Input, Select, Switch, Text, Toast, VStack } from 'native-base';
+import { AntDesign, Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../services/AuthService';
 import OptionItem from '../components/ui/OptionItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Localization from 'expo-localization';
 import { changePassword, deleteUser } from '../services/UserService';
 
 const OptionsScreen = props => {
@@ -21,6 +21,8 @@ const OptionsScreen = props => {
     const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [languageVisible, setLanguageVisible] = useState('');
+    const [language, setLanguage] = useState('hu-HU');
     const [deleteUserVisible, setDeleteUserVisible] = useState(false);
     const [creditsVisible, setCreditsVisible] = useState(false);
 
@@ -30,7 +32,7 @@ const OptionsScreen = props => {
         if (errors.length > 0) {
             Toast.show({
                 title: i18n.t('error'),
-                description: errors[0] ? errors[0].data.message : 'Ismeretlen hiba történt!',
+                description: errors[0] ? errors[0].data.message : i18n.t('unknownError'),
                 status: 'error',
                 placement: 'bottom'
             });
@@ -43,7 +45,7 @@ const OptionsScreen = props => {
                 <OptionItem
                     visible={ notificationVisible }
                     setVisible={ setNotificationVisible }
-                    title='Értesítések'
+                    title={ i18n.t('notifications') }
                     icon={ () => <Ionicons
                         name='notifications'
                         size={ 26 }
@@ -55,7 +57,7 @@ const OptionsScreen = props => {
                         size={ 24 }
                         color='#FFF'
                     />
-                    <Text style={ styles.smallText }>Push notifications</Text>
+                    <Text style={ styles.smallText }>{ i18n.t('pushNotifications') }</Text>
                     <Switch
                         size='lg'
                         marginLeft={ 8 }
@@ -67,7 +69,7 @@ const OptionsScreen = props => {
                 <OptionItem
                     visible={ interestsVisible }
                     setVisible={ setInterestsVisible }
-                    title='Érdeklődési körök módosítása'
+                    title={ i18n.t('modifyInterests') }
                     icon={ () => <MaterialIcons
                         name='local-attraction'
                         size={ 26 }
@@ -92,7 +94,7 @@ const OptionsScreen = props => {
                                 style={ styles.smallText }
                                 mb={ 2 }
                             >
-                                Biztos vagy benne? A programajánlás pontossága csökkenhet.
+                                { i18n.t('modifyInterestsVerify') }
                             </Text>
                             <Button
                                 size='md'
@@ -108,7 +110,7 @@ const OptionsScreen = props => {
                                     });
                                 } }
                             >
-                                Igen!
+                                { i18n.t('agree') }
                             </Button>
                         </VStack>
                     </HStack>
@@ -116,7 +118,7 @@ const OptionsScreen = props => {
                 <OptionItem
                     visible={ changePasswordVisible }
                     setVisible={ setChangePasswordVisible }
-                    title='Jelszó változtatás'
+                    title={ i18n.t('changePassword') }
                     icon={ () => <Ionicons
                         name='md-key-sharp'
                         size={ 24 }
@@ -146,7 +148,7 @@ const OptionsScreen = props => {
                             <Input
                                 w={ Dimensions.get('window').width * 0.7 }
                                 h={ 10 }
-                                placeholder={ 'Jelenlegi jelszó' }
+                                placeholder={ i18n.t('currentPassword') }
                                 placeholderTextColor='#FFF'
                                 color='#FFF'
                                 selectionColor='#FFF'
@@ -157,7 +159,7 @@ const OptionsScreen = props => {
                             <Input
                                 w={ Dimensions.get('window').width * 0.7 }
                                 h={ 10 }
-                                placeholder={ 'Új jelszó' }
+                                placeholder={ i18n.t('newPassword') }
                                 placeholderTextColor='#FFF'
                                 color='#FFF'
                                 selectionColor='#FFF'
@@ -168,7 +170,7 @@ const OptionsScreen = props => {
                             <Input
                                 w={ Dimensions.get('window').width * 0.7 }
                                 h={ 10 }
-                                placeholder={ 'Új jelszó megerősítése' }
+                                placeholder={ i18n.t('newPasswordVerify') }
                                 placeholderTextColor='#FFF'
                                 color='#FFF'
                                 selectionColor='#FFF'
@@ -197,7 +199,7 @@ const OptionsScreen = props => {
                 <OptionItem
                     visible={ deleteUserVisible }
                     setVisible={ setDeleteUserVisible }
-                    title='Felasználó törlése'
+                    title={ i18n.t('deleteUser') }
                     icon={ () => <AntDesign
                         name='deleteuser'
                         size={ 24 }
@@ -222,13 +224,12 @@ const OptionsScreen = props => {
                             <Text
                                 style={ styles.smallText }
                             >
-                                Biztosan törlöd a fiókód? Az adataid és beállításaid teljesen elvesznek, és nem{ ' ' }
-                                visszaállíthatóak!
+                                { i18n.t('deleteUserText') }
                             </Text>
                             <Input
                                 w={ Dimensions.get('window').width * 0.7 }
                                 h={ 10 }
-                                placeholder={ 'Jelszó' }
+                                placeholder={ i18n.t('password') }
                                 placeholderTextColor='#FFF'
                                 color='#FFF'
                                 selectionColor='#FFF'
@@ -251,7 +252,7 @@ const OptionsScreen = props => {
                             <Input
                                 w={ Dimensions.get('window').width * 0.7 }
                                 h={ 10 }
-                                placeholder={ 'Jelszó megerősítése' }
+                                placeholder={ i18n.t('confirmPassword') }
                                 placeholderTextColor='#FFF'
                                 color='#FFF'
                                 selectionColor='#FFF'
@@ -271,7 +272,7 @@ const OptionsScreen = props => {
                                     setPasswordConfirm('');
                                 } }
                             >
-                                Igen, biztosan!
+                                { i18n.t('agreeDelete') }
                             </Button>
                         </VStack>
                     </HStack>
@@ -279,7 +280,7 @@ const OptionsScreen = props => {
                 <OptionItem
                     visible={ creditsVisible }
                     setVisible={ setCreditsVisible }
-                    title='Credits'
+                    title={ i18n.t('credits') }
                     icon={ () => <AntDesign
                         name='questioncircleo'
                         size={ 24 }
@@ -297,7 +298,7 @@ const OptionsScreen = props => {
                                 style={ styles.creditText }
                                 onPress={ () => Linking.openURL('https://github.com/somogyidavid/szakdolgozat') }
                             >
-                                Szakdolgozatot készítette:{ '\n' }Somogyi Dávid - EQDGRJ
+                                { i18n.t('thesisCreator') + '\n' }Somogyi Dávid - EQDGRJ
                             </Text>
                         </HStack>
                         <HStack alignItems='center'>

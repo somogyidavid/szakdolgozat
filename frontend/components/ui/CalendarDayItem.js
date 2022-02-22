@@ -37,6 +37,7 @@ const CalendarDayItem = props => {
             >
                 <VStack
                     alignItems='flex-start'
+                    justifyContent='center'
                     space={ 4 }
                 >
                     <Text style={ styles.title }>{ item.name }</Text>
@@ -59,12 +60,13 @@ const CalendarDayItem = props => {
                         </VStack>
                         <VStack
                             space={ 2 }
+                            justifyContent='center'
                         >
                             <Text style={ styles.text }>
                                 { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
                             </Text>
-                            <Text style={ styles.text }>
-                                { item.location.city && item.location.city + ' - ' }{ item.location.formattedAddress }
+                            <Text style={ { ...styles.text, marginRight: 22 } }>
+                                { item.location.city } - { item.location.formattedAddress }
                             </Text>
                         </VStack>
                     </HStack>
@@ -103,7 +105,7 @@ const CalendarDayItem = props => {
                                 size={ 24 }
                                 color='#FFF'
                             />
-                            <Text style={ styles.buttonText }>Módosítás</Text>
+                            <Text style={ styles.buttonText }>{ i18n.t('edit') }</Text>
                         </VStack>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -120,7 +122,7 @@ const CalendarDayItem = props => {
                                 size={ 24 }
                                 color='#FFF'
                             />
-                            <Text style={ styles.buttonText }>Részletek</Text>
+                            <Text style={ styles.buttonText }>{ i18n.t('details') }</Text>
                         </VStack>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -139,7 +141,7 @@ const CalendarDayItem = props => {
                                 size={ 24 }
                                 color='#FFF'
                             />
-                            <Text style={ styles.buttonText }>Törlés</Text>
+                            <Text style={ styles.buttonText }>{ i18n.t('delete') }</Text>
                         </VStack>
                     </TouchableOpacity>
                 </HStack>
@@ -163,7 +165,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.30,
         shadowRadius: 4.65,
-
         elevation: 8,
     },
     title: {
