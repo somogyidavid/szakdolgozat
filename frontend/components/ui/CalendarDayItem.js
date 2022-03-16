@@ -66,7 +66,7 @@ const CalendarDayItem = props => {
                                 { item.isAllDay ? i18n.t('activityAllDay') : startingTime + ' - ' + endingTime }
                             </Text>
                             <Text style={ { ...styles.text, marginRight: 22 } }>
-                                { item.location.city } - { item.location.formattedAddress }
+                                { item.location.city ? item.location.city + ' - ' : '' }{ item.location.formattedAddress }
                             </Text>
                         </VStack>
                     </HStack>

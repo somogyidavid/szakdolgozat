@@ -3,21 +3,21 @@ import i18n from 'i18n-js';
 export const weatherHandler = weatherId => {
     switch (weatherId) {
         case 200:
-            return i18n.t('thunderStormWithLightRain');
+            return i18n.t('thunderstormWithLightRain');
         case 201:
-            return i18n.t('thunderStormWithRain');
+            return i18n.t('thunderstormWithRain');
         case 202:
-            return i18n.t('thunderStormWithHeavyRain');
+            return i18n.t('thunderstormWithHeavyRain');
         case 210:
-            return i18n.t('lightThunderStorm');
+            return i18n.t('lightThunderstorm');
         case 211:
-            return i18n.t('thunderStorm');
+            return i18n.t('thunderstorm');
         case 212:
             return i18n.t('heavyThunderstorm');
         case 221:
             return i18n.t('raggedThunderstorm');
         case 230:
-            return i18n.t('thunderStormWithLightDrizzle');
+            return i18n.t('thunderstormWithLightDrizzle');
         case 231:
             return i18n.t('thunderstormWithDrizzle');
         case 232:

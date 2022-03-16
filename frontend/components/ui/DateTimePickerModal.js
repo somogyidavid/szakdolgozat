@@ -79,14 +79,6 @@ const DateTimePickerModal = props => {
         }
     };
 
-    const resetUI = () => {
-        setSelectedStartingDate(new Date());
-        setSelectedEndingDate(new Date());
-        setIsAllDay(true);
-        setReminder(60);
-        setTimeType('minute');
-    };
-
     return (
         <Modal isOpen={ isOpen }>
             <Modal.Content
@@ -300,7 +292,6 @@ const DateTimePickerModal = props => {
                             onPress={ () => {
                                 setDateSelected(true);
                                 setTimePickerOpen(false);
-                                resetUI();
                             } }
                         >
                             { i18n.t('setDate') }
