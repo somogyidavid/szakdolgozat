@@ -142,7 +142,7 @@ const InterestsSelectorModal = props => {
                                 await addToStorageHandler();
                                 setVisible(false);
                                 dispatch(editUser({
-                                    email: 'test@test.com',
+                                    email: user.email,
                                     name: user.name,
                                     age: user.age,
                                     description: user.description,

@@ -37,19 +37,16 @@ export class UsersService {
     }
 
     async updateUser(userId: Types.ObjectId, updateUserDto: UpdateUserDto): Promise<User> {
-        let updatedUser = await this.userModel.findById(userId);
+        let user = await this.userModel.findById(userId);
 
-        if (!updatedUser) {
+        if (!user) {
             throw new BadRequestException('Nincs ilyen regisztrált felhasználó!');
         }
 
-        updatedUser.name = updateUserDto.name ? updateUserDto.name : updatedUser.name;
-        updatedUser.age = updateUserDto.age ? updateUserDto.age : updatedUser.age;
-        updatedUser.description = updateUserDto.description ? updateUserDto.description : updatedUser.description;
-        updatedUser.interests = updateUserDto.interests ? updateUserDto.interests : updatedUser.interests;
-
-        await updatedUser.save();
-        return updatedUser;
+        return await this.userModel.findOneAndUpdate({ _id: userId }, updateUserDto, {
+            new: true,
+            context: 'query'
+        }).select({ 'password': 0 }).exec();
     }
 
     async deleteUser(userId: Types.ObjectId, deleteUserDto: DeleteUserDto): Promise<User> {

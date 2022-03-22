@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { View, StyleSheet, Dimensions, Platform, KeyboardAvoidingView, Alert } from 'react-native';
 import { Modal as BaseModal } from 'react-native';
@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import i18n from 'i18n-js';
 import ActivityAdvisorModal from './ActivityAdvisorModal';
 import { editUserActivity, insertUserActivity } from '../../services/UserActivitiesService';
+import * as Notifications from 'expo-notifications';
 
 const CreateActivityModal = props => {
     const dispatch = useDispatch();
@@ -72,6 +73,21 @@ const CreateActivityModal = props => {
     }, [errors]);
 
     useEffect(() => {
+        Notifications.getPermissionsAsync()
+            .then(result => {
+                if (!result.granted) {
+                    Notifications.requestPermissionsAsync();
+                }
+                return result;
+            })
+            .then(result => {
+                if (!result.granted) {
+                    i18n.t('notificationsPermissionDenied');
+                }
+            });
+    }, []);
+
+    useEffect(() => {
         if (props.isEdit) {
             setTitle(props.item.name);
             setSelectedStartingDate(new Date(props.item.startingDate));
@@ -104,6 +120,26 @@ const CreateActivityModal = props => {
 
         getAddressHandler();
     }, [pickedLocation]);
+
+    const triggerNotificationsHandler = (date) => {
+        Notifications.scheduleNotificationAsync({
+            identifier: 'teszt',
+            content: {
+                title: 'My first local notification',
+                body: 'This is the first notification we are sending!',
+                data: {
+                    mySpecialData: 'Some nice data'
+                }
+            },
+            trigger: {
+                date: date
+            }
+        });
+    };
+
+    const cancelNotificationsHandler = async (id) => {
+        await Notifications.cancelScheduledNotificationAsync(id);
+    };
 
     const onChange = (event, selectedPickerDate) => {
         let selectedDate;
@@ -539,6 +575,7 @@ const CreateActivityModal = props => {
                                     onPress={ () => {
                                         props.isEdit ? props.editHandler() : setDidSelectMode(false);
                                         setInputTouched(false);
+                                        cancelNotificationsHandler('teszt');
                                     } }
                                 >
                                     { i18n.t('cancel') }
@@ -552,6 +589,16 @@ const CreateActivityModal = props => {
                                                 props.editHandler();
                                             } else {
                                                 dispatch(insertUserActivity(data));
+                                                let scheduleTime = moment(selectedStartingDate);
+                                                if (timeType === 'minute') {
+                                                    scheduleTime.subtract(1, 'minutes').toDate();
+                                                } else if (timeType === 'hour') {
+                                                    scheduleTime.subtract(reminder, 'hours').toDate();
+                                                } else if (timeType === 'day') {
+                                                    scheduleTime.subtract(reminder, 'days').toDate();
+                                                }
+                                                scheduleTime.set('seconds', 0);
+                                                triggerNotificationsHandler(new Date(scheduleTime.toDate()));
                                                 setDidSelectMode(false);
                                             }
                                             resetUI();

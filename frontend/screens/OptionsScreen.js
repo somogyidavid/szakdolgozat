@@ -21,8 +21,6 @@ const OptionsScreen = props => {
     const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [languageVisible, setLanguageVisible] = useState('');
-    const [language, setLanguage] = useState('hu-HU');
     const [deleteUserVisible, setDeleteUserVisible] = useState(false);
     const [creditsVisible, setCreditsVisible] = useState(false);
 
@@ -32,7 +30,7 @@ const OptionsScreen = props => {
         if (errors.length > 0) {
             Toast.show({
                 title: i18n.t('error'),
-                description: errors[0] ? errors[0].data.message : i18n.t('unknownError'),
+                description: errors[0] && errors[0].data ? errors[0].data.message : i18n.t('unknownError'),
                 status: 'error',
                 placement: 'bottom'
             });

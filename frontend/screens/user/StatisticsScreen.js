@@ -38,35 +38,35 @@ const StatisticsScreen = props => {
 
     const data = [
         {
-            name: 'Park',
+            name: i18n.t('park'),
             count: 4,
             color: 'rgba(131, 167, 234, 1)',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: 'Zoo',
+            name: i18n.t('zoo'),
             count: 2,
             color: '#F00',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: 'Tourist Attraction',
+            name: i18n.t('tourist_attraction'),
             count: 12,
             color: 'green',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: 'Spa',
+            name: i18n.t('spa'),
             count: 5,
             color: '#ffffff',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: 'Cafe',
+            name: i18n.t('cafe'),
             count: 4,
             color: 'rgb(0, 0, 255)',
             legendFontColor: '#7F7F7F',
@@ -102,7 +102,6 @@ const StatisticsScreen = props => {
                 chartConfig={ chartConfig }
                 accessor={ 'count' }
                 backgroundColor={ 'transparent' }
-                paddingLeft={ 10 }
             />
             <SeparatorLine text={ i18n.t('activity') } />
             <LineChart
