@@ -7,7 +7,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
 import WeatherCard from '../../components/weather/WeatherCard';
-import InterestsSelectorModal from '../../components/ui/InterestsSelectorModal';
+import InterestsSelectorModal from '../../components/activity/InterestsSelectorModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OverviewScreen = props => {

@@ -50,12 +50,12 @@ export class ActivitiesService {
         if (!updatedActivity) {
             throw new BadRequestException('Nincs ilyen program!');
         }
-
+        
         updatedActivity.name = updateActivityDto.name ? updateActivityDto.name : updatedActivity.name;
-        updatedActivity.isAllDay = updateActivityDto.isAllDay ? updateActivityDto.isAllDay : updatedActivity.isAllDay;
+        updatedActivity.isAllDay = updateActivityDto.isAllDay !== undefined ? updateActivityDto.isAllDay : updatedActivity.isAllDay;
         updatedActivity.startingDate = updateActivityDto.startingDate ? updateActivityDto.startingDate : updatedActivity.startingDate;
         updatedActivity.endingDate = updateActivityDto.endingDate ? updateActivityDto.endingDate : updatedActivity.endingDate;
-        updatedActivity.reminder = updateActivityDto.reminder ? updateActivityDto.reminder : updatedActivity.reminder;
+        updatedActivity.reminder = updateActivityDto.reminder >= 0 ? updateActivityDto.reminder : updatedActivity.reminder;
         updatedActivity.timeType = updateActivityDto.timeType ? updateActivityDto.timeType : updatedActivity.timeType;
 
         if (locationDto) {

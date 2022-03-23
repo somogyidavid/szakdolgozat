@@ -20,7 +20,7 @@ import { fetchPlaceDetails } from '../../services/PlaceDetailsService';
 import ENV from '../../constants/env';
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
 import { backgroundColor } from 'react-native-calendars/src/style';
-import ReviewItem from './ReviewItem';
+import ReviewItem from '../ui/ReviewItem';
 import DateTimePickerModal from './DateTimePickerModal';
 import { insertUserActivity } from '../../services/UserActivitiesService';
 import moment from 'moment';

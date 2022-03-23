@@ -36,8 +36,14 @@ const UserActivityItem = props => {
                         />
                         { item.isAllDay && <Text style={ styles.isAllDay }>{ i18n.t('activityAllDay') }:</Text> }
                         <Text>
-                            { moment.utc(item.startingDate).format('YYYY.MM.DD') }{ ' - ' }
-                            { moment.utc(item.endingDate).format('YYYY.MM.DD') }
+                            { item.isAllDay ?
+                              moment.utc(item.startingDate).format('YYYY.MM.DD.') :
+                              moment.utc(item.startingDate).format('YYYY.MM.DD. HH:mm') }
+                            { ' - ' }
+                            { item.isAllDay ?
+                              moment.utc(item.endingDate).format('YYYY.MM.DD.') :
+                              moment.utc(item.endingDate).format('YYYY.MM.DD. HH:mm')
+                            }
                         </Text>
                     </HStack>
                     <HStack alignItems='center'>
@@ -48,7 +54,9 @@ const UserActivityItem = props => {
                             style={ styles.icon }
                         />
                         <Text>
-                            { i18n.t('activityReminder') }: { item.reminder } { i18n.t(`activity${ item.timeType[0].toUpperCase() + item.timeType.substring(1) }`) }
+                            { i18n.t('activityReminder') + ': ' }
+                            { item.reminder > 0 ? item.reminder + ' ' +
+                                i18n.t(`activity${ item.timeType[0].toUpperCase() + item.timeType.substring(1) }`) : '-' }
                         </Text>
                     </HStack>
                     { item.photoReference &&

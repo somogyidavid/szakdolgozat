@@ -12,7 +12,7 @@ import {
     DELETE_USER_ACTIVITY_SUCCESS,
     DELETE_USER_ACTIVITY_FAILED
 } from '../../constants/UserActivitiesConstants';
-import activityItem from '../../components/ui/ActivityItem';
+import activityItem from '../../components/activity/ActivityItem';
 
 export const fetchUserActivitiesRequest = () => {
     return {

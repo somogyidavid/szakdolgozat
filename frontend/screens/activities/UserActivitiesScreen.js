@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import { Text, View, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Dimensions } from 'react-native';
-import AppIntroSlider from 'react-native-app-intro-slider';
+import { Text, View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserActivities } from '../../services/UserActivitiesService';
 import { FlatList } from 'native-base';
 import Title from '../../components/ui/Title';
 import i18n from 'i18n-js';
-import ActivityItem from '../../components/ui/ActivityItem';
-import UserActivityItem from '../../components/ui/UserActivityItem';
+import UserActivityItem from '../../components/activity/UserActivityItem';
 
 const UserActivitiesScreen = props => {
     const dispatch = useDispatch();

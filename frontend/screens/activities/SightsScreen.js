@@ -4,8 +4,8 @@ import Title from '../../components/ui/Title';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSights } from '../../services/SightsService';
-import ActivityItem from '../../components/ui/ActivityItem';
-import SightDetailsModal from '../../components/ui/SightDetailsModal';
+import ActivityItem from '../../components/activity/ActivityItem';
+import SightDetailsModal from '../../components/activity/SightDetailsModal';
 import { Toast, VStack } from 'native-base';
 import { MaterialIcons } from '@expo/vector-icons';
 

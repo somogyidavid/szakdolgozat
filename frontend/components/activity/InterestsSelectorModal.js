@@ -3,10 +3,10 @@ import { Dimensions, FlatList, Modal, Platform, StyleSheet, Text, View, } from '
 import Tooltip from 'react-native-walkthrough-tooltip';
 import Colors from '../../constants/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from './Button';
-import Title from './Title';
+import Button from '../ui/Button';
+import Title from '../ui/Title';
 import { PlacesTypes } from '../../data/places-types';
-import HelpButton from './HelpButton';
+import HelpButton from '../ui/HelpButton';
 import InterestsSelectorItem from './InterestsSelectorItem';
 import { AntDesign } from '@expo/vector-icons';
 import i18n from 'i18n-js';

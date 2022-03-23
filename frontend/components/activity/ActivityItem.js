@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import { FlatList, HStack, Image, Text, View, VStack } from 'native-base';
 import { AirbnbRating, Rating } from 'react-native-ratings';
 import ENV from '../../constants/env';
-import Label from './Label';
+import Label from '../ui/Label';
 import { Entypo, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
 const ActivityItem = props => {

@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Center, HStack, PresenceTransition, VStack } from 'native-base';
 import CreateActivityModal from './CreateActivityModal';
 import i18n from 'i18n-js';
-import SeparatorLine from './SeparatorLine';
+import SeparatorLine from '../ui/SeparatorLine';
 import { useDispatch } from 'react-redux';
 import { deleteUserActivity } from '../../services/UserActivitiesService';
 
