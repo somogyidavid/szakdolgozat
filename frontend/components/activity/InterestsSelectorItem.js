@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 import Colors from '../../constants/Colors';
 import i18n from 'i18n-js';
 

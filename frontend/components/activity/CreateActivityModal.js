@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import { View, StyleSheet, Dimensions, Platform, KeyboardAvoidingView, Alert } from 'react-native';
-import { Modal as BaseModal } from 'react-native';
+import { Alert, Dimensions, KeyboardAvoidingView, Modal as BaseModal, Platform, StyleSheet, View } from 'react-native';
 import {
     Button,
+    Center,
+    CheckIcon,
     Divider,
     FormControl,
     HStack,
     Icon,
     Input,
     Modal,
+    Select,
     Switch,
     Text,
-    VStack, Select, CheckIcon, WarningOutlineIcon, Toast, Center
+    Toast,
+    VStack,
+    WarningOutlineIcon
 } from 'native-base';
 import Slider from '@react-native-community/slider';
 import MapView, { Marker } from 'react-native-maps';

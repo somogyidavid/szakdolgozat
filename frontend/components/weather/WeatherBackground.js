@@ -1,8 +1,6 @@
 import React from 'react';
 import { ImageBackground, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
-import image from '../../assets/images/cloud_day.jpeg';
-import { View } from 'react-native-web';
 
 const WeatherBackground = props => {
     const weather = useSelector(state => state.location.weather);

@@ -1,4 +1,4 @@
-import { fetchLocationRequested, fetchLocationSuccess, fetchLocationFailed } from '../store/actions/LocationActions';
+import { fetchLocationFailed, fetchLocationRequested, fetchLocationSuccess } from '../store/actions/LocationActions';
 import { getHeader } from '../constants/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../helpers/api';

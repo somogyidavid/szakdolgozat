@@ -1,5 +1,5 @@
-import React, { useReducer, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { useEffect, useReducer } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import Colors from '../../constants/Colors';
 
 const INPUT_CHANGE = 'INPUT_CHANGE';
@@ -85,9 +85,9 @@ const Input = props => {
                 onBlur={ lostFocusHandler }
             />
             { !inputState.isValid && inputState.touched &&
-            <View style={ styles.errorContainer }>
-                <Text style={ styles.errorText }>{ props.errorText }</Text>
-            </View>
+                <View style={ styles.errorContainer }>
+                    <Text style={ styles.errorText }>{ props.errorText }</Text>
+                </View>
             }
         </View>
     );

@@ -1,16 +1,17 @@
 import {
+    deleteUserActivityFailed,
+    deleteUserActivityRequest,
+    deleteUserActivitySuccess,
+    editUserActivityFailed,
+    editUserActivityRequest,
+    editUserActivitySuccess,
+    fetchUserActivitiesFailed,
     fetchUserActivitiesRequest,
     fetchUserActivitiesSuccess,
-    fetchUserActivitiesFailed,
-    insertUserActivityRequest,
-    insertUserActivitySuccess,
     insertUserActivityFailed,
-    editUserActivityRequest,
-    editUserActivityFailed,
-    editUserActivitySuccess,
-    deleteUserActivityRequest, deleteUserActivitySuccess, deleteUserActivityFailed
+    insertUserActivityRequest,
+    insertUserActivitySuccess
 } from '../store/actions/UserActivitiesActions';
-import moment from 'moment';
 import api from '../helpers/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getHeader } from '../constants/constants';

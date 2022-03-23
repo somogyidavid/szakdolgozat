@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-    View,
-    StyleSheet,
-    Modal,
-    Text,
-    Platform,
-    FlatList, ScrollView
-} from 'react-native';
+import { FlatList, Modal, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../ui/Button';
 import i18n from 'i18n-js';
 import Colors from '../../constants/Colors';

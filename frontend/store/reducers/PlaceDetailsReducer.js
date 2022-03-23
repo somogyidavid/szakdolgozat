@@ -1,7 +1,7 @@
 import {
+    FETCH_PLACE_DETAILS_FAILED,
     FETCH_PLACE_DETAILS_REQUEST,
-    FETCH_PLACE_DETAILS_SUCCESS,
-    FETCH_PLACE_DETAILS_FAILED
+    FETCH_PLACE_DETAILS_SUCCESS
 } from '../../constants/PlaceDetailsConstants';
 
 const initialState = {

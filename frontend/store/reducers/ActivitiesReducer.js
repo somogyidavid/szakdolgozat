@@ -1,7 +1,7 @@
 import {
+    FETCH_ACTIVITIES_FAILED,
     FETCH_ACTIVITIES_REQUEST,
-    FETCH_ACTIVITIES_SUCCESS,
-    FETCH_ACTIVITIES_FAILED
+    FETCH_ACTIVITIES_SUCCESS
 } from '../../constants/ActivitiesConstants';
 
 const initialState = {

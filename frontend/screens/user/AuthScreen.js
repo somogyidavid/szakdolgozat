@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
-import {
-    View,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Alert,
-    ScrollView,
-    ActivityIndicator
-} from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, signup } from '../../services/AuthService';

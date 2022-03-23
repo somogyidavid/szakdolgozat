@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Text, StyleSheet, View, Platform, TouchableNativeFeedback, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { Image, Platform, StyleSheet, Text, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';

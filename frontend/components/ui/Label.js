@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Center, Text, View } from 'native-base';
+import { Text, View } from 'native-base';
 import i18n from 'i18n-js';
 
 const Label = props => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, FlatList, Text } from 'react-native';
-import { PresenceTransition, Toast, Button, Fab, Icon } from 'native-base';
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Button, Fab, Icon, PresenceTransition, Toast } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import Colors from '../../constants/Colors';

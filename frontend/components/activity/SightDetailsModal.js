@@ -1,25 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import {
-    Button,
-    Divider,
-    FlatList,
-    HStack,
-    Image,
-    Modal,
-    PresenceTransition,
-    Text,
-    Toast,
-    View,
-    VStack
-} from 'native-base';
+import { Button, Divider, FlatList, HStack, Image, Modal, PresenceTransition, Text, View, VStack } from 'native-base';
 import { SliderBox } from 'react-native-image-slider-box';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPlaceDetails } from '../../services/PlaceDetailsService';
 import ENV from '../../constants/env';
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
-import { backgroundColor } from 'react-native-calendars/src/style';
 import ReviewItem from '../ui/ReviewItem';
 import DateTimePickerModal from './DateTimePickerModal';
 import { insertUserActivity } from '../../services/UserActivitiesService';

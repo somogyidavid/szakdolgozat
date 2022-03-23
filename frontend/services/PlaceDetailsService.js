@@ -1,7 +1,7 @@
 import {
+    fetchPlaceDetailsFailed,
     fetchPlaceDetailsRequest,
-    fetchPlaceDetailsSuccess,
-    fetchPlaceDetailsFailed
+    fetchPlaceDetailsSuccess
 } from '../store/actions/PlaceDetailsActions';
 import ENV from '../constants/env';
 import * as Localization from 'expo-localization';

@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-    ActivityIndicator,
-    StyleSheet,
-    View
-} from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import Colors from '../../constants/Colors';
 import WeatherCard from '../../components/weather/WeatherCard';
 import InterestsSelectorModal from '../../components/activity/InterestsSelectorModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OverviewScreen = props => {
     const isLoading = useSelector(state => state.location.isLoading);

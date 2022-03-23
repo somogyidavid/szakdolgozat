@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import i18n from 'i18n-js';
 

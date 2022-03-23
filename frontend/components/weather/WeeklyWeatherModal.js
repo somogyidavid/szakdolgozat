@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Modal, Platform, Image, ScrollView } from 'react-native';
+import { Image, Modal, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Colors from '../../constants/Colors';
 import Button from '../ui/Button';
 import i18n from 'i18n-js';

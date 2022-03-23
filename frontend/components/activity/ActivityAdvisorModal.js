@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import {
-    Button,
-    Divider,
-    FlatList,
-    HStack,
-    Modal, Text, Toast,
-    View,
-} from 'native-base';
+import { Button, Divider, FlatList, HStack, Modal, Text, View, } from 'native-base';
 import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchActivities } from '../../services/ActivitiesService';

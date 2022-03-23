@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, View, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserActivities } from '../../services/UserActivitiesService';
 import { FlatList } from 'native-base';

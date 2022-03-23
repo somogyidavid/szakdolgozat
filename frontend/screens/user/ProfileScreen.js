@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, View, StyleSheet, Dimensions, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import Colors from '../../constants/Colors';
 import SeparatorLine from '../../components/ui/SeparatorLine';
 import { Button, FormControl, Icon, Input, PresenceTransition, ScrollView } from 'native-base';
@@ -7,7 +7,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import InputSpinner from 'react-native-input-spinner';
 import i18n from 'i18n-js';
 import ProfileCard from '../../components/ui/ProfileCard';
-import { fetchUser, editUser } from '../../services/UserService';
+import { editUser, fetchUser } from '../../services/UserService';
 import { useDispatch, useSelector } from 'react-redux';
 
 const ProfileScreen = props => {

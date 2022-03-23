@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Colors';
 import SeparatorLine from '../../components/ui/SeparatorLine';
 import i18n from 'i18n-js';

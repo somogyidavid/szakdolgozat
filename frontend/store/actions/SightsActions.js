@@ -1,4 +1,4 @@
-import { FETCH_SIGHTS_REQUEST, FETCH_SIGHTS_SUCCESS, FETCH_SIGHTS_FAILED } from '../../constants/SightsConstants';
+import { FETCH_SIGHTS_FAILED, FETCH_SIGHTS_REQUEST, FETCH_SIGHTS_SUCCESS } from '../../constants/SightsConstants';
 
 export const fetchSightsRequest = () => {
     return {

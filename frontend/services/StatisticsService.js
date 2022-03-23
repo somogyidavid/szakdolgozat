@@ -1,7 +1,7 @@
 import {
+    fetchStatisticsFailed,
     fetchStatisticsRequest,
-    fetchStatisticsSuccess,
-    fetchStatisticsFailed
+    fetchStatisticsSuccess
 } from '../store/actions/StatisticsActions';
 import api from '../helpers/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';

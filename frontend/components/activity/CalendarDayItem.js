@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
 import { Center, HStack, PresenceTransition, VStack } from 'native-base';

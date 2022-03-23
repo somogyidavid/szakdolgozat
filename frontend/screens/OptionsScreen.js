@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Linking, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Dimensions, Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
 import i18n from 'i18n-js';
-import { Button, HStack, Input, Select, Switch, Text, Toast, VStack } from 'native-base';
-import { AntDesign, Entypo, FontAwesome, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Button, HStack, Input, Switch, Text, Toast, VStack } from 'native-base';
+import { AntDesign, Entypo, FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../services/AuthService';
 import OptionItem from '../components/ui/OptionItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Localization from 'expo-localization';
 import { changePassword, deleteUser } from '../services/UserService';
 
 const OptionsScreen = props => {

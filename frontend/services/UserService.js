@@ -1,15 +1,16 @@
 import {
-    fetchUserRequest,
-    fetchUserSuccess,
-    fetchUserFailed,
-    editUserRequest,
-    editUserSuccess,
-    editUserFailed,
     changePasswordFailed,
     changePasswordRequest,
     changePasswordSuccess,
+    deleteUserFailed,
     deleteUserRequest,
-    deleteUserSuccess, deleteUserFailed
+    deleteUserSuccess,
+    editUserFailed,
+    editUserRequest,
+    editUserSuccess,
+    fetchUserFailed,
+    fetchUserRequest,
+    fetchUserSuccess
 } from '../store/actions/UserActions';
 import api from '../helpers/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';

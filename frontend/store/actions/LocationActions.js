@@ -1,7 +1,7 @@
 import {
+    FETCH_LOCATION_ERROR,
     FETCH_LOCATION_REQUEST,
-    FETCH_LOCATION_SUCCESS,
-    FETCH_LOCATION_ERROR
+    FETCH_LOCATION_SUCCESS
 } from '../../constants/LocationConstants';
 
 export const fetchLocationRequested = () => {

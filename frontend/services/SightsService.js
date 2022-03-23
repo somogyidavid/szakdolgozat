@@ -1,4 +1,4 @@
-import { fetchSightsRequest, fetchSightsSuccess, fetchSightsFailed } from '../store/actions/SightsActions';
+import { fetchSightsFailed, fetchSightsRequest, fetchSightsSuccess } from '../store/actions/SightsActions';
 import * as Localization from 'expo-localization';
 import api from '../helpers/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';

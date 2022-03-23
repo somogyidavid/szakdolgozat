@@ -1,7 +1,7 @@
 import {
+    fetchActivitiesFailed,
     fetchActivitiesRequest,
-    fetchActivitiesSuccess,
-    fetchActivitiesFailed
+    fetchActivitiesSuccess
 } from '../store/actions/ActivitiesActions';
 import api from '../helpers/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';

@@ -1,20 +1,19 @@
 import {
+    authenticateFailed,
     authenticateRequested,
     authenticateSuccess,
-    authenticateFailed,
-    signupRequest,
-    signupSuccess,
-    signupFailed,
+    loginFailed,
     loginRequest,
     loginSuccess,
-    loginFailed,
+    logoutFailed,
     logoutRequest,
     logoutSuccess,
-    logoutFailed,
     setDidTryAutoLogin as setDidTryAutoLoginAction,
+    signupFailed,
+    signupRequest,
+    signupSuccess,
 } from '../store/actions/AuthActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import env from '../constants/env';
 import { expirationTime, getHeader } from '../constants/constants';
 import api from '../helpers/api';
 import { fetchUserFailed, fetchUserRequest, fetchUserSuccess } from '../store/actions/UserActions';

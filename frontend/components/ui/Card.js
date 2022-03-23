@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 import WeatherBackground from '../weather/WeatherBackground';
 

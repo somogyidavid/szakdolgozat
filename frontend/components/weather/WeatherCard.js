@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Image, Platform, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Colors from '../../constants/Colors';
@@ -8,7 +8,6 @@ import i18n from 'i18n-js';
 import * as Location from 'expo-location';
 import { fetchLocation } from '../../services/LocationService';
 import { Ionicons } from '@expo/vector-icons';
-import Button from '../ui/Button';
 import CurrentWeatherModal from './CurrentWeatherModal';
 import Title from '../ui/Title';
 import WeatherTable from './WeatherTable';

@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-} from 'react-native';
+import { Image, StyleSheet, Text, View, } from 'react-native';
 import i18n from 'i18n-js';
 import Colors from '../../constants/Colors';
 import Button from '../ui/Button';
