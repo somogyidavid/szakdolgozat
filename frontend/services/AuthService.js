@@ -18,8 +18,6 @@ import { expirationTime, getHeader } from '../constants/constants';
 import api from '../helpers/api';
 import { fetchUserFailed, fetchUserRequest, fetchUserSuccess } from '../store/actions/UserActions';
 
-const axios = require('axios');
-
 let timer;
 
 export const setDidTryAutoLogin = () => {

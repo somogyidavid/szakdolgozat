@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authenticate, setDidTryAutoLogin } from '../../services/AuthService';
 
-const StartupScreen = props => {
+const StartupScreen = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {

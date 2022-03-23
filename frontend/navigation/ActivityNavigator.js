@@ -9,7 +9,6 @@ import UserActivitiesScreen from '../screens/activities/UserActivitiesScreen';
 import CalendarScreen from '../screens/activities/CalendarScreen';
 import SightsScreen from '../screens/activities/SightsScreen';
 import OptionsScreen from '../screens/OptionsScreen';
-import InterestsScreen from '../screens/user/InterestsScreen';
 import AuthScreen from '../screens/user/AuthScreen';
 import i18n from 'i18n-js';
 import { Entypo, Ionicons } from '@expo/vector-icons';
@@ -136,10 +135,6 @@ export const OptionsNavigator = () => {
                 options={ {
                     headerShown: false
                 } }
-            />
-            <OptionsStackNavigator.Screen
-                name='Interests'
-                component={ InterestsScreen }
             />
         </OptionsStackNavigator.Navigator>
     );

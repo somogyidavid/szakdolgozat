@@ -102,6 +102,7 @@ const StatisticsScreen = props => {
                 chartConfig={ chartConfig }
                 accessor={ 'count' }
                 backgroundColor={ 'transparent' }
+                paddingLeft={ 0 }
             />
             <SeparatorLine text={ i18n.t('activity') } />
             <LineChart

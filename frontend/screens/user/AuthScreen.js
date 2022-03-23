@@ -39,7 +39,7 @@ const formReducer = (state, action) => {
     return state;
 };
 
-const AuthScreen = props => {
+const AuthScreen = () => {
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch();
     const errors = useSelector(state => state.auth.errors);
