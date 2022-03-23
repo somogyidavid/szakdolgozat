@@ -8,11 +8,14 @@ import i18n from 'i18n-js';
 import SeparatorLine from '../ui/SeparatorLine';
 import { useDispatch } from 'react-redux';
 import { deleteUserActivity } from '../../services/UserActivitiesService';
+import CalendarItemDetailsModal from './CalendarItemDetailsModal';
 
 const CalendarDayItem = props => {
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [detailsOpen, setDetailsOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState();
     const { item, selectedDate } = props;
 
     const startingTime = moment(selectedDate).isSame(moment(item.startingDate), 'day') ?
@@ -26,6 +29,12 @@ const CalendarDayItem = props => {
 
     return (
         <View style={ styles.container }>
+            { item && <CalendarItemDetailsModal
+                isOpen={ detailsOpen }
+                setIsOpen={ setDetailsOpen }
+                item={ selectedItem }
+                navigation={ props.navigation }
+            /> }
             <CreateActivityModal
                 isEdit={ isEdit }
                 editHandler={ editHandler }
@@ -111,7 +120,10 @@ const CalendarDayItem = props => {
                     <TouchableOpacity
                         activeOpacity={ 0.6 }
                         style={ styles.detailsButton }
-                        onPress={ () => console.log(props.item._id) }
+                        onPress={ () => {
+                            setSelectedItem(item);
+                            setDetailsOpen(true);
+                        } }
                     >
                         <VStack
                             space={ 1 }

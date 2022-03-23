@@ -5,17 +5,27 @@ import {
 } from '../store/actions/PlaceDetailsActions';
 import ENV from '../constants/env';
 import * as Localization from 'expo-localization';
-
-const axios = require('axios');
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../helpers/api';
+import { getHeader } from '../constants/constants';
 
 export const fetchPlaceDetails = (placeId) => {
-    const placeDetailsUri = `https://maps.googleapis.com/maps/api/place/details/json?language=${ Localization.locale }&place_id=${ placeId }&key=${ ENV().googleApiKey }`;
 
     return async (dispatch) => {
         try {
             dispatch(fetchPlaceDetailsRequest());
-            const placeDetailsResponse = await axios.get(placeDetailsUri);
-            dispatch(fetchPlaceDetailsSuccess(placeDetailsResponse.data.result));
+
+            const userData = await AsyncStorage.getItem('userData');
+            const token = JSON.parse(userData)['token'];
+
+            const response = await api.post('/activities/places/details', {
+                placeId: placeId,
+                language: Localization.locale
+            }, getHeader(token));
+
+            console.log(response.data);
+
+            dispatch(fetchPlaceDetailsSuccess(response.data.result));
         } catch (err) {
             dispatch(fetchPlaceDetailsFailed(err));
         }

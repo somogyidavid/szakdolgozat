@@ -175,6 +175,7 @@ const CalendarScreen = props => {
                           renderItem={ ({ index, item }) => <CalendarDayItem
                               item={ item }
                               selectedDate={ selectedDate }
+                              navigation={ props.navigation }
                           /> }
                           keyExtractor={ (item, index) => index.toString() }
                       /> :

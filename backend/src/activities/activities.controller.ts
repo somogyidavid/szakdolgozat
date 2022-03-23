@@ -11,6 +11,7 @@ import { CastErrorExceptionFilter } from '../exceptions/castError-exception.filt
 import { ValidationExceptionFilter } from '../exceptions/validation-exception.filter';
 import { ApiErrorExceptionFilter } from '../exceptions/ApiError-exception.filter';
 import { RequestActivitiesDto } from './dto/RequestActivitiesDto';
+import { RequestPlaceDetailsDto } from './dto/RequestPlaceDetailsDto';
 
 @ApiTags('Activities')
 @Controller('activities')
@@ -55,6 +56,12 @@ export class ActivitiesController {
     @Post('/recommend/request')
     async getActivities(@Body() requestActivitiesDto: RequestActivitiesDto): Promise<Object> {
         return await this.activitiesService.getActivities(requestActivitiesDto);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Post('/places/details')
+    async getPlaceDetails(@Body() requestPlaceDetailsDto: RequestPlaceDetailsDto): Promise<Object> {
+        return await this.activitiesService.getPlaceDetails(requestPlaceDetailsDto);
     }
 
     @UseGuards(AuthGuard('jwt'))

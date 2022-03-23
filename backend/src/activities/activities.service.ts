@@ -10,6 +10,7 @@ import { UpdateActivityDto } from './dto/UpdateActivityDto';
 import { RequestActivitiesDto } from './dto/RequestActivitiesDto';
 import { ajax } from 'rxjs/ajax';
 import axios from 'axios';
+import { RequestPlaceDetailsDto } from './dto/RequestPlaceDetailsDto';
 
 @Injectable()
 export class ActivitiesService {
@@ -50,7 +51,7 @@ export class ActivitiesService {
         if (!updatedActivity) {
             throw new BadRequestException('Nincs ilyen program!');
         }
-        
+
         updatedActivity.name = updateActivityDto.name ? updateActivityDto.name : updatedActivity.name;
         updatedActivity.isAllDay = updateActivityDto.isAllDay !== undefined ? updateActivityDto.isAllDay : updatedActivity.isAllDay;
         updatedActivity.startingDate = updateActivityDto.startingDate ? updateActivityDto.startingDate : updatedActivity.startingDate;
@@ -112,6 +113,14 @@ export class ActivitiesService {
 
         activities.results = [ ...new Set(activities.results) ];
         return activities;
+    }
+
+    async getPlaceDetails(requestPlaceDetailsDto: RequestPlaceDetailsDto): Promise<Object> {
+        const placeDetailsUri = `https://maps.googleapis.com/maps/api/place/details/json?language=${requestPlaceDetailsDto.language}&place_id=${requestPlaceDetailsDto.placeId}&key=${process.env.GOOGLE_API_KEY}`;
+
+        const response = await axios.get(placeDetailsUri);
+
+        return response.data;
     }
 
     async getTopActivityTypes(userId: Types.ObjectId): Promise<Object[]> {
