@@ -10,7 +10,7 @@ const ReviewItem = props => {
         <View style={ styles.card }>
             <HStack space={ 3 }>
                 <Text style={ styles.author }>{ item.author_name }</Text>
-                <Text>{ moment.utc(item.time * 1000).format('YYYY.MM.DD') }</Text>
+                <Text>{ moment(item.time * 1000).format('YYYY.MM.DD') }</Text>
             </HStack>
             <Text style={ styles.description }>{ item.text }</Text>
         </View>

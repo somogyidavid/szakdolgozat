@@ -127,13 +127,10 @@ const CreateActivityModal = props => {
 
     const triggerNotificationsHandler = (date) => {
         Notifications.scheduleNotificationAsync({
-            identifier: 'teszt',
+            identifier: 'id',
             content: {
-                title: 'My first local notification',
-                body: 'This is the first notification we are sending!',
-                data: {
-                    mySpecialData: 'Some nice data'
-                }
+                title: i18n.t('activity'),
+                body: i18n.t('activitySoon'),
             },
             trigger: {
                 date: date
@@ -579,7 +576,7 @@ const CreateActivityModal = props => {
                                     onPress={ () => {
                                         props.isEdit ? props.editHandler() : setDidSelectMode(false);
                                         setInputTouched(false);
-                                        cancelNotificationsHandler('teszt');
+                                        cancelNotificationsHandler('id');
                                     } }
                                 >
                                     { i18n.t('cancel') }
@@ -594,12 +591,16 @@ const CreateActivityModal = props => {
                                             } else {
                                                 dispatch(insertUserActivity(data));
                                                 let scheduleTime = moment(selectedStartingDate);
+                                                if (isAllDay) {
+                                                    scheduleTime.set('hours', 0);
+                                                    scheduleTime.set('minutes', 0);
+                                                }
                                                 if (timeType === 'minute') {
-                                                    scheduleTime.subtract(1, 'minutes').toDate();
+                                                    scheduleTime.subtract(reminder, 'minutes');
                                                 } else if (timeType === 'hour') {
-                                                    scheduleTime.subtract(reminder, 'hours').toDate();
+                                                    scheduleTime.subtract(reminder, 'hours');
                                                 } else if (timeType === 'day') {
-                                                    scheduleTime.subtract(reminder, 'days').toDate();
+                                                    scheduleTime.subtract(reminder, 'days');
                                                 }
                                                 scheduleTime.set('seconds', 0);
                                                 triggerNotificationsHandler(new Date(scheduleTime.toDate()));

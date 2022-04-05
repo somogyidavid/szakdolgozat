@@ -23,8 +23,6 @@ export const fetchPlaceDetails = (placeId) => {
                 language: Localization.locale
             }, getHeader(token));
 
-            console.log(response.data);
-
             dispatch(fetchPlaceDetailsSuccess(response.data.result));
         } catch (err) {
             dispatch(fetchPlaceDetailsFailed(err));

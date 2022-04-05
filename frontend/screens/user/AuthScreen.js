@@ -8,6 +8,7 @@ import Input from '../../components/ui/Input';
 import Colors from '../../constants/Colors';
 import Button from '../../components/ui/Button';
 import { Toast } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -73,6 +74,7 @@ const AuthScreen = () => {
 
         if (isSignUp) {
             action = signup(formState.inputValues.email, formState.inputValues.password);
+            await AsyncStorage.removeItem('firstLaunch');
         } else {
             action = login(formState.inputValues.email, formState.inputValues.password);
         }

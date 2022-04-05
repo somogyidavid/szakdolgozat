@@ -37,12 +37,12 @@ const UserActivityItem = props => {
                         { item.isAllDay && <Text style={ styles.isAllDay }>{ i18n.t('activityAllDay') }:</Text> }
                         <Text>
                             { item.isAllDay ?
-                              moment.utc(item.startingDate).format('YYYY.MM.DD.') :
-                              moment.utc(item.startingDate).format('YYYY.MM.DD. HH:mm') }
+                              moment(item.startingDate).format('YYYY.MM.DD.') :
+                              moment(item.startingDate).format('YYYY.MM.DD. HH:mm') }
                             { ' - ' }
                             { item.isAllDay ?
-                              moment.utc(item.endingDate).format('YYYY.MM.DD.') :
-                              moment.utc(item.endingDate).format('YYYY.MM.DD. HH:mm')
+                              moment(item.endingDate).format('YYYY.MM.DD.') :
+                              moment(item.endingDate).format('YYYY.MM.DD. HH:mm')
                             }
                         </Text>
                     </HStack>

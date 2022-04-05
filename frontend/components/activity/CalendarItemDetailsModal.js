@@ -49,8 +49,8 @@ const CalendarItemDetailsModal = props => {
                                     style={ styles.data }
                                 >
                                     { item.isAllDay ?
-                                      moment.utc(item.startingDate).format('YYYY.MM.DD.') :
-                                      moment.utc(item.startingDate).format('YYYY.MM.DD. HH:mm') }
+                                      moment(item.startingDate).format('YYYY.MM.DD.') :
+                                      moment(item.startingDate).format('YYYY.MM.DD. HH:mm') }
                                 </Text>
                             </Center>
                             <HStack alignItems='center'>
@@ -70,8 +70,8 @@ const CalendarItemDetailsModal = props => {
                                     style={ styles.data }
                                 >
                                     { item.isAllDay ?
-                                      moment.utc(item.endingDate).format('YYYY.MM.DD.') :
-                                      moment.utc(item.endingDate).format('YYYY.MM.DD. HH:mm') }
+                                      moment(item.endingDate).format('YYYY.MM.DD.') :
+                                      moment(item.endingDate).format('YYYY.MM.DD. HH:mm') }
                                 </Text>
                             </Center>
                             <HStack alignItems='center'>

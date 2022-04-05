@@ -11,6 +11,7 @@ import DateTimePickerModal from './DateTimePickerModal';
 import moment from 'moment';
 import { insertUserActivity } from '../../services/UserActivitiesService';
 import { PlacesTypes } from '../../data/places-types';
+import * as Notifications from 'expo-notifications';
 
 const ActivityAdvisorModal = props => {
     const dispatch = useDispatch();
@@ -47,6 +48,46 @@ const ActivityAdvisorModal = props => {
         };
 
         dispatch(fetchActivities(options.location, options.types));
+    };
+
+    const triggerNotificationsHandler = (date) => {
+        Notifications.scheduleNotificationAsync({
+            identifier: 'id',
+            content: {
+                title: i18n.t('activity'),
+                body: i18n.t('activitySoon'),
+            },
+            trigger: {
+                date: date
+            }
+        });
+    };
+
+    const cancelNotificationsHandler = async (id) => {
+        await Notifications.cancelScheduledNotificationAsync(id);
+    };
+
+    const insertHandler = () => {
+        let scheduleTime = moment(selectedStartingDate);
+        if (isAllDay) {
+            scheduleTime.set('hours', 0);
+            scheduleTime.set('minutes', 0);
+        }
+        if (timeType === 'minute') {
+            scheduleTime.subtract(reminder, 'minutes');
+        } else if (timeType === 'hour') {
+            scheduleTime.subtract(reminder, 'hours');
+        } else if (timeType === 'day') {
+            scheduleTime.subtract(reminder, 'days');
+        }
+        scheduleTime.set('seconds', 0);
+        triggerNotificationsHandler(new Date(scheduleTime.toDate()));
+        setReminder(60);
+        setTimeType('minute');
+        setSelectedActivity('');
+        setDateSelected(false);
+        props.onCloseHandler();
+        setModalOpen(false);
     };
 
     useEffect(() => {
@@ -163,12 +204,12 @@ const ActivityAdvisorModal = props => {
                             <Text style={ styles.chosenDate }>{ i18n.t('chosenDate', {
                                 fromDate:
                                     isAllDay ?
-                                    moment.utc(selectedStartingDate).format('YYYY.MM.DD') :
-                                    moment.utc(selectedStartingDate).format('YYYY.MM.DD HH:mm'),
+                                    moment(selectedStartingDate).format('YYYY.MM.DD') :
+                                    moment(selectedStartingDate).format('YYYY.MM.DD HH:mm'),
                                 toDate:
                                     isAllDay ?
-                                    moment.utc(selectedEndingDate).format('YYYY.MM.DD') :
-                                    moment.utc(selectedEndingDate).format('YYYY.MM.DD HH:mm')
+                                    moment(selectedEndingDate).format('YYYY.MM.DD') :
+                                    moment(selectedEndingDate).format('YYYY.MM.DD HH:mm')
 
                             }) }
                             </Text>
@@ -184,6 +225,7 @@ const ActivityAdvisorModal = props => {
                                 variant='ghost'
                                 colorScheme='blueGray'
                                 onPress={ () => {
+                                    cancelNotificationsHandler('id');
                                     setSelectedActivity('');
                                     setDateSelected(false);
                                     setReminder(60);
@@ -216,12 +258,7 @@ const ActivityAdvisorModal = props => {
                                                 timeType: timeType,
                                                 details: item
                                             }));
-                                            setReminder(60);
-                                            setTimeType('minute');
-                                            setSelectedActivity('');
-                                            setDateSelected(false);
-                                            props.onCloseHandler();
-                                            setModalOpen(false);
+                                            insertHandler();
                                         } else {
                                             setTimePickerOpen(true);
                                         }

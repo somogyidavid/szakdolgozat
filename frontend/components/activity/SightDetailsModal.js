@@ -11,6 +11,7 @@ import ReviewItem from '../ui/ReviewItem';
 import DateTimePickerModal from './DateTimePickerModal';
 import { insertUserActivity } from '../../services/UserActivitiesService';
 import moment from 'moment';
+import * as Notifications from 'expo-notifications';
 
 const SightDetailsModal = props => {
     const { isOpen, setIsOpen, selectedSight, setSelectedSight } = props;
@@ -46,6 +47,45 @@ const SightDetailsModal = props => {
             setImages(photos);
         }
     }, [placeDetails]);
+
+    const triggerNotificationsHandler = (date) => {
+        Notifications.scheduleNotificationAsync({
+            identifier: 'id',
+            content: {
+                title: i18n.t('activity'),
+                body: i18n.t('activitySoon'),
+            },
+            trigger: {
+                date: date
+            }
+        });
+    };
+
+    const cancelNotificationsHandler = async (id) => {
+        await Notifications.cancelScheduledNotificationAsync(id);
+    };
+
+    const insertHandler = () => {
+        let scheduleTime = moment(startingDate);
+        if (isAllDay) {
+            scheduleTime.set('hours', 0);
+            scheduleTime.set('minutes', 0);
+        }
+        if (timeType === 'minute') {
+            scheduleTime.subtract(reminder, 'minutes');
+        } else if (timeType === 'hour') {
+            scheduleTime.subtract(reminder, 'hours');
+        } else if (timeType === 'day') {
+            scheduleTime.subtract(reminder, 'days');
+        }
+        scheduleTime.set('seconds', 0);
+        triggerNotificationsHandler(new Date(scheduleTime.toDate()));
+        setReminder(60);
+        setTimeType('minute');
+        setDateSelected(false);
+        setSelectedSight();
+        setIsOpen(false);
+    };
 
     return (
         <View>
@@ -248,12 +288,12 @@ const SightDetailsModal = props => {
                                           <Text style={ styles.chosenDate }>{ i18n.t('chosenDate', {
                                               fromDate:
                                                   isAllDay ?
-                                                  moment.utc(startingDate).format('YYYY.MM.DD') :
-                                                  moment.utc(startingDate).format('YYYY.MM.DD HH:mm'),
+                                                  moment(startingDate).format('YYYY.MM.DD') :
+                                                  moment(startingDate).format('YYYY.MM.DD HH:mm'),
                                               toDate:
                                                   isAllDay ?
-                                                  moment.utc(endingDate).format('YYYY.MM.DD') :
-                                                  moment.utc(endingDate).format('YYYY.MM.DD HH:mm')
+                                                  moment(endingDate).format('YYYY.MM.DD') :
+                                                  moment(endingDate).format('YYYY.MM.DD HH:mm')
 
                                           }) }
                                           </Text>
@@ -290,6 +330,7 @@ const SightDetailsModal = props => {
                                 variant='ghost'
                                 colorScheme='blueGray'
                                 onPress={ () => {
+                                    cancelNotificationsHandler('id');
                                     setSelectedSight();
                                     setDateSelected(false);
                                     setReminder(60);
@@ -321,12 +362,7 @@ const SightDetailsModal = props => {
                                             timeType: timeType,
                                             details: placeDetails
                                         }));
-                                        setReminder(60);
-                                        setTimeType('minute');
-                                        setDateSelected(false);
-                                        setSelectedSight();
-                                        setIsOpen(false);
-
+                                        insertHandler();
                                     } else {
                                         setTimePickerOpen(true);
                                     }
