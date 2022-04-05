@@ -6,7 +6,7 @@ import i18n from 'i18n-js';
 import { useDispatch, useSelector } from 'react-redux';
 import { LineChart, PieChart } from 'react-native-chart-kit';
 import { View } from 'native-base';
-import { getActivitiesForMonths } from '../../services/StatisticsService';
+import { getActivitiesCountForSeasons, getActivitiesForMonths } from '../../services/StatisticsService';
 
 const StatisticsScreen = props => {
     const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const StatisticsScreen = props => {
 
     const getStatisticsHandler = async () => {
         dispatch(getActivitiesForMonths());
+        dispatch(getActivitiesCountForSeasons());
     };
 
     useEffect(() => {
@@ -38,37 +39,30 @@ const StatisticsScreen = props => {
 
     const data = [
         {
-            name: i18n.t('park'),
-            count: 4,
-            color: 'rgba(131, 167, 234, 1)',
-            legendFontColor: '#7F7F7F',
-            legendFontSize: 15
-        },
-        {
-            name: i18n.t('zoo'),
-            count: 2,
-            color: '#F00',
-            legendFontColor: '#7F7F7F',
-            legendFontSize: 15
-        },
-        {
-            name: i18n.t('tourist_attraction'),
-            count: 12,
+            name: i18n.t('spring'),
+            count: 0,
             color: 'green',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: i18n.t('spa'),
-            count: 5,
-            color: '#ffffff',
+            name: i18n.t('summer'),
+            count: 0,
+            color: 'cyan',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: i18n.t('cafe'),
-            count: 4,
-            color: 'rgb(0, 0, 255)',
+            name: i18n.t('autumn'),
+            count: 0,
+            color: 'orange',
+            legendFontColor: '#7F7F7F',
+            legendFontSize: 15
+        },
+        {
+            name: i18n.t('winter'),
+            count: 0,
+            color: 'blue',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         }
@@ -86,15 +80,22 @@ const StatisticsScreen = props => {
         legend: [i18n.t('countOfActivities')]
     };
 
-    if (statistics.length > 0) {
+    if (statistics.length > 0 && statistics[0].length && statistics[0]) {
         statistics[0].map((item) => {
             dateData.datasets[0].data[item.month - 1] = item.count;
         });
     }
 
+    if (statistics.length > 1 && statistics[1]) {
+        data[0].count = statistics[1].spring;
+        data[1].count = statistics[1].summer;
+        data[2].count = statistics[1].autumn;
+        data[3].count = statistics[1].winter;
+    }
+
     return (
         <View style={ styles.container }>
-            <SeparatorLine text={ i18n.t('interests') } />
+            <SeparatorLine text={ i18n.t('seasonsTitle') } />
             <PieChart
                 data={ data }
                 width={ Dimensions.get('window').width * 0.9 }

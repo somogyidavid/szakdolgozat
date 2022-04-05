@@ -1,161 +1,195 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from 'nestjs-typegoose';
-import Activity from './schemas/activity.schema';
-import { ReturnModelType } from '@typegoose/typegoose';
-import { Types } from 'mongoose';
-import { CreateActivityDto } from './dto/CreateActivityDto';
-import { CreateLocationDto } from './dto/CreateLocationDto';
-import Location from './schemas/location.schema';
-import { UpdateActivityDto } from './dto/UpdateActivityDto';
-import { RequestActivitiesDto } from './dto/RequestActivitiesDto';
-import { ajax } from 'rxjs/ajax';
-import axios from 'axios';
-import { RequestPlaceDetailsDto } from './dto/RequestPlaceDetailsDto';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectModel } from "nestjs-typegoose";
+import Activity from "./schemas/activity.schema";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { Types } from "mongoose";
+import { CreateActivityDto } from "./dto/CreateActivityDto";
+import { CreateLocationDto } from "./dto/CreateLocationDto";
+import Location from "./schemas/location.schema";
+import { UpdateActivityDto } from "./dto/UpdateActivityDto";
+import { RequestActivitiesDto } from "./dto/RequestActivitiesDto";
+import { ajax } from "rxjs/ajax";
+import axios from "axios";
+import { RequestPlaceDetailsDto } from "./dto/RequestPlaceDetailsDto";
 
 @Injectable()
 export class ActivitiesService {
-    constructor(@InjectModel(Activity) private readonly activityModel: ReturnModelType<typeof Activity>,
-                @InjectModel(Location) private readonly locationModel: ReturnModelType<typeof Location>) {
+  constructor(@InjectModel(Activity) private readonly activityModel: ReturnModelType<typeof Activity>,
+              @InjectModel(Location) private readonly locationModel: ReturnModelType<typeof Location>) {
+  }
+
+  async fetchAllActivity(userId: Types.ObjectId): Promise<Activity[]> {
+    return await this.activityModel.find({ user: userId }).exec();
+  }
+
+  async fetchActivityById(userId: Types.ObjectId, activityId: Types.ObjectId): Promise<Activity> {
+    return await this.activityModel.findOne({ user: userId, _id: activityId }).exec();
+  }
+
+  async createActivity(userId: Types.ObjectId, createActivityDto: CreateActivityDto, locationDto: CreateLocationDto): Promise<Activity> {
+    let newActivity = new this.activityModel({
+      _id: new Types.ObjectId(),
+      user: userId,
+      ...createActivityDto
+    });
+
+    let location = new this.locationModel({
+      _id: new Types.ObjectId(),
+      ...locationDto
+    });
+
+    newActivity.location = location;
+
+    await newActivity.save();
+    await location.save();
+    return newActivity;
+  }
+
+  async updateActivity(activityId: Types.ObjectId, updateActivityDto: UpdateActivityDto, locationDto: CreateLocationDto): Promise<Activity> {
+    let updatedActivity = await this.activityModel.findById(activityId);
+
+    if (!updatedActivity) {
+      throw new BadRequestException("Nincs ilyen program!");
     }
 
-    async fetchAllActivity(userId: Types.ObjectId): Promise<Activity[]> {
-        return await this.activityModel.find({ user: userId }).exec();
+    updatedActivity.name = updateActivityDto.name ? updateActivityDto.name : updatedActivity.name;
+    updatedActivity.isAllDay = updateActivityDto.isAllDay !== undefined ? updateActivityDto.isAllDay : updatedActivity.isAllDay;
+    updatedActivity.startingDate = updateActivityDto.startingDate ? updateActivityDto.startingDate : updatedActivity.startingDate;
+    updatedActivity.endingDate = updateActivityDto.endingDate ? updateActivityDto.endingDate : updatedActivity.endingDate;
+    updatedActivity.reminder = updateActivityDto.reminder >= 0 ? updateActivityDto.reminder : updatedActivity.reminder;
+    updatedActivity.timeType = updateActivityDto.timeType ? updateActivityDto.timeType : updatedActivity.timeType;
+
+    if (locationDto) {
+      let location = await this.locationModel.findById(updatedActivity.location);
+      location.city = locationDto.city ? locationDto.city : location.city;
+      location.formattedAddress = locationDto.formattedAddress ? locationDto.formattedAddress : location.formattedAddress;
+      location.latitude = locationDto.latitude ? locationDto.latitude : location.latitude;
+      location.longitude = locationDto.longitude ? locationDto.longitude : location.longitude;
+      await location.save();
+
+      updatedActivity.location = location;
     }
 
-    async fetchActivityById(userId: Types.ObjectId, activityId: Types.ObjectId): Promise<Activity> {
-        return await this.activityModel.findOne({ user: userId, _id: activityId }).exec();
+    await updatedActivity.save();
+    return updatedActivity;
+  }
+
+  async deleteActivity(activityId: Types.ObjectId): Promise<Activity> {
+    let activity = await this.activityModel.findById(activityId);
+
+    if (!activity) {
+      throw new BadRequestException("Nincs ilyen program!");
     }
 
-    async createActivity(userId: Types.ObjectId, createActivityDto: CreateActivityDto, locationDto: CreateLocationDto): Promise<Activity> {
-        let newActivity = new this.activityModel({
-            _id: new Types.ObjectId(),
-            user: userId,
-            ...createActivityDto
-        });
+    await this.locationModel.findOneAndRemove({ _id: activity.location._id });
 
-        let location = new this.locationModel({
-            _id: new Types.ObjectId(),
-            ...locationDto
-        });
+    return await this.activityModel.findOneAndRemove({ _id: activityId }).exec();
+  }
 
-        newActivity.location = location;
+  async getActivities(requestActivitiesDto: RequestActivitiesDto): Promise<Object> {
+    const {
+      latitude,
+      longitude,
+      types,
+      radius,
+      language,
+      keyword,
+      minPrice,
+      maxPrice,
+      openNow
+    } = requestActivitiesDto;
 
-        await newActivity.save();
-        await location.save();
-        return newActivity;
+    let activities = { results: [] };
+
+    for (let i = 0; i < types.length; i++) {
+      const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types[i]["type"]}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
+      const response = await axios.get(activitiesUri);
+
+      activities.results = [
+        ...activities.results,
+        ...response.data.results.sort(() => 0.5 - Math.random()).slice(0, 10)
+      ];
     }
 
-    async updateActivity(activityId: Types.ObjectId, updateActivityDto: UpdateActivityDto, locationDto: CreateLocationDto): Promise<Activity> {
-        let updatedActivity = await this.activityModel.findById(activityId);
+    activities.results = [ ...new Set(activities.results) ];
+    return activities;
+  }
 
-        if (!updatedActivity) {
-            throw new BadRequestException('Nincs ilyen program!');
+  async getPlaceDetails(requestPlaceDetailsDto: RequestPlaceDetailsDto): Promise<Object> {
+    const placeDetailsUri = `https://maps.googleapis.com/maps/api/place/details/json?language=${requestPlaceDetailsDto.language}&place_id=${requestPlaceDetailsDto.placeId}&key=${process.env.GOOGLE_API_KEY}`;
+
+    const response = await axios.get(placeDetailsUri);
+
+    return response.data;
+  }
+
+  async getTopActivityTypes(userId: Types.ObjectId): Promise<Object[]> {
+    const count = await this.activityModel.aggregate([ {
+      $count: "interestCount"
+    } ]);
+
+    return [ count ];
+  }
+
+  async getActivityCountForMonths(userId: Types.ObjectId): Promise<Object[]> {
+    const counts = await this.activityModel.aggregate([
+      {
+        "$match": {
+          "user": userId
         }
-
-        updatedActivity.name = updateActivityDto.name ? updateActivityDto.name : updatedActivity.name;
-        updatedActivity.isAllDay = updateActivityDto.isAllDay !== undefined ? updateActivityDto.isAllDay : updatedActivity.isAllDay;
-        updatedActivity.startingDate = updateActivityDto.startingDate ? updateActivityDto.startingDate : updatedActivity.startingDate;
-        updatedActivity.endingDate = updateActivityDto.endingDate ? updateActivityDto.endingDate : updatedActivity.endingDate;
-        updatedActivity.reminder = updateActivityDto.reminder >= 0 ? updateActivityDto.reminder : updatedActivity.reminder;
-        updatedActivity.timeType = updateActivityDto.timeType ? updateActivityDto.timeType : updatedActivity.timeType;
-
-        if (locationDto) {
-            let location = await this.locationModel.findById(updatedActivity.location);
-            location.city = locationDto.city ? locationDto.city : location.city;
-            location.formattedAddress = locationDto.formattedAddress ? locationDto.formattedAddress : location.formattedAddress;
-            location.latitude = locationDto.latitude ? locationDto.latitude : location.latitude;
-            location.longitude = locationDto.longitude ? locationDto.longitude : location.longitude;
-            await location.save();
-
-            updatedActivity.location = location;
-        }
-
-        await updatedActivity.save();
-        return updatedActivity;
-    }
-
-    async deleteActivity(activityId: Types.ObjectId): Promise<Activity> {
-        let activity = await this.activityModel.findById(activityId);
-
-        if (!activity) {
-            throw new BadRequestException('Nincs ilyen program!');
-        }
-
-        await this.locationModel.findOneAndRemove({ _id: activity.location._id });
-
-        return await this.activityModel.findOneAndRemove({ _id: activityId }).exec();
-    }
-
-    async getActivities(requestActivitiesDto: RequestActivitiesDto): Promise<Object> {
-        const {
-            latitude,
-            longitude,
-            types,
-            radius,
-            language,
-            keyword,
-            minPrice,
-            maxPrice,
-            openNow
-        } = requestActivitiesDto;
-
-        let activities = { results: [] };
-
-        for (let i = 0; i < types.length; i++) {
-            const activitiesUri = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude}%2C${longitude}&radius=${radius}&type=${types[i]['type']}&language=${language}&key=${process.env.GOOGLE_API_KEY}`;
-            const response = await axios.get(activitiesUri);
-
-            activities.results = [
-                ...activities.results,
-                ...response.data.results.sort(() => 0.5 - Math.random()).slice(0, 10)
-            ];
-        }
-
-        activities.results = [ ...new Set(activities.results) ];
-        return activities;
-    }
-
-    async getPlaceDetails(requestPlaceDetailsDto: RequestPlaceDetailsDto): Promise<Object> {
-        const placeDetailsUri = `https://maps.googleapis.com/maps/api/place/details/json?language=${requestPlaceDetailsDto.language}&place_id=${requestPlaceDetailsDto.placeId}&key=${process.env.GOOGLE_API_KEY}`;
-
-        const response = await axios.get(placeDetailsUri);
-
-        return response.data;
-    }
-
-    async getTopActivityTypes(userId: Types.ObjectId): Promise<Object[]> {
-        const count = await this.activityModel.aggregate([ {
-            $count: 'interestCount'
-        } ]);
-
-        return [ count ];
-    }
-
-    async getActivityCountForMonths(userId: Types.ObjectId): Promise<Object[]> {
-        const counts = await this.activityModel.aggregate([
-            {
-                '$match': {
-                    'user': userId
-                }
-            }, {
-                '$group': {
-                    '_id': {
-                        '$month': {
-                            '$toDate': '$startingDate'
-                        }
-                    },
-                    'count': {
-                        '$sum': 1
-                    }
-                }
+      }, {
+        "$group": {
+          "_id": {
+            "$month": {
+              "$toDate": "$startingDate"
             }
-        ]);
+          },
+          "count": {
+            "$sum": 1
+          }
+        }
+      }
+    ]);
 
-        counts.map((item) => {
-            Object.defineProperty(item, 'month', Object.getOwnPropertyDescriptor(item, '_id'));
-            delete item['_id'];
-        });
+    counts.map((item) => {
+      Object.defineProperty(item, "month", Object.getOwnPropertyDescriptor(item, "_id"));
+      delete item["_id"];
+    });
 
-        return counts;
-    }
+    return counts;
+  }
+
+  async getActivityCountForSeasons(userId: Types.ObjectId): Promise<Object> {
+    const counts = {
+      spring: 0,
+      summer: 0,
+      autumn: 0,
+      winter: 0
+    };
+
+    const activities = await this.activityModel.aggregate([
+      {
+        "$match": {
+          "user": userId
+        }
+      }
+    ]);
+
+    activities.map((item) => {
+      const d = item.startingDate;
+      const seasonArray = [
+        { name: "spring", date: new Date(d.getFullYear(), 2, (d.getFullYear() % 4 === 0) ? 19 : 20).getTime() },
+        { name: "summer", date: new Date(d.getFullYear(), 5, (d.getFullYear() % 4 === 0) ? 20 : 21).getTime() },
+        { name: "autumn", date: new Date(d.getFullYear(), 8, (d.getFullYear() % 4 === 0) ? 22 : 23).getTime() },
+        { name: "winter", date: new Date(d.getFullYear(), 11, (d.getFullYear() % 4 === 0) ? 20 : 21).getTime() }
+      ];
+      // @ts-ignore
+      const season = seasonArray.filter(({ date }) => date <= d).slice(-1)[0] || { name: "Winter" };
+
+      // @ts-ignore
+      counts[season.name]++;
+    });
+
+    return counts;
+  }
 }

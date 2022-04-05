@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { WeatherDto } from './dto/weatherDto';
 import { readdirSync } from 'fs';
+import * as path from 'path';
 
 require('@tensorflow/tfjs-node');
 const weatherCategory = require('../weatherData/weatherCategory');
@@ -19,7 +20,7 @@ function sleep(ms) {
 export class TrainService {
     async train(): Promise<boolean> {
         try {
-            if (readdirSync('/home/somi/szakdolgozat/backend/src/weatherData/model/').length === 0) {
+            if (readdirSync(path.resolve('./src/weatherData/model/')).length === 0) {
                 let numTrainingIterations = 50;
                 for (let i = 0; i < numTrainingIterations; i++) {
                     console.log(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
@@ -28,9 +29,9 @@ export class TrainService {
                     await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
                 }
 
-                await weatherCategory.saveModel('file:///home/somi/szakdolgozat/backend/src/weatherData/model/');
+                await weatherCategory.saveModel(`file://${path.resolve('./src/weatherData/model/')}`);
             } else {
-                await weatherCategory.loadModel('file:///home/somi/szakdolgozat/backend/src/weatherData/model/model.json');
+                await weatherCategory.loadModel(`file://${path.resolve('./src/weatherData/model/model.json')}`);
             }
 
             return true;

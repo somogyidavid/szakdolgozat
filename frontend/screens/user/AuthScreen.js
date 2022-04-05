@@ -62,7 +62,7 @@ const AuthScreen = () => {
         if (errors.length > 0) {
             Toast.show({
                 title: i18n.t('error'),
-                description: errors[0] ? errors[0].data.message : i18n.t('unknownError'),
+                description: errors[0].data ? errors[0].data.message : i18n.t('unknownError'),
                 status: 'error',
                 placement: 'bottom'
             });
